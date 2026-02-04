@@ -2,13 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Placeholder</title>
+  <title>AR Coffee Menu - Marker Placeholder</title>
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
-    body { margin: 0; }
+    body { margin: 0; font-family: Arial; }
     #menu {
       position: fixed;
       bottom: 10px;
@@ -36,36 +36,41 @@
 <body>
 
 <div id="menu">
-  <button id="showCubeBtn" disabled>Show Coffee Placeholder</button>
+  <button onclick="showCoffee('latte')">Latte</button>
+  <button onclick="showCoffee('espresso')">Espresso</button>
+  <button onclick="showCoffee('cappuccino')">Cappuccino</button>
 </div>
 
 <a-scene
-  embedded
   vr-mode-ui="enabled: false"
-  arjs="sourceType: webcam; facingMode: environment; debugUIEnabled: false;"
+  embedded
+  arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
 >
-  <!-- Placeholder Cube -->
-  <a-box id="placeholder" position="0 0 -1" color="brown" scale="0.5 0.5 0.5"
-         visible="false"
-         animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
-  </a-box>
+  <!-- Marker -->
+  <a-marker preset="hiro">
 
-  <!-- Camera -->
-  <a-camera look-controls="enabled: false"></a-camera>
+    <!-- Placeholder Cubes -->
+    <a-box id="latte" color="brown" position="0 0.25 0" scale="0.5 0.5 0.5" visible="false"
+           animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
+
+    <a-box id="espresso" color="darkred" position="0 0.25 0" scale="0.5 0.5 0.5" visible="false"
+           animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
+
+    <a-box id="cappuccino" color="saddlebrown" position="0 0.25 0" scale="0.5 0.5 0.5" visible="false"
+           animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
+
+  </a-marker>
+
+  <a-entity camera></a-entity>
 </a-scene>
 
 <script>
-  const scene = document.querySelector('a-scene');
-  const btn = document.getElementById('showCubeBtn');
-
-  // Wait for AR.js to initialize
-  scene.addEventListener('arReady', () => {
-    btn.disabled = false;  // enable button once AR is ready
-  });
-
-  btn.addEventListener('click', () => {
-    document.getElementById('placeholder').setAttribute('visible', true);
-  });
+  function showCoffee(type) {
+    ['latte','espresso','cappuccino'].forEach(id => {
+      document.getElementById(id).setAttribute('visible', false);
+    });
+    document.getElementById(type).setAttribute('visible', true);
+  }
 </script>
 
 </body>
