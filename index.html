@@ -2,40 +2,66 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Test</title>
+  <title>AR Coffee Placeholder</title>
 
+  <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
-    body { margin: 0; overflow: hidden; }
+    body { margin: 0; font-family: Arial; }
+    #menu {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      border-radius: 12px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #cfa670;
+      font-weight: bold;
+      color: white;
+      font-size: 14px;
+    }
   </style>
 </head>
 
 <body>
 
+<!-- MENU -->
+<div id="menu">
+  <button onclick="showCube()">Show Coffee Placeholder</button>
+</div>
+
+<!-- AR SCENE -->
 <a-scene
   embedded
   vr-mode-ui="enabled: false"
-  arjs="
-    sourceType: webcam;
-    sourceWidth: 1280;
-    sourceHeight: 720;
-    displayWidth: 1280;
-    displayHeight: 720;
-    facingMode: environment;
-    debugUIEnabled: false;
-  "
+  arjs="sourceType: webcam; facingMode: environment; debugUIEnabled: false;"
 >
-  <a-box
-    position="0 0 -1"
-    rotation="0 45 0"
-    color="brown"
-    animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"
-  ></a-box>
+  <!-- Placeholder Cube -->
+  <a-box id="placeholder" position="0 0 -1" color="brown" scale="0.5 0.5 0.5"
+         visible="false"
+         animation="property: rotation; to: 0 360 0; loop: true; dur: 4000">
+  </a-box>
 
+  <!-- Camera -->
   <a-camera look-controls="enabled: false"></a-camera>
 </a-scene>
+
+<script>
+  function showCube() {
+    document.getElementById('placeholder').setAttribute('visible', true);
+  }
+</script>
 
 </body>
 </html>
