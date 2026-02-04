@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu - Mobile Friendly</title>
+  <title>AR Coffee Menu - Fully Working</title>
 
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -55,27 +55,27 @@
   </a-assets>
 
   <a-marker preset="hiro">
-    <!-- Coffee Bear model -->
     <a-entity id="coffeeBear"
               gltf-model="#coffeeBearAsset"
               visible="true"
-              position="0 -0.08 0"   <!-- lowered to sit on marker -->
-              scale="0.06 0.06 0.06"> <!-- small initial size -->
+              position="0 -0.08 0"
+              scale="0.06 0.06 0.06"
+              rotation="0 0 0">
     </a-entity>
   </a-marker>
 
-  <a-entity camera look-controls="enabled: true"></a-entity>
+  <a-entity camera></a-entity>
 </a-scene>
 
 <script>
   const model = document.getElementById('coffeeBear');
 
-  // Menu buttons: all show same model for now
+  // Menu buttons (all currently show same model)
   function showModel(name) {
     model.setAttribute('visible', true);
   }
 
-  // Pinch-to-zoom for mobile
+  // ----- Pinch-to-zoom -----
   let initialDistance = null;
   let initialScale = null;
 
@@ -109,6 +109,33 @@
     if (e.touches.length < 2) {
       initialDistance = null;
     }
+  });
+
+  // ----- One-finger drag rotation -----
+  let lastTouchX = null;
+
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      lastTouchX = e.touches[0].clientX;
+    }
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 1 && lastTouchX !== null) {
+      const deltaX = e.touches[0].clientX - lastTouchX;
+      lastTouchX = e.touches[0].clientX;
+
+      const rotation = model.getAttribute('rotation');
+      model.setAttribute('rotation', {
+        x: rotation.x,
+        y: rotation.y + deltaX * 0.5, // rotation speed
+        z: rotation.z
+      });
+    }
+  });
+
+  document.addEventListener('touchend', (e) => {
+    if (e.touches.length === 0) lastTouchX = null;
   });
 </script>
 
