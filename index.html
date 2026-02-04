@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AR Coffee Test</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
+
+  <style>
+    body { margin: 0; overflow: hidden; }
+  </style>
+</head>
+
+<body>
+
+<a-scene
+  embedded
+  vr-mode-ui="enabled: false"
+  arjs="
+    sourceType: webcam;
+    sourceWidth: 1280;
+    sourceHeight: 720;
+    displayWidth: 1280;
+    displayHeight: 720;
+    facingMode: environment;
+    debugUIEnabled: false;
+  "
+>
+  <a-box
+    position="0 0 -1"
+    rotation="0 45 0"
+    color="brown"
+    animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"
+  ></a-box>
+
+  <a-camera look-controls="enabled: false"></a-camera>
+</a-scene>
+
+</body>
+</html>
