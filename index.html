@@ -2,13 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu - Marker Placeholder</title>
+  <title>AR Coffee Demo - Marker</title>
 
+  <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
 
   <style>
-    body { margin: 0; font-family: Arial; }
+    body { margin: 0; }
     #menu {
       position: fixed;
       bottom: 10px;
@@ -50,7 +51,7 @@
   <a-marker preset="hiro">
 
     <!-- Placeholder Cubes -->
-    <a-box id="latte" color="brown" position="0 0.25 0" scale="0.5 0.5 0.5" visible="false"
+    <a-box id="latte" color="brown" position="0 0.25 0" scale="0.5 0.5 0.5" visible="true"
            animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
 
     <a-box id="espresso" color="darkred" position="0 0.25 0" scale="0.5 0.5 0.5" visible="false"
