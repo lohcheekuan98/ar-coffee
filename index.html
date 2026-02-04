@@ -10,7 +10,8 @@
 
   <style>
     body { margin: 0; font-family: Arial; }
-    #menu {
+    
+    #menu, #zoomMenu {
       position: fixed;
       bottom: 10px;
       left: 50%;
@@ -22,6 +23,7 @@
       gap: 10px;
       z-index: 10;
     }
+    
     button {
       padding: 10px 14px;
       border: none;
@@ -31,16 +33,26 @@
       color: white;
       font-size: 14px;
     }
+    
+    #zoomMenu {
+      bottom: 60px;
+    }
   </style>
 </head>
 
 <body>
 
-<!-- MENU -->
+<!-- Model Selection Menu -->
 <div id="menu">
   <button onclick="showModel('matchaCat')">Matcha Cat</button>
   <button onclick="showModel('mochaCat')">Mocha Cat</button>
   <button onclick="showModel('coffeeBear')">Coffee Bear</button>
+</div>
+
+<!-- Zoom Buttons -->
+<div id="zoomMenu">
+  <button onclick="zoomModel(1.1)">Zoom In</button>
+  <button onclick="zoomModel(0.9)">Zoom Out</button>
 </div>
 
 <!-- AR Scene with Marker -->
@@ -51,26 +63,26 @@
 >
   <a-marker preset="hiro">
 
-    <!-- 3D Models without auto-rotation -->
+    <!-- 3D Models -->
     <a-entity id="matchaCat"
-              gltf-model="matcha cat.glb"
+              gltf-model="matchaCat.glb"
               visible="false"
               position="0 0 0"
-              scale="0.5 0.5 0.5">
+              scale="0.2 0.2 0.2">
     </a-entity>
 
     <a-entity id="mochaCat"
-              gltf-model="mocha cat.glb"
+              gltf-model="mochaCat.glb"
               visible="false"
               position="0 0 0"
-              scale="0.5 0.5 0.5">
+              scale="0.2 0.2 0.2">
     </a-entity>
 
     <a-entity id="coffeeBear"
-              gltf-model="coffee bear.glb"
+              gltf-model="coffeeBear.glb"
               visible="false"
               position="0 0 0"
-              scale="0.5 0.5 0.5">
+              scale="0.2 0.2 0.2">
     </a-entity>
 
   </a-marker>
@@ -80,19 +92,26 @@
 </a-scene>
 
 <script>
+  let currentModel = null;
+
+  // Show selected model
   function showModel(name) {
-    // Hide all models
     ['matchaCat','mochaCat','coffeeBear'].forEach(id => {
       document.getElementById(id).setAttribute('visible', false);
     });
-    // Show selected model
-    document.getElementById(name).setAttribute('visible', true);
+    currentModel = document.getElementById(name);
+    currentModel.setAttribute('visible', true);
   }
-</script>
 
-</body>
-</html>    });
-    document.getElementById(type).setAttribute('visible', true);
+  // Zoom in/out current model
+  function zoomModel(factor) {
+    if (!currentModel) return;
+    let scale = currentModel.getAttribute('scale');
+    currentModel.setAttribute('scale', {
+      x: scale.x * factor,
+      y: scale.y * factor,
+      z: scale.z * factor
+    });
   }
 </script>
 
