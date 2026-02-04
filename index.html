@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu - Full Rotation + Zoom</title>
+  <title>AR Coffee Menu - Full Rotation + Zoom + Top Visible</title>
 
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -55,12 +55,13 @@
   </a-assets>
 
   <a-marker preset="hiro">
+    <!-- Coffee Bear model -->
     <a-entity id="coffeeBear"
               gltf-model="#coffeeBearAsset"
               visible="true"
-              position="0 -0.08 0"
+              position="0 -0.08 0.15"   <!-- moved forward so top is visible -->
               scale="0.06 0.06 0.06"
-              rotation="0 0 0">
+              rotation="20 0 0">        <!-- slight tilt forward for initial view -->
     </a-entity>
   </a-marker>
 
@@ -135,8 +136,8 @@
       // Rotate Y for horizontal drag
       rotation.y += deltaX * 0.5;
 
-      // Rotate X for vertical drag, clamp between -45 and 45 degrees
-      rotation.x = Math.min(Math.max(rotation.x + deltaY * 0.3, -45), 45);
+      // Rotate X for vertical drag, clamp so top remains visible
+      rotation.x = Math.min(Math.max(rotation.x + deltaY * 0.3, -30), 60);
 
       model.setAttribute('rotation', rotation);
     }
