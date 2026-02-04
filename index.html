@@ -4,12 +4,11 @@
   <meta charset="utf-8">
   <title>AR Coffee Placeholder</title>
 
-  <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
-    body { margin: 0; font-family: Arial; }
+    body { margin: 0; }
     #menu {
       position: fixed;
       bottom: 10px;
@@ -36,12 +35,10 @@
 
 <body>
 
-<!-- MENU -->
 <div id="menu">
-  <button onclick="showCube()">Show Coffee Placeholder</button>
+  <button id="showCubeBtn" disabled>Show Coffee Placeholder</button>
 </div>
 
-<!-- AR SCENE -->
 <a-scene
   embedded
   vr-mode-ui="enabled: false"
@@ -58,9 +55,17 @@
 </a-scene>
 
 <script>
-  function showCube() {
+  const scene = document.querySelector('a-scene');
+  const btn = document.getElementById('showCubeBtn');
+
+  // Wait for AR.js to initialize
+  scene.addEventListener('arReady', () => {
+    btn.disabled = false;  // enable button once AR is ready
+  });
+
+  btn.addEventListener('click', () => {
     document.getElementById('placeholder').setAttribute('visible', true);
-  }
+  });
 </script>
 
 </body>
