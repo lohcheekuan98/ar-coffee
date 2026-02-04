@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Demo - Marker</title>
+  <title>AR Coffee Menu - Marker</title>
 
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
 
   <style>
-    body { margin: 0; }
+    body { margin: 0; font-family: Arial; }
     #menu {
       position: fixed;
       bottom: 10px;
@@ -36,40 +36,62 @@
 
 <body>
 
+<!-- MENU -->
 <div id="menu">
-  <button onclick="showCoffee('latte')">Latte</button>
-  <button onclick="showCoffee('espresso')">Espresso</button>
-  <button onclick="showCoffee('cappuccino')">Cappuccino</button>
+  <button onclick="showModel('matchaCat')">Matcha Cat</button>
+  <button onclick="showModel('mochaCat')">Mocha Cat</button>
+  <button onclick="showModel('coffeeBear')">Coffee Bear</button>
 </div>
 
+<!-- AR Scene with Marker -->
 <a-scene
   vr-mode-ui="enabled: false"
   embedded
   arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
 >
-  <!-- Marker -->
   <a-marker preset="hiro">
 
-    <!-- Placeholder Cubes -->
-    <a-box id="latte" color="brown" position="0 0.25 0" scale="0.5 0.5 0.5" visible="true"
-           animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
+    <!-- 3D Models without auto-rotation -->
+    <a-entity id="matchaCat"
+              gltf-model="matcha cat.glb"
+              visible="false"
+              position="0 0 0"
+              scale="0.5 0.5 0.5">
+    </a-entity>
 
-    <a-box id="espresso" color="darkred" position="0 0.25 0" scale="0.5 0.5 0.5" visible="false"
-           animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
+    <a-entity id="mochaCat"
+              gltf-model="mocha cat.glb"
+              visible="false"
+              position="0 0 0"
+              scale="0.5 0.5 0.5">
+    </a-entity>
 
-    <a-box id="cappuccino" color="saddlebrown" position="0 0.25 0" scale="0.5 0.5 0.5" visible="false"
-           animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-box>
+    <a-entity id="coffeeBear"
+              gltf-model="coffee bear.glb"
+              visible="false"
+              position="0 0 0"
+              scale="0.5 0.5 0.5">
+    </a-entity>
 
   </a-marker>
 
-  <a-entity camera></a-entity>
+  <!-- Camera with look-controls for touch rotation -->
+  <a-entity camera look-controls="enabled: true"></a-entity>
 </a-scene>
 
 <script>
-  function showCoffee(type) {
-    ['latte','espresso','cappuccino'].forEach(id => {
+  function showModel(name) {
+    // Hide all models
+    ['matchaCat','mochaCat','coffeeBear'].forEach(id => {
       document.getElementById(id).setAttribute('visible', false);
     });
+    // Show selected model
+    document.getElementById(name).setAttribute('visible', true);
+  }
+</script>
+
+</body>
+</html>    });
     document.getElementById(type).setAttribute('visible', true);
   }
 </script>
