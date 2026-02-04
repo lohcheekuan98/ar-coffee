@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu - Working Demo</title>
+  <title>AR Coffee Menu - Working Coffee Bear</title>
 
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -13,6 +13,7 @@
   <style>
     body { margin: 0; font-family: Arial; }
 
+    /* Small top-right menu */
     #menu {
       position: fixed;
       top: 10px;
@@ -56,11 +57,12 @@
   </a-assets>
 
   <a-marker preset="hiro">
+    <!-- Coffee Bear model -->
     <a-entity id="coffeeBear"
               gltf-model="#coffeeBearAsset"
               visible="true"
-              position="0 0 0"
-              scale="0.08 0.08 0.08"
+              position="0 0 0"       <!-- Sits on the marker -->
+              scale="0.12 0.12 0.12" <!-- Adjusted to look normal -->
               gesture-detector>
     </a-entity>
   </a-marker>
@@ -69,22 +71,22 @@
 </a-scene>
 
 <script>
-  let currentModel = document.getElementById('coffeeBear');
+  const coffeeBear = document.getElementById('coffeeBear');
+  let currentModel = coffeeBear;
 
-  // Switch model (all buttons use same model for now)
+  // Menu buttons: show model (all same model for now)
   function showModel(name) {
-    // No need to hide anything, single model
     currentModel.setAttribute('visible', true);
   }
 
-  // Pinch zoom
+  // Pinch-to-zoom for mobile
   document.querySelectorAll('[gesture-detector]').forEach(el => {
     el.addEventListener('pinchstarted', e => {
       el.initialScale = el.getAttribute('scale');
     });
 
     el.addEventListener('pinchmoved', e => {
-      let newScale = {
+      const newScale = {
         x: el.initialScale.x * e.detail.scale,
         y: el.initialScale.y * e.detail.scale,
         z: el.initialScale.z * e.detail.scale
