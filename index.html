@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu - Working Coffee Bear</title>
+  <title>AR Coffee Menu - Mobile Friendly</title>
 
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -13,7 +13,7 @@
   <style>
     body { margin: 0; font-family: Arial; }
 
-    /* Small top-right menu */
+    /* Top-right menu */
     #menu {
       position: fixed;
       top: 10px;
@@ -61,8 +61,8 @@
     <a-entity id="coffeeBear"
               gltf-model="#coffeeBearAsset"
               visible="true"
-              position="0 0 0"       <!-- Sits on the marker -->
-              scale="0.12 0.12 0.12" <!-- Adjusted to look normal -->
+              position="0 -0.05 0"   <!-- lower so it sits on marker -->
+              scale="0.08 0.08 0.08" <!-- smaller -->
               gesture-detector>
     </a-entity>
   </a-marker>
@@ -72,14 +72,13 @@
 
 <script>
   const coffeeBear = document.getElementById('coffeeBear');
-  let currentModel = coffeeBear;
 
-  // Menu buttons: show model (all same model for now)
+  // Menu buttons: all use the same model for now
   function showModel(name) {
-    currentModel.setAttribute('visible', true);
+    coffeeBear.setAttribute('visible', true);
   }
 
-  // Pinch-to-zoom for mobile
+  // Pinch-to-zoom
   document.querySelectorAll('[gesture-detector]').forEach(el => {
     el.addEventListener('pinchstarted', e => {
       el.initialScale = el.getAttribute('scale');
