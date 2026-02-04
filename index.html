@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu - All Models Visible</title>
+  <title>AR Coffee Menu - Marker with Menu & Pinch</title>
 
   <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -12,11 +12,43 @@
 
   <style>
     body { margin: 0; font-family: Arial; }
+
+    /* Small corner menu */
+    #menu {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background: #cfa670;
+      font-weight: bold;
+      color: white;
+      font-size: 14px;
+    }
   </style>
 </head>
 
 <body>
 
+<!-- Menu to switch models -->
+<div id="menu">
+  <button onclick="showModel('matchaCat')">Matcha Cat</button>
+  <button onclick="showModel('mochaCat')">Mocha Cat</button>
+  <button onclick="showModel('coffeeBear')">Coffee Bear</button>
+</div>
+
+<!-- AR Scene -->
 <a-scene
   vr-mode-ui="enabled: false"
   embedded
@@ -30,38 +62,50 @@
   </a-assets>
 
   <a-marker preset="hiro">
-    <!-- All models visible -->
+
+    <!-- 3D Models with pinch/drag gestures -->
     <a-entity id="matchaCat"
               gltf-model="#matchaCatAsset"
               visible="true"
-              position="-0.15 0 0"
+              position="0 0 0"
               scale="0.18 0.18 0.18"
               gesture-detector>
     </a-entity>
 
     <a-entity id="mochaCat"
               gltf-model="#mochaCatAsset"
-              visible="true"
-              position="0.15 0 0"
+              visible="false"
+              position="0 0 0"
               scale="0.18 0.18 0.18"
               gesture-detector>
     </a-entity>
 
     <a-entity id="coffeeBear"
               gltf-model="#coffeeBearAsset"
-              visible="true"
+              visible="false"
               position="0 0 0"
               scale="0.15 0.15 0.15"
               gesture-detector>
     </a-entity>
+
   </a-marker>
 
-  <!-- Camera for touch rotation -->
   <a-entity camera look-controls="enabled: true"></a-entity>
 </a-scene>
 
 <script>
-  // Pinch zoom for all models
+  let currentModel = document.getElementById('matchaCat'); // Default visible
+
+  // Switch model
+  function showModel(name) {
+    ['matchaCat','mochaCat','coffeeBear'].forEach(id => {
+      document.getElementById(id).setAttribute('visible', false);
+    });
+    currentModel = document.getElementById(name);
+    currentModel.setAttribute('visible', true);
+  }
+
+  // Pinch zoom
   document.querySelectorAll('[gesture-detector]').forEach(el => {
     el.addEventListener('pinchstarted', e => {
       el.initialScale = el.getAttribute('scale');
