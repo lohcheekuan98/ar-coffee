@@ -2,153 +2,107 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu - Full Rotation + Zoom + Top Visible</title>
+  <title>AR Coffee Menu</title>
 
-  <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
 
   <style>
-    body { margin: 0; font-family: Arial; }
-
-    /* Top-right menu */
-    #menu {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: rgba(0,0,0,0.7);
-      padding: 10px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      z-index: 10;
-    }
-
-    button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      background: #cfa670;
-      font-weight: bold;
-      color: white;
-      font-size: 14px;
-    }
+    body { margin: 0; overflow: hidden; }
   </style>
 </head>
 
 <body>
 
-<div id="menu">
-  <button onclick="showModel('coffeeBear')">Matcha Cat</button>
-  <button onclick="showModel('coffeeBear')">Mocha Cat</button>
-  <button onclick="showModel('coffeeBear')">Coffee Bear</button>
-</div>
-
 <a-scene
-  vr-mode-ui="enabled: false"
   embedded
-  arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+  vr-mode-ui="enabled: false"
+  arjs="sourceType: webcam; debugUIEnabled: false;"
 >
   <a-assets>
-    <a-asset-item id="coffeeBearAsset" src="coffeeBear.glb"></a-asset-item>
+    <a-asset-item id="bear" src="coffeeBear.glb"></a-asset-item>
   </a-assets>
 
   <a-marker preset="hiro">
-    <!-- Coffee Bear model -->
-    <a-entity id="coffeeBear"
-              gltf-model="#coffeeBearAsset"
-              visible="true"
-              position="0 -0.08 0.15"   <!-- moved forward so top is visible -->
-              scale="0.06 0.06 0.06"
-              rotation="20 0 0">        <!-- slight tilt forward for initial view -->
+
+    <!-- MODEL -->
+    <a-entity
+      id="model"
+      gltf-model="#bear"
+
+      position="0 -0.1 0.25"
+      scale="0.025 0.025 0.025"
+      rotation="35 0 0">
     </a-entity>
+
   </a-marker>
 
   <a-entity camera></a-entity>
 </a-scene>
 
 <script>
-  const model = document.getElementById('coffeeBear');
+const model = document.getElementById("model");
 
-  // Menu buttons (all currently show same model)
-  function showModel(name) {
-    model.setAttribute('visible', true);
+/* ---------- ROTATION ---------- */
+let lastX = null;
+let lastY = null;
+
+document.addEventListener("touchstart", e => {
+  if (e.touches.length === 1) {
+    lastX = e.touches[0].clientX;
+    lastY = e.touches[0].clientY;
   }
+});
 
-  // ----- Pinch-to-zoom -----
-  let initialDistance = null;
-  let initialScale = null;
+document.addEventListener("touchmove", e => {
+  if (e.touches.length === 1 && lastX !== null) {
+    const dx = e.touches[0].clientX - lastX;
+    const dy = e.touches[0].clientY - lastY;
 
-  document.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      initialDistance = Math.sqrt(dx*dx + dy*dy);
-      const s = model.getAttribute('scale');
-      initialScale = {x: s.x, y: s.y, z: s.z};
-    }
-  });
+    lastX = e.touches[0].clientX;
+    lastY = e.touches[0].clientY;
 
-  document.addEventListener('touchmove', (e) => {
-    // Pinch zoom
-    if (e.touches.length === 2 && initialDistance) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      const distance = Math.sqrt(dx*dx + dy*dy);
-      const factor = distance / initialDistance;
+    let r = model.getAttribute("rotation");
 
-      const newScale = {
-        x: initialScale.x * factor,
-        y: initialScale.y * factor,
-        z: initialScale.z * factor
-      };
-      model.setAttribute('scale', newScale);
-    }
-  });
+    r.y += dx * 0.4;               // left / right
+    r.x = Math.min(Math.max(r.x + dy * 0.25, 10), 65); // tilt limit
 
-  document.addEventListener('touchend', (e) => {
-    if (e.touches.length < 2) {
-      initialDistance = null;
-    }
-  });
+    model.setAttribute("rotation", r);
+  }
+});
 
-  // ----- One-finger drag rotation (Y + X axis) -----
-  let lastTouchX = null;
-  let lastTouchY = null;
+/* ---------- PINCH ZOOM ---------- */
+let startDist = null;
+let startScale = null;
 
-  document.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1) {
-      lastTouchX = e.touches[0].clientX;
-      lastTouchY = e.touches[0].clientY;
-    }
-  });
+document.addEventListener("touchstart", e => {
+  if (e.touches.length === 2) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    startDist = Math.sqrt(dx*dx + dy*dy);
 
-  document.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 1 && lastTouchX !== null && lastTouchY !== null) {
-      const deltaX = e.touches[0].clientX - lastTouchX;
-      const deltaY = e.touches[0].clientY - lastTouchY;
-      lastTouchX = e.touches[0].clientX;
-      lastTouchY = e.touches[0].clientY;
+    const s = model.getAttribute("scale");
+    startScale = s.x;
+  }
+});
 
-      let rotation = model.getAttribute('rotation');
+document.addEventListener("touchmove", e => {
+  if (e.touches.length === 2 && startDist) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
 
-      // Rotate Y for horizontal drag
-      rotation.y += deltaX * 0.5;
+    let scale = startScale * (dist / startDist);
+    scale = Math.min(Math.max(scale, 0.015), 0.06);
 
-      // Rotate X for vertical drag, clamp so top remains visible
-      rotation.x = Math.min(Math.max(rotation.x + deltaY * 0.3, -30), 60);
+    model.setAttribute("scale", `${scale} ${scale} ${scale}`);
+  }
+});
 
-      model.setAttribute('rotation', rotation);
-    }
-  });
-
-  document.addEventListener('touchend', (e) => {
-    if (e.touches.length === 0) {
-      lastTouchX = null;
-      lastTouchY = null;
-    }
-  });
+document.addEventListener("touchend", () => {
+  startDist = null;
+  lastX = null;
+});
 </script>
 
 </body>
