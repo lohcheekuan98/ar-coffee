@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>AR Coffee Menu</title>
+  <title>Meow Brew Café</title>
 
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
@@ -11,35 +11,134 @@
   <style>
     body {
       margin: 0;
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #f6efe8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    .header {
+      padding: 16px;
+      background: #3e2c23;
+      color: white;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 1px;
+    }
+
+    .header p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    /* MODEL VIEW */
+    .viewer {
+      flex: 1;
+      position: relative;
     }
 
     model-viewer {
       width: 100%;
       height: 100%;
-      background: #111;
+      background: #f6efe8;
+    }
+
+    /* BOTTOM MENU */
+    .menu {
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      padding: 10px 0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    }
+
+    .menu button {
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #3e2c23;
+    }
+
+    .menu button.active {
+      color: #c48a5a;
+    }
+
+    /* AR BUTTON */
+    .ar-btn {
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #c48a5a;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     }
   </style>
 </head>
 
 <body>
 
-<model-viewer
-  src="coffeeBear.glb"
-  ar
-  ar-modes="scene-viewer webxr quick-look"
-  camera-controls
-  touch-action="pan-y"
-  auto-rotate="false"
-  scale="0.3 0.3 0.3"
-  shadow-intensity="1"
-  alt="AR Coffee">
+<!-- HEADER -->
+<div class="header">
+  <h1>Meow Brew Café</h1>
+  <p>Tap a drink · View in AR ☕</p>
+</div>
 
-</model-viewer>
+<!-- MODEL -->
+<div class="viewer">
+  <model-viewer
+    id="viewer"
+    src="matcha cat.glb"
+    ar
+    ar-modes="scene-viewer webxr quick-look"
+    camera-controls
+    touch-action="pan-y"
+    shadow-intensity="1"
+    exposure="1"
+    scale="0.3 0.3 0.3"
+    alt="Coffee Model">
+  </model-viewer>
+
+  <div class="ar-btn">View in AR</div>
+</div>
+
+<!-- MENU -->
+<div class="menu">
+  <button class="active" onclick="setModel('matcha cat.glb', this)">
+    🍵 Matcha Cat
+  </button>
+  <button onclick="setModel('mocha cat.glb', this)">
+    🍫 Mocha Cat
+  </button>
+  <button onclick="setModel('coffee bear.glb', this)">
+    ☕ Coffee Bear
+  </button>
+</div>
+
+<script>
+  const viewer = document.getElementById('viewer');
+
+  function setModel(src, btn) {
+    viewer.src = src;
+
+    document.querySelectorAll('.menu button')
+      .forEach(b => b.classList.remove('active'));
+
+    btn.classList.add('active');
+  }
+</script>
 
 </body>
 </html>
