@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Meow Brew Café</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AR Café Menu</title>
 
+  <!-- model-viewer -->
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
@@ -11,132 +13,140 @@
   <style>
     body {
       margin: 0;
-      background: #f6efe8;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
+      font-family: "Segoe UI", sans-serif;
+      background: #f7f3ef;
+      color: #3b2f2f;
     }
 
-    /* HEADER */
-    .header {
-      padding: 16px;
-      background: #3e2c23;
-      color: white;
+    header {
+      padding: 14px;
       text-align: center;
-    }
-
-    .header h1 {
-      margin: 0;
       font-size: 22px;
-      letter-spacing: 1px;
-    }
-
-    .header p {
-      margin: 4px 0 0;
-      font-size: 13px;
-      opacity: 0.8;
-    }
-
-    /* MODEL VIEW */
-    .viewer {
-      flex: 1;
-      position: relative;
+      font-weight: bold;
+      background: #6f4e37;
+      color: white;
     }
 
     model-viewer {
       width: 100%;
-      height: 100%;
-      background: #f6efe8;
+      height: 55vh;
+      background: #ffffff;
     }
 
-    /* BOTTOM MENU */
     .menu {
-      display: flex;
-      justify-content: space-around;
-      background: white;
-      padding: 10px 0;
-      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      padding: 16px;
     }
 
-    .menu button {
-      background: none;
-      border: none;
-      font-size: 14px;
-      font-weight: 600;
-      color: #3e2c23;
-    }
-
-    .menu button.active {
-      color: #c48a5a;
-    }
-
-    /* AR BUTTON */
-    .ar-btn {
-      position: absolute;
-      bottom: 90px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #c48a5a;
-      color: white;
-      padding: 14px 20px;
-      border-radius: 30px;
-      font-size: 15px;
+    .drink-title {
+      font-size: 20px;
       font-weight: bold;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .drink-desc {
+      font-size: 16px;
+      margin-top: 6px;
+      opacity: 0.85;
+    }
+
+    .drink-price {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #6f4e37;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #5a3d2b;
     }
   </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <h1>Meow Brew Café</h1>
-  <p>Tap a drink · View in AR ☕</p>
-</div>
+<header>☕ AR Café Menu</header>
 
-<!-- MODEL -->
-<div class="viewer">
-  <model-viewer
-    id="viewer"
-    src="matcha cat.glb"
-    ar
-    ar-modes="scene-viewer webxr quick-look"
-    camera-controls
-    touch-action="pan-y"
-    shadow-intensity="1"
-    exposure="1"
-    scale="0.3 0.3 0.3"
-    alt="Coffee Model">
-  </model-viewer>
+<model-viewer
+  id="viewer"
+  src="matchaCat.glb"
+  ar
+  ar-modes="scene-viewer webxr quick-look"
+  camera-controls
+  touch-action="pan-y"
+  interaction-prompt="none"
+  exposure="1"
+  shadow-intensity="1"
+  camera-orbit="0deg 75deg 1.8m"
+  min-camera-orbit="auto 45deg 0.8m"
+  max-camera-orbit="auto 90deg 3m"
+  field-of-view="45deg"
+  auto-scale>
+</model-viewer>
 
-  <div class="ar-btn">View in AR</div>
-</div>
-
-<!-- MENU -->
 <div class="menu">
-  <button class="active" onclick="setModel('matchaCat.glb', this)">
-    🍵 Matcha Cat
-  </button>
-  <button onclick="setModel('mochaCat.glb', this)">
-    🍫 Mocha Cat
-  </button>
-  <button onclick="setModel('coffeeBear.glb', this)">
-    ☕ Coffee Bear
-  </button>
+  <div class="drink-title" id="title">Matcha Cat</div>
+  <div class="drink-desc" id="desc">
+    Creamy Japanese matcha latte with a smooth, earthy finish.
+  </div>
+  <div class="drink-price" id="price">RM 12</div>
+
+  <div class="buttons">
+    <button onclick="loadDrink('matcha')">Matcha</button>
+    <button onclick="loadDrink('mocha')">Mocha</button>
+    <button onclick="loadDrink('bear')">Coffee Bear</button>
+  </div>
 </div>
 
 <script>
-  const viewer = document.getElementById('viewer');
+  const viewer = document.getElementById("viewer");
 
-  function setModel(src, btn) {
-    viewer.src = src;
+  const drinks = {
+    matcha: {
+      src: "matchaCat.glb",
+      title: "Matcha Cat",
+      desc: "Creamy Japanese matcha latte with a smooth, earthy finish.",
+      price: "RM 12"
+    },
+    mocha: {
+      src: "mochaCat.glb",
+      title: "Mocha Cat",
+      desc: "Rich chocolate espresso blend with gentle sweetness.",
+      price: "RM 13"
+    },
+    bear: {
+      src: "coffeeBear.glb",
+      title: "Coffee Bear",
+      desc: "Bold classic coffee served with an adorable bear design.",
+      price: "RM 15"
+    }
+  };
 
-    document.querySelectorAll('.menu button')
-      .forEach(b => b.classList.remove('active'));
+  function loadDrink(type) {
+    const d = drinks[type];
+    viewer.src = d.src;
 
-    btn.classList.add('active');
+    document.getElementById("title").textContent = d.title;
+    document.getElementById("desc").textContent = d.desc;
+    document.getElementById("price").textContent = d.price;
+
+    // reset camera nicely every switch
+    viewer.cameraOrbit = "0deg 75deg 1.8m";
+    viewer.fieldOfView = "45deg";
   }
 </script>
 
