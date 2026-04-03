@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AR Coffee</title>
+<title>AR Coffee - Final Boss</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -15,7 +15,7 @@ body {
   background: #f7f3ef;
 }
 
-/* START */
+/* START SCREEN */
 #startScreen {
   position: fixed;
   width: 100%;
@@ -58,22 +58,6 @@ button {
   background: #6f4e37;
   color: white;
   cursor: pointer;
-  opacity: 0.8;
-}
-
-button.active {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-/* ORDER */
-#orderBtn {
-  width: 90%;
-  margin: 10px auto;
-  display: block;
-  padding: 12px;
-  border-radius: 10px;
-  background: #3b2f2f;
 }
 
 /* CART BTN */
@@ -87,14 +71,14 @@ button.active {
   font-size: 18px;
 }
 
-/* RECEIPT */
+/* SUMMARY */
 #summaryPage {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: white;
   display: none;
   padding: 20px;
   overflow: auto;
@@ -105,36 +89,31 @@ button.active {
   margin: auto;
 }
 
-.receipt h2 {
-  text-align: center;
-}
-
 .item {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
-  align-items: center;
-}
-
-.qty {
-  display: flex;
-  gap: 5px;
 }
 
 .qty button {
   padding: 4px 8px;
-  font-size: 12px;
 }
 
-.delete {
-  background: red;
-}
+.delete { background: red; }
 
 .total {
   border-top: 1px dashed #000;
-  margin-top: 15px;
+  margin-top: 10px;
   padding-top: 10px;
   font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 </style>
 </head>
@@ -143,7 +122,7 @@ button.active {
 
 <div id="startScreen">
   <h1>☕ AR Coffee</h1>
-  <button onclick="startApp()">Start</button>
+  <button onclick="startApp()">Start Experience</button>
 </div>
 
 <div id="app">
@@ -152,30 +131,36 @@ button.active {
 
 <model-viewer id="viewer" src="matchaCat.glb" ar camera-controls auto-rotate></model-viewer>
 
-<div class="buttons" id="categoryButtons">
-  <button onclick="switchCategory('drinks', this)" class="active">☕</button>
-  <button onclick="switchCategory('cookies', this)">🍪</button>
-  <button onclick="switchCategory('chocolate', this)">🍫</button>
+<div class="buttons">
+  <button onclick="switchCategory('drinks')">☕</button>
+  <button onclick="switchCategory('cookies')">🍪</button>
+  <button onclick="switchCategory('chocolate')">🍫</button>
 </div>
 
-<div class="buttons" id="drinkButtons"></div>
+<div class="buttons" id="menuButtons"></div>
 
 <h3 id="title"></h3>
 <p id="desc"></p>
 <strong id="price"></strong>
 
-<button id="orderBtn" onclick="addToCart()">Add to Cart</button>
+<button onclick="addToCart()">Add to Cart</button>
 
 </div>
 
 <button id="cartBtn" onclick="openSummary()">🛒</button>
 
-<!-- RECEIPT -->
+<!-- SUMMARY -->
 <div id="summaryPage">
   <div class="receipt">
-    <h2>🧾 AR Coffee Receipt</h2>
+    <h2>🧾 Receipt</h2>
+
+    <input id="customerName" placeholder="Customer Name">
+    <input id="tableNo" placeholder="Table No">
+
     <div id="orderList"></div>
     <div class="total" id="total"></div>
+
+    <p id="time"></p>
 
     <button onclick="checkout()">Checkout WhatsApp</button>
     <button onclick="closeSummary()">Close</button>
@@ -183,84 +168,68 @@ button.active {
 </div>
 
 <script>
+let cart = [];
 let currentCategory = "drinks";
 let currentItem = "";
-let cart = [];
 
 const menu = {
   drinks: {
-    matcha: { src:"matchaCat.glb", title:"Matcha", desc:"Matcha latte", price:12 },
-    mocha: { src:"mochaCat.glb", title:"Mocha", desc:"Chocolate coffee", price:13 }
+    matcha:{title:"Matcha",desc:"Matcha Latte",price:12,src:"matchaCat.glb"},
+    mocha:{title:"Mocha",desc:"Chocolate Coffee",price:13,src:"mochaCat.glb"}
   },
-  cookies: {
-    cookie1: { src:"matchaCat.glb", title:"Cookie", desc:"Sweet cookie", price:6 }
+  cookies:{
+    cookie:{title:"Cookie",desc:"Sweet Cookie",price:6,src:"matchaCat.glb"}
   },
-  chocolate: {
-    choco1: { src:"matchaCat.glb", title:"Hot Choco", desc:"Cocoa drink", price:10 }
+  chocolate:{
+    choco:{title:"Hot Choco",desc:"Cocoa Drink",price:10,src:"matchaCat.glb"}
   }
 };
 
-function startApp() {
-  startScreen.style.display = "none";
-  app.style.display = "block";
+function startApp(){
+  startScreen.style.display="none";
+  app.style.display="block";
+  loadMenu();
 }
 
-function generateMenu() {
-  const container = drinkButtons;
-  container.innerHTML = "";
-
+function loadMenu(){
+  menuButtons.innerHTML="";
   Object.keys(menu[currentCategory]).forEach((key,i)=>{
-    const btn = document.createElement("button");
-    btn.textContent = menu[currentCategory][key].title;
+    const btn=document.createElement("button");
+    btn.textContent=menu[currentCategory][key].title;
+    btn.onclick=()=>loadItem(key);
+    menuButtons.appendChild(btn);
 
-    if(i===0){ btn.classList.add("active"); loadItem(key,btn,true); }
-
-    btn.onclick = ()=>loadItem(key,btn);
-    container.appendChild(btn);
+    if(i===0) loadItem(key);
   });
 }
 
-function switchCategory(cat,btn){
-  currentCategory = cat;
-  document.querySelectorAll("#categoryButtons button")
-    .forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  generateMenu();
+function switchCategory(cat){
+  currentCategory=cat;
+  loadMenu();
 }
 
-function loadItem(key,btn,auto=false){
-  currentItem = key;
+function loadItem(key){
+  currentItem=key;
+  const d=menu[currentCategory][key];
 
-  if(!auto){
-    document.querySelectorAll("#drinkButtons button")
-      .forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-  }
-
-  const d = menu[currentCategory][key];
-
-  viewer.src = d.src;
-  title.textContent = d.title;
-  desc.textContent = d.desc;
-  price.textContent = "RM "+d.price;
+  viewer.src=d.src;
+  title.textContent=d.title;
+  desc.textContent=d.desc;
+  price.textContent="RM "+d.price;
 }
 
-/* CART LOGIC */
+/* CART */
 function addToCart(){
-  const d = menu[currentCategory][currentItem];
+  const d=menu[currentCategory][currentItem];
+  const exist=cart.find(i=>i.title===d.title);
 
-  const existing = cart.find(i=>i.title===d.title);
+  if(exist){ exist.qty++; }
+  else{ cart.push({...d,qty:1}); }
 
-  if(existing){
-    existing.qty++;
-  }else{
-    cart.push({...d, qty:1});
-  }
-
-  alert(d.title+" added!");
+  alert("Added!");
 }
 
-/* RECEIPT */
+/* SUMMARY */
 function openSummary(){
   summaryPage.style.display="block";
   renderCart();
@@ -270,31 +239,31 @@ function renderCart(){
   orderList.innerHTML="";
   let total=0;
 
-  cart.forEach((item,index)=>{
+  cart.forEach((item,i)=>{
     const div=document.createElement("div");
     div.className="item";
 
     div.innerHTML=`
-      <span>${item.title}</span>
+      ${item.title} 
       <div class="qty">
-        <button onclick="changeQty(${index},-1)">-</button>
-        <span>${item.qty}</span>
-        <button onclick="changeQty(${index},1)">+</button>
+        <button onclick="changeQty(${i},-1)">-</button>
+        ${item.qty}
+        <button onclick="changeQty(${i},1)">+</button>
       </div>
-      <span>RM ${item.price*item.qty}</span>
-      <button class="delete" onclick="removeItem(${index})">X</button>
+      RM ${item.price*item.qty}
+      <button class="delete" onclick="removeItem(${i})">X</button>
     `;
 
     orderList.appendChild(div);
-    total += item.price*item.qty;
+    total+=item.price*item.qty;
   });
 
-  totalDiv = document.getElementById("total");
-  totalDiv.textContent = "Total: RM "+total;
+  totalDiv.textContent="Total: RM "+total;
+  time.textContent="Time: "+new Date().toLocaleString();
 }
 
-function changeQty(i,delta){
-  cart[i].qty += delta;
+function changeQty(i,d){
+  cart[i].qty+=d;
   if(cart[i].qty<=0) cart.splice(i,1);
   renderCart();
 }
@@ -308,22 +277,37 @@ function closeSummary(){
   summaryPage.style.display="none";
 }
 
+/* SALES TRACKER */
+function saveSale(total){
+  let sales=JSON.parse(localStorage.getItem("sales")||"[]");
+  sales.push({total,date:new Date()});
+  localStorage.setItem("sales",JSON.stringify(sales));
+}
+
 /* CHECKOUT */
 function checkout(){
-  let text="Order:%0A";
+  const name=customerName.value||"Guest";
+  const table=tableNo.value||"-";
+
+  let text=`Order%0AName: ${name}%0ATable: ${table}%0A%0A`;
   let total=0;
 
   cart.forEach(item=>{
     text+=`${item.title} x${item.qty} RM ${item.price*item.qty}%0A`;
-    total += item.price*item.qty;
+    total+=item.price*item.qty;
   });
 
   text+=`%0ATotal: RM ${total}`;
 
+  saveSale(total);
+
   window.open("https://wa.me/60123456789?text="+text);
+
+  cart=[];
+  renderCart();
 }
 
-window.onload = generateMenu;
+window.onload=loadMenu;
 </script>
 
 </body>
