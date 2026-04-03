@@ -76,24 +76,6 @@ button {
   background: #6f4e37;
   color: white;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
-/* RIPPLE */
-button:active::after {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.4);
-  border-radius: 50%;
-  transform: scale(2);
-  opacity: 0;
-  transition: 0.4s;
 }
 
 /* FLOAT CART */
@@ -104,29 +86,28 @@ button:active::after {
   background: #3b2f2f;
   padding: 14px;
   border-radius: 50%;
-  animation: float 2s infinite;
 }
 
-@keyframes float {
-  50% { transform: translateY(-6px); }
-}
-
-/* RECEIPT */
+/* RECEIPT OVERLAY */
 #summaryPage {
   position: fixed;
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.4);
   display: none;
+  overflow-y: auto; /* 🔥 FIX SCROLL */
 }
 
+/* RECEIPT BOX */
 .receipt {
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.9);
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;
   border-radius: 20px;
+
+  max-height: 80vh; /* 🔥 FIX SCROLL */
+  overflow-y: auto;
 }
 
 .item {
@@ -142,31 +123,35 @@ button:active::after {
   font-weight: bold;
 }
 
-/* ANIMATION */
-.fade {
-  animation: fade 0.3s ease;
-}
-
-@keyframes fade {
-  from {opacity:0; transform:translateY(5px);}
-  to {opacity:1; transform:translateY(0);}
+/* SUCCESS SCREEN */
+#successPage {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg,#6f4e37,#3b2f2f);
+  color: white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
 }
 </style>
 </head>
 
 <body>
 
+<!-- START -->
 <div id="startScreen">
   <h1>☕ AR Coffee</h1>
-  <p>Experience your drink in AR</p>
-  <button onclick="startApp()">Start Experience</button>
+  <button onclick="startApp()">Start</button>
 </div>
 
 <div id="app">
 
 <header>☕ AR Coffee</header>
 
-<model-viewer id="viewer" src="matchaCat.glb" ar camera-controls auto-rotate></model-viewer>
+<model-viewer id="viewer" src="matchaCat.glb" camera-controls auto-rotate></model-viewer>
 
 <div class="glass">
   <div class="buttons">
@@ -196,8 +181,8 @@ button:active::after {
   <div class="receipt">
     <h2>🧾 Receipt</h2>
 
-    <input id="customerName" placeholder="Name">
-    <input id="tableNo" placeholder="Table">
+    <input id="customerName" placeholder="Name"><br><br>
+    <input id="tableNo" placeholder="Table"><br><br>
 
     <div id="orderList"></div>
     <div class="total" id="total"></div>
@@ -205,6 +190,13 @@ button:active::after {
     <button onclick="checkout()">Checkout</button>
     <button onclick="closeSummary()">Close</button>
   </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+<div id="successPage">
+  <h1>✅ Order Sent!</h1>
+  <p id="orderInfo"></p>
+  <button onclick="restart()">Back to Menu</button>
 </div>
 
 <script>
@@ -251,36 +243,19 @@ function loadItem(key){
   currentItem=key;
   const d=menu[currentCategory][key];
 
-  // 🔥 THIS LINE FIXES YOUR PROBLEM
-  viewer.src = d.src;
-
-  viewer.cameraOrbit="0deg 75deg 105%";
-  setTimeout(()=>viewer.cameraOrbit="0deg 75deg 85%",200);
+  viewer.src = d.src; // 🔥 FIX MODEL
 
   title.textContent=d.title;
   desc.textContent=d.desc;
   price.textContent="RM "+d.price;
-
-  title.classList.add("fade");
-  desc.classList.add("fade");
-  price.classList.add("fade");
-
-  setTimeout(()=>{
-    title.classList.remove("fade");
-    desc.classList.remove("fade");
-    price.classList.remove("fade");
-  },300);
 }
-  
+
 function addToCart(){
   const d=menu[currentCategory][currentItem];
   const exist=cart.find(i=>i.title===d.title);
 
   if(exist){exist.qty++;}
   else{cart.push({...d,qty:1});}
-
-  cartBtn.style.transform="scale(1.2)";
-  setTimeout(()=>cartBtn.style.transform="scale(1)",200);
 }
 
 function openSummary(){
@@ -291,12 +266,12 @@ function openSummary(){
 function renderCart(){
   if(cart.length===0){
     orderList.innerHTML="<p>No items yet ☕</p>";
-    document.getElementById("total").textContent="Total: RM 0";
+    total.textContent="Total: RM 0";
     return;
   }
 
   orderList.innerHTML="";
-  let total=0;
+  let sum=0;
 
   cart.forEach((item,i)=>{
     const div=document.createElement("div");
@@ -307,10 +282,10 @@ function renderCart(){
       <button onclick="removeItem(${i})">X</button>
     `;
     orderList.appendChild(div);
-    total+=item.price*item.qty;
+    sum+=item.price*item.qty;
   });
 
-  document.getElementById("total").textContent="Total: RM "+total;
+  total.textContent="Total: RM "+sum;
 }
 
 function removeItem(i){
@@ -323,12 +298,32 @@ function closeSummary(){
 }
 
 function checkout(){
-  alert("✨ Order Sent! (Demo Mode)");
+  const name=document.getElementById("customerName").value || "Guest";
+  const table=document.getElementById("tableNo").value || "-";
+  const orderId="ORD"+Math.floor(Math.random()*100000);
+
+  // SAVE ORDER
+  const orders=JSON.parse(localStorage.getItem("orders")||"[]");
+  orders.push({orderId,name,table,cart,time:new Date().toLocaleString()});
+  localStorage.setItem("orders",JSON.stringify(orders));
+
+  summaryPage.style.display="none";
+  successPage.style.display="flex";
+
+  orderInfo.innerHTML=`
+    Order ID: ${orderId}<br>
+    Name: ${name}<br>
+    Table: ${table}<br><br>
+    ☕ Preparing your drinks...
+  `;
+
   cart=[];
-  renderCart();
 }
 
-window.onload=loadMenu;
+function restart(){
+  successPage.style.display="none";
+  app.style.display="block";
+}
 </script>
 
 </body>
