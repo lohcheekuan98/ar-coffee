@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AR Coffee - Final Boss</title>
+<title>AR Coffee - Aesthetic</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -12,7 +12,8 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
-  background: #f7f3ef;
+  background: linear-gradient(135deg, #f7f3ef, #e8dfd8);
+  color: #3b2f2f;
 }
 
 /* START SCREEN */
@@ -20,7 +21,7 @@ body {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: #6f4e37;
+  background: linear-gradient(135deg,#6f4e37,#3b2f2f);
   color: white;
   display: flex;
   justify-content: center;
@@ -28,39 +29,74 @@ body {
   flex-direction: column;
 }
 
+#startScreen button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: 20px;
+  background: white;
+  color: #6f4e37;
+  font-weight: bold;
+}
+
 #app { display: none; }
 
 header {
-  background: #6f4e37;
-  color: white;
-  padding: 14px;
   text-align: center;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 model-viewer {
   width: 100%;
-  height: 50vh;
+  height: 45vh;
+}
+
+/* GLASS PANEL */
+.glass {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+  margin: 10px;
+  padding: 10px;
+  border-radius: 16px;
 }
 
 /* BUTTONS */
 .buttons {
   display: flex;
-  justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 10px;
+  justify-content: center;
 }
 
 button {
+  border: none;
   padding: 8px 14px;
   border-radius: 20px;
-  border: none;
   background: #6f4e37;
   color: white;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-/* CART BTN */
+button:hover {
+  transform: scale(1.05);
+}
+
+/* RIPPLE */
+button:active::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  transform: scale(2);
+  opacity: 0;
+  transition: 0.4s;
+}
+
+/* FLOAT CART */
 #cartBtn {
   position: fixed;
   bottom: 20px;
@@ -68,25 +104,29 @@ button {
   background: #3b2f2f;
   padding: 14px;
   border-radius: 50%;
-  font-size: 18px;
+  animation: float 2s infinite;
 }
 
-/* SUMMARY */
+@keyframes float {
+  50% { transform: translateY(-6px); }
+}
+
+/* RECEIPT */
 #summaryPage {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background: white;
+  background: rgba(0,0,0,0.4);
   display: none;
-  padding: 20px;
-  overflow: auto;
 }
 
 .receipt {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
   max-width: 400px;
-  margin: auto;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 20px;
 }
 
 .item {
@@ -95,12 +135,6 @@ button {
   margin: 10px 0;
 }
 
-.qty button {
-  padding: 4px 8px;
-}
-
-.delete { background: red; }
-
 .total {
   border-top: 1px dashed #000;
   margin-top: 10px;
@@ -108,12 +142,14 @@ button {
   font-weight: bold;
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+/* ANIMATION */
+.fade {
+  animation: fade 0.3s ease;
+}
+
+@keyframes fade {
+  from {opacity:0; transform:translateY(5px);}
+  to {opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
@@ -122,6 +158,7 @@ input {
 
 <div id="startScreen">
   <h1>☕ AR Coffee</h1>
+  <p>Experience your drink in AR</p>
   <button onclick="startApp()">Start Experience</button>
 </div>
 
@@ -131,57 +168,60 @@ input {
 
 <model-viewer id="viewer" src="matchaCat.glb" ar camera-controls auto-rotate></model-viewer>
 
-<div class="buttons">
-  <button onclick="switchCategory('drinks')">☕</button>
-  <button onclick="switchCategory('cookies')">🍪</button>
-  <button onclick="switchCategory('chocolate')">🍫</button>
+<div class="glass">
+  <div class="buttons">
+    <button onclick="switchCategory('drinks')">☕</button>
+    <button onclick="switchCategory('cookies')">🍪</button>
+    <button onclick="switchCategory('chocolate')">🍫</button>
+  </div>
 </div>
 
-<div class="buttons" id="menuButtons"></div>
+<div class="glass">
+  <div class="buttons" id="menuButtons"></div>
+</div>
 
-<h3 id="title"></h3>
-<p id="desc"></p>
-<strong id="price"></strong>
-
-<button onclick="addToCart()">Add to Cart</button>
+<div class="glass">
+  <h3 id="title"></h3>
+  <p id="desc"></p>
+  <strong id="price"></strong>
+  <button onclick="addToCart()">Add to Cart</button>
+</div>
 
 </div>
 
 <button id="cartBtn" onclick="openSummary()">🛒</button>
 
-<!-- SUMMARY -->
+<!-- RECEIPT -->
 <div id="summaryPage">
   <div class="receipt">
     <h2>🧾 Receipt</h2>
 
-    <input id="customerName" placeholder="Customer Name">
-    <input id="tableNo" placeholder="Table No">
+    <input id="customerName" placeholder="Name">
+    <input id="tableNo" placeholder="Table">
 
     <div id="orderList"></div>
     <div class="total" id="total"></div>
 
-    <p id="time"></p>
-
-    <button onclick="checkout()">Checkout WhatsApp</button>
+    <button onclick="checkout()">Checkout</button>
     <button onclick="closeSummary()">Close</button>
   </div>
 </div>
 
 <script>
-let cart = [];
-let currentCategory = "drinks";
-let currentItem = "";
+let cart=[];
+let currentCategory="drinks";
+let currentItem="";
 
-const menu = {
-  drinks: {
-    matcha:{title:"Matcha",desc:"Matcha Latte",price:12,src:"matchaCat.glb"},
-    mocha:{title:"Mocha",desc:"Chocolate Coffee",price:13,src:"mochaCat.glb"}
+const menu={
+  drinks:{
+    matcha:{title:"Matcha",desc:"Smooth matcha latte",price:12,src:"matchaCat.glb"},
+    mocha:{title:"Mocha",desc:"Chocolate coffee",price:13,src:"mochaCat.glb"}
   },
   cookies:{
-    cookie:{title:"Cookie",desc:"Sweet Cookie",price:6,src:"matchaCat.glb"}
+    cookie:{title:"Cookie",desc:"Sweet treat",price:6,src:"matchaCat.glb"}
   },
   chocolate:{
-    choco:{title:"Hot Choco",desc:"Cocoa Drink",price:10,src:"matchaCat.glb"}
+    choco:{title:"Hot Choco",desc:"Warm cocoa",price:10,src:"matchaCat.glb"}
   }
 };
 
@@ -198,7 +238,6 @@ function loadMenu(){
     btn.textContent=menu[currentCategory][key].title;
     btn.onclick=()=>loadItem(key);
     menuButtons.appendChild(btn);
-
     if(i===0) loadItem(key);
   });
 }
@@ -212,60 +251,63 @@ function loadItem(key){
   currentItem=key;
   const d=menu[currentCategory][key];
 
-  viewer.src=d.src;
+  viewer.cameraOrbit="0deg 75deg 105%";
+  setTimeout(()=>viewer.cameraOrbit="0deg 75deg 85%",200);
+
   title.textContent=d.title;
   desc.textContent=d.desc;
   price.textContent="RM "+d.price;
+
+  title.classList.add("fade");
+  desc.classList.add("fade");
+  price.classList.add("fade");
+
+  setTimeout(()=>{
+    title.classList.remove("fade");
+    desc.classList.remove("fade");
+    price.classList.remove("fade");
+  },300);
 }
 
-/* CART */
 function addToCart(){
   const d=menu[currentCategory][currentItem];
   const exist=cart.find(i=>i.title===d.title);
 
-  if(exist){ exist.qty++; }
-  else{ cart.push({...d,qty:1}); }
+  if(exist){exist.qty++;}
+  else{cart.push({...d,qty:1});}
 
-  alert("Added!");
+  cartBtn.style.transform="scale(1.2)";
+  setTimeout(()=>cartBtn.style.transform="scale(1)",200);
 }
 
-/* SUMMARY */
 function openSummary(){
   summaryPage.style.display="block";
   renderCart();
 }
 
 function renderCart(){
+  if(cart.length===0){
+    orderList.innerHTML="<p>No items yet ☕</p>";
+    document.getElementById("total").textContent="Total: RM 0";
+    return;
+  }
+
   orderList.innerHTML="";
   let total=0;
 
   cart.forEach((item,i)=>{
     const div=document.createElement("div");
     div.className="item";
-
     div.innerHTML=`
-      ${item.title} 
-      <div class="qty">
-        <button onclick="changeQty(${i},-1)">-</button>
-        ${item.qty}
-        <button onclick="changeQty(${i},1)">+</button>
-      </div>
+      ${item.title} x${item.qty}
       RM ${item.price*item.qty}
-      <button class="delete" onclick="removeItem(${i})">X</button>
+      <button onclick="removeItem(${i})">X</button>
     `;
-
     orderList.appendChild(div);
     total+=item.price*item.qty;
   });
 
-  totalDiv.textContent="Total: RM "+total;
-  time.textContent="Time: "+new Date().toLocaleString();
-}
-
-function changeQty(i,d){
-  cart[i].qty+=d;
-  if(cart[i].qty<=0) cart.splice(i,1);
-  renderCart();
+  document.getElementById("total").textContent="Total: RM "+total;
 }
 
 function removeItem(i){
@@ -277,32 +319,8 @@ function closeSummary(){
   summaryPage.style.display="none";
 }
 
-/* SALES TRACKER */
-function saveSale(total){
-  let sales=JSON.parse(localStorage.getItem("sales")||"[]");
-  sales.push({total,date:new Date()});
-  localStorage.setItem("sales",JSON.stringify(sales));
-}
-
-/* CHECKOUT */
 function checkout(){
-  const name=customerName.value||"Guest";
-  const table=tableNo.value||"-";
-
-  let text=`Order%0AName: ${name}%0ATable: ${table}%0A%0A`;
-  let total=0;
-
-  cart.forEach(item=>{
-    text+=`${item.title} x${item.qty} RM ${item.price*item.qty}%0A`;
-    total+=item.price*item.qty;
-  });
-
-  text+=`%0ATotal: RM ${total}`;
-
-  saveSale(total);
-
-  window.open("https://wa.me/60123456789?text="+text);
-
+  alert("✨ Order Sent! (Demo Mode)");
   cart=[];
   renderCart();
 }
