@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AR Café Menu</title>
 
   <!-- model-viewer -->
@@ -31,6 +31,7 @@
       width: 100%;
       height: 55vh;
       background: #ffffff;
+      transition: opacity 0.25s ease;
     }
 
     .menu {
@@ -71,6 +72,111 @@
       cursor: pointer;
     }
 
+    button:hover {
+      background: #5a3d2b;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>☕ AR Café Menu</header>
+
+<model-viewer
+  id="viewer"
+  src="matchaCat.glb"
+  ar
+  ar-modes="scene-viewer webxr quick-look"
+  camera-controls
+  touch-action="pan-y"
+  interaction-prompt="none"
+  exposure="1"
+  shadow-intensity="1"
+  camera-orbit="0deg 75deg 2.2m"
+  min-camera-orbit="auto 45deg 0.8m"
+  max-camera-orbit="auto 90deg 3m"
+  field-of-view="45deg"
+  auto-scale>
+</model-viewer>
+
+<div class="menu">
+  <div class="drink-title" id="title">Matcha Cat</div>
+  <div class="drink-desc" id="desc">
+    Creamy Japanese matcha latte with a smooth, earthy finish.
+  </div>
+  <div class="drink-price" id="price">RM 12</div>
+
+  <div class="buttons">
+    <button onclick="loadDrink('matcha')">Matcha</button>
+    <button onclick="loadDrink('mocha')">Mocha</button>
+    <button onclick="loadDrink('bear')">Coffee Bear</button>
+  </div>
+</div>
+
+<script>
+  const viewer = document.getElementById("viewer");
+
+  const drinks = {
+    matcha: {
+      src: "matchaCat.glb",
+      scale: "1 1 1", // reference
+      title: "Matcha Cat",
+      desc: "Creamy Japanese matcha latte with a smooth, earthy finish.",
+      price: "RM 12"
+    },
+    mocha: {
+      src: "mochaCat.glb",
+      scale: "0.55 0.55 0.55", // reduced
+      title: "Mocha Cat",
+      desc: "Rich chocolate espresso blend with gentle sweetness.",
+      price: "RM 13"
+    },
+    bear: {
+      src: "coffeeBear.glb",
+      scale: "0.6 0.6 0.6", // reduced
+      title: "Coffee Bear",
+      desc: "Bold classic coffee served with an adorable bear design.",
+      price: "RM 15"
+    }
+  };
+
+  let currentDrink = "matcha";
+
+  function loadDrink(type) {
+    currentDrink = type;
+    const d = drinks[type];
+
+    // smooth transition
+    viewer.style.opacity = 0;
+
+    setTimeout(() => {
+      viewer.src = d.src;
+
+      // ✅ apply scale
+      viewer.scale = d.scale;
+
+      // ✅ keep model grounded
+      viewer.cameraTarget = "0m 0.05m 0m";
+
+      document.getElementById("title").textContent = d.title;
+      document.getElementById("desc").textContent = d.desc;
+      document.getElementById("price").textContent = d.price;
+
+      viewer.cameraOrbit = "0deg 75deg 2.2m";
+      viewer.fieldOfView = "45deg";
+
+      viewer.style.opacity = 1;
+    }, 150);
+  }
+
+  // apply initial scale on load
+  window.addEventListener("load", () => {
+    viewer.scale = drinks[currentDrink].scale;
+  });
+</script>
+
+</body>
+</html>
     button:hover {
       background: #5a3d2b;
     }
