@@ -88,15 +88,14 @@
   ar
   ar-modes="scene-viewer webxr quick-look"
   camera-controls
-  touch-action="pan-y"
+  auto-rotate
   interaction-prompt="none"
   exposure="1"
   shadow-intensity="1"
-  camera-orbit="0deg 75deg 2.2m"
-  min-camera-orbit="auto 45deg 0.8m"
-  max-camera-orbit="auto 90deg 3m"
+  camera-orbit="0deg 75deg 2.5m"
   field-of-view="45deg"
-  auto-scale>
+  auto-scale
+  camera-target="auto auto auto">
 </model-viewer>
 
 <div class="menu">
@@ -119,21 +118,21 @@
   const drinks = {
     matcha: {
       src: "matchaCat.glb",
-      scale: "1 1 1", // reference
+      scale: "1 1 1",
       title: "Matcha Cat",
       desc: "Creamy Japanese matcha latte with a smooth, earthy finish.",
       price: "RM 12"
     },
     mocha: {
       src: "mochaCat.glb",
-      scale: "0.55 0.55 0.55", // reduced
+      scale: "0.55 0.55 0.55",
       title: "Mocha Cat",
       desc: "Rich chocolate espresso blend with gentle sweetness.",
       price: "RM 13"
     },
     bear: {
       src: "coffeeBear.glb",
-      scale: "0.6 0.6 0.6", // reduced
+      scale: "0.3 0.3 0.3", // 👈 important fix
       title: "Coffee Bear",
       desc: "Bold classic coffee served with an adorable bear design.",
       price: "RM 15"
@@ -146,30 +145,34 @@
     currentDrink = type;
     const d = drinks[type];
 
-    // smooth transition
     viewer.style.opacity = 0;
+
+    // 🔥 reset model to prevent blank screen
+    viewer.src = "";
 
     setTimeout(() => {
       viewer.src = d.src;
 
-      // ✅ apply scale
-      viewer.scale = d.scale;
+      viewer.addEventListener("load", () => {
+        // ✅ auto center model (important fix)
+        viewer.cameraTarget = "auto auto auto";
 
-      // ✅ keep model grounded
-      viewer.cameraTarget = "0m 0.05m 0m";
+        // ✅ apply scale
+        viewer.scale = d.scale;
 
-      document.getElementById("title").textContent = d.title;
-      document.getElementById("desc").textContent = d.desc;
-      document.getElementById("price").textContent = d.price;
+        document.getElementById("title").textContent = d.title;
+        document.getElementById("desc").textContent = d.desc;
+        document.getElementById("price").textContent = d.price;
 
-      viewer.cameraOrbit = "0deg 75deg 2.2m";
-      viewer.fieldOfView = "45deg";
+        viewer.cameraOrbit = "0deg 75deg 2.5m";
 
-      viewer.style.opacity = 1;
-    }, 150);
+        viewer.style.opacity = 1;
+      }, { once: true });
+
+    }, 100);
   }
 
-  // apply initial scale on load
+  // initial setup
   window.addEventListener("load", () => {
     viewer.scale = drinks[currentDrink].scale;
   });
