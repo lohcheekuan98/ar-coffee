@@ -35,14 +35,18 @@ body {
 
 #startScreen h1 {
   font-size: 32px;
+  margin-bottom: 10px;
+}
+
+#startScreen p {
   margin-bottom: 20px;
+  opacity: 0.9;
 }
 
 #startScreen button {
-  padding: 12px 20px;
-  font-size: 16px;
-  border: none;
+  padding: 10px 18px;
   border-radius: 10px;
+  border: none;
   background: white;
   color: #6f4e37;
   cursor: pointer;
@@ -66,36 +70,18 @@ model-viewer {
   width: 100%;
   height: 55vh;
   background: #ffffff;
-  transition: opacity 0.25s ease;
 }
 
 .menu {
   padding: 16px;
 }
 
-.drink-title {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.drink-desc {
-  font-size: 16px;
-  margin-top: 6px;
-  opacity: 0.85;
-}
-
-.drink-price {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
 .buttons {
   display: flex;
   gap: 8px;
   margin-top: 12px;
-  justify-content: center; /* 🔥 center buttons */
-  flex-wrap: wrap; /* 🔥 wrap nicely on small screen */
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 button {
@@ -107,41 +93,26 @@ button {
   color: white;
   cursor: pointer;
   opacity: 0.7;
-  flex: unset; /* 🔥 remove full stretch */
-  min-width: 60px;
 }
-  
+
 button.active {
   opacity: 1;
   background: #5a3d2b;
-}
-
-#loading {
-  text-align: center;
-  display: none;
-  padding: 8px;
-  font-size: 14px;
-}
-
-.hint {
-  text-align: center;
-  font-size: 13px;
-  opacity: 0.7;
-  margin-top: 6px;
+  transform: scale(1.05);
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🔥 MAIN MENU -->
+<!-- 🔥 START SCREEN -->
 <div id="startScreen">
   <h1>☕ AR Coffee</h1>
-  <p>Experience your drink in AR ✨</p>
+  <p>Experience your drinks in AR ✨</p>
   <button onclick="startApp()">Start Experience</button>
 </div>
 
-<!-- MAIN APP -->
+<!-- 🔥 MAIN APP -->
 <div id="app">
 
 <header>☕ AR Café Menu</header>
@@ -150,75 +121,69 @@ button.active {
   id="viewer"
   src="matchaCat.glb"
   ar
-  ar-modes="scene-viewer webxr quick-look"
   camera-controls
-  auto-rotate
-  exposure="1"
-  shadow-intensity="1"
-  field-of-view="45deg"
-  auto-scale
-  camera-target="auto"
-  camera-orbit="auto">
+  auto-rotate>
 </model-viewer>
 
-<div id="loading">Brewing your drink... ☕</div>
-<div class="hint">Tap cube icon to view in AR 📦✨</div>
-
 <div class="menu">
-  <div class="drink-title" id="title">Matcha Cat</div>
-  <div class="drink-desc" id="desc">
-    Creamy Japanese matcha latte with a smooth, earthy finish.
-  </div>
-  <div class="drink-price" id="price">RM 12</div>
 
-  <!-- Drink buttons -->
-  <div class="buttons" id="drinkButtons">
-    <button onclick="loadDrink('matcha', this)" class="active">Matcha</button>
-    <button onclick="loadDrink('mocha', this)">Mocha</button>
+  <!-- CATEGORY -->
+  <div class="buttons" id="categoryButtons">
+    <button onclick="switchCategory('drinks', this)" class="active">Drinks</button>
+    <button onclick="switchCategory('cookies', this)">Cookies</button>
+    <button onclick="switchCategory('chocolate', this)">Chocolate</button>
   </div>
 
-  <!-- Size buttons -->
-  <div class="buttons" id="sizeButtons">
-    <button onclick="setSize('S', this)">S</button>
-    <button onclick="setSize('M', this)" class="active">M</button>
-    <button onclick="setSize('L', this)">L</button>
-  </div>
+  <!-- ITEMS -->
+  <div class="buttons" id="drinkButtons"></div>
 
-  <!-- Extra -->
-  <div class="buttons">
-    <button onclick="toggleRotate()">Toggle Spin</button>
-  </div>
+  <h3 id="title">...</h3>
+  <p id="desc"></p>
+  <strong id="price"></strong>
+
 </div>
 
 </div>
 
 <script>
 const viewer = document.getElementById("viewer");
-const loading = document.getElementById("loading");
 
-let currentDrink = "matcha";
-let currentSize = "M";
+let currentCategory = "drinks";
+let currentItem = "";
 
-const sizeScale = {
-  S: 0.8,
-  M: 1,
-  L: 1.3
-};
-
-const drinks = {
-  matcha: {
-    src: "matchaCat.glb",
-    baseScale: 1,
-    title: "Matcha Cat",
-    desc: "Creamy Japanese matcha latte with a smooth, earthy finish.",
-    price: "RM 12"
+/* 🔥 MENU SYSTEM */
+const menu = {
+  drinks: {
+    matcha: {
+      src: "matchaCat.glb",
+      title: "Matcha Cat",
+      desc: "Creamy Japanese matcha latte.",
+      price: "RM 12"
+    },
+    mocha: {
+      src: "mochaCat.glb",
+      title: "Mocha Cat",
+      desc: "Chocolate espresso blend.",
+      price: "RM 13"
+    }
   },
-  mocha: {
-    src: "mochaCat.glb",
-    baseScale: 0.55,
-    title: "Mocha Cat",
-    desc: "Rich chocolate espresso blend with gentle sweetness.",
-    price: "RM 13"
+
+  cookies: {
+    cookie1: {
+      src: "matchaCat.glb", // placeholder
+      title: "Choco Cookie",
+      desc: "Crunchy and sweet.",
+      price: "RM 6"
+    }
+  },
+
+  chocolate: {
+    choco1: {
+      src: "matchaCat.glb", // placeholder
+      title: "Hot Chocolate",
+      desc: "Rich cocoa drink.",
+      price: "RM 10"
+    }
   }
 };
 
@@ -228,66 +193,63 @@ function startApp() {
   document.getElementById("app").style.display = "block";
 }
 
-/* SCALE */
-function applyScale() {
-  const d = drinks[currentDrink];
-  const finalScale = d.baseScale * sizeScale[currentSize];
-  viewer.scale = `${finalScale} ${finalScale} ${finalScale}`;
+/* 🔥 GENERATE MENU */
+function generateMenu() {
+  const container = document.getElementById("drinkButtons");
+  container.innerHTML = "";
+
+  const items = menu[currentCategory];
+
+  Object.keys(items).forEach((key, index) => {
+    const btn = document.createElement("button");
+    btn.textContent = items[key].title.split(" ")[0];
+
+    if (index === 0) {
+      btn.classList.add("active");
+      loadItem(key, btn, true);
+    }
+
+    btn.onclick = () => loadItem(key, btn);
+
+    container.appendChild(btn);
+  });
 }
 
-/* LOAD DRINK */
-function loadDrink(type, btn) {
-  currentDrink = type;
+/* 🔥 SWITCH CATEGORY */
+function switchCategory(category, btn) {
+  currentCategory = category;
 
-  document.querySelectorAll("#drinkButtons button").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll("#categoryButtons button")
+    .forEach(b => b.classList.remove("active"));
+
   if (btn) btn.classList.add("active");
 
-  const d = drinks[type];
-
-  loading.style.display = "block";
-  viewer.style.opacity = 0;
-
-  viewer.src = "";
-
-  setTimeout(() => {
-    viewer.src = d.src;
-
-    viewer.addEventListener("load", async () => {
-      await viewer.updateComplete;
-
-      viewer.cameraTarget = "auto";
-      viewer.cameraOrbit = "auto";
-
-      applyScale();
-
-      document.getElementById("title").textContent = d.title;
-      document.getElementById("desc").textContent = d.desc;
-      document.getElementById("price").textContent = d.price;
-
-      viewer.style.opacity = 1;
-      loading.style.display = "none";
-    }, { once: true });
-
-  }, 100);
+  generateMenu();
 }
 
-/* SIZE */
-function setSize(size, btn) {
-  currentSize = size;
+/* 🔥 LOAD ITEM */
+function loadItem(type, btn, auto=false) {
+  currentItem = type;
 
-  document.querySelectorAll("#sizeButtons button").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
+  if (!auto) {
+    document.querySelectorAll("#drinkButtons button")
+      .forEach(b => b.classList.remove("active"));
 
-  applyScale();
+    if (btn) btn.classList.add("active");
+  }
+
+  const d = menu[currentCategory][type];
+
+  viewer.src = d.src || "matchaCat.glb";
+
+  document.getElementById("title").textContent = d.title;
+  document.getElementById("desc").textContent = d.desc;
+  document.getElementById("price").textContent = d.price;
 }
 
-/* ROTATE */
-function toggleRotate() {
-  viewer.autoRotate = !viewer.autoRotate;
-}
-
+/* INIT */
 window.addEventListener("load", () => {
-  applyScale();
+  generateMenu();
 });
 </script>
 
