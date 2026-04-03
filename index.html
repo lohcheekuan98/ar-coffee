@@ -15,7 +15,7 @@ body {
   background: #f7f3ef;
 }
 
-/* START SCREEN */
+/* START */
 #startScreen {
   position: fixed;
   width: 100%;
@@ -58,7 +58,7 @@ button {
   background: #6f4e37;
   color: white;
   cursor: pointer;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 button.active {
@@ -66,7 +66,7 @@ button.active {
   transform: scale(1.05);
 }
 
-/* ORDER BUTTON */
+/* ORDER */
 #orderBtn {
   width: 90%;
   margin: 10px auto;
@@ -76,40 +76,76 @@ button.active {
   background: #3b2f2f;
 }
 
-/* CART */
+/* CART BTN */
 #cartBtn {
   position: fixed;
   bottom: 20px;
   right: 20px;
   background: #3b2f2f;
-  padding: 12px;
+  padding: 14px;
   border-radius: 50%;
+  font-size: 18px;
 }
 
-/* SUMMARY PAGE */
+/* RECEIPT */
 #summaryPage {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: white;
+  background: #fff;
   display: none;
   padding: 20px;
   overflow: auto;
+}
+
+.receipt {
+  max-width: 400px;
+  margin: auto;
+}
+
+.receipt h2 {
+  text-align: center;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.qty {
+  display: flex;
+  gap: 5px;
+}
+
+.qty button {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.delete {
+  background: red;
+}
+
+.total {
+  border-top: 1px dashed #000;
+  margin-top: 15px;
+  padding-top: 10px;
+  font-weight: bold;
 }
 </style>
 </head>
 
 <body>
 
-<!-- START -->
 <div id="startScreen">
   <h1>☕ AR Coffee</h1>
   <button onclick="startApp()">Start</button>
 </div>
 
-<!-- APP -->
 <div id="app">
 
 <header>☕ AR Coffee</header>
@@ -132,143 +168,161 @@ button.active {
 
 </div>
 
-<!-- CART BUTTON -->
 <button id="cartBtn" onclick="openSummary()">🛒</button>
 
-<!-- SUMMARY -->
+<!-- RECEIPT -->
 <div id="summaryPage">
-  <h2>Your Order</h2>
-  <div id="orderList"></div>
-  <h3 id="total"></h3>
+  <div class="receipt">
+    <h2>🧾 AR Coffee Receipt</h2>
+    <div id="orderList"></div>
+    <div class="total" id="total"></div>
 
-  <button onclick="checkout()">Checkout WhatsApp</button>
-  <button onclick="closeSummary()">Close</button>
+    <button onclick="checkout()">Checkout WhatsApp</button>
+    <button onclick="closeSummary()">Close</button>
+  </div>
 </div>
 
 <script>
-const viewer = document.getElementById("viewer");
-
 let currentCategory = "drinks";
 let currentItem = "";
 let cart = [];
 
-/* MENU */
 const menu = {
   drinks: {
-    matcha: { src: "matchaCat.glb", title: "Matcha", desc: "Matcha latte", price: 12 },
-    mocha: { src: "mochaCat.glb", title: "Mocha", desc: "Chocolate coffee", price: 13 }
+    matcha: { src:"matchaCat.glb", title:"Matcha", desc:"Matcha latte", price:12 },
+    mocha: { src:"mochaCat.glb", title:"Mocha", desc:"Chocolate coffee", price:13 }
   },
   cookies: {
-    cookie1: { src: "matchaCat.glb", title: "Cookie", desc: "Sweet cookie", price: 6 }
+    cookie1: { src:"matchaCat.glb", title:"Cookie", desc:"Sweet cookie", price:6 }
   },
   chocolate: {
-    choco1: { src: "matchaCat.glb", title: "Hot Choco", desc: "Cocoa drink", price: 10 }
+    choco1: { src:"matchaCat.glb", title:"Hot Choco", desc:"Cocoa drink", price:10 }
   }
 };
 
-/* START */
 function startApp() {
   startScreen.style.display = "none";
   app.style.display = "block";
 }
 
-/* MENU GENERATE */
 function generateMenu() {
-  const container = document.getElementById("drinkButtons");
+  const container = drinkButtons;
   container.innerHTML = "";
 
-  const items = menu[currentCategory];
-
-  Object.keys(items).forEach((key, i) => {
+  Object.keys(menu[currentCategory]).forEach((key,i)=>{
     const btn = document.createElement("button");
-    btn.textContent = items[key].title;
+    btn.textContent = menu[currentCategory][key].title;
 
-    if (i === 0) {
-      btn.classList.add("active");
-      loadItem(key, btn, true);
-    }
+    if(i===0){ btn.classList.add("active"); loadItem(key,btn,true); }
 
-    btn.onclick = () => loadItem(key, btn);
+    btn.onclick = ()=>loadItem(key,btn);
     container.appendChild(btn);
   });
 }
 
-/* SWITCH */
-function switchCategory(cat, btn) {
+function switchCategory(cat,btn){
   currentCategory = cat;
-
   document.querySelectorAll("#categoryButtons button")
-    .forEach(b => b.classList.remove("active"));
-
+    .forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   generateMenu();
 }
 
-/* LOAD */
-function loadItem(key, btn, auto=false) {
+function loadItem(key,btn,auto=false){
   currentItem = key;
 
-  if (!auto) {
+  if(!auto){
     document.querySelectorAll("#drinkButtons button")
-      .forEach(b => b.classList.remove("active"));
+      .forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
   }
 
   const d = menu[currentCategory][key];
 
   viewer.src = d.src;
-
   title.textContent = d.title;
   desc.textContent = d.desc;
-  price.textContent = "RM " + d.price;
+  price.textContent = "RM "+d.price;
 }
 
-/* CART */
-function addToCart() {
+/* CART LOGIC */
+function addToCart(){
   const d = menu[currentCategory][currentItem];
-  cart.push(d);
-  alert(d.title + " added to cart!");
+
+  const existing = cart.find(i=>i.title===d.title);
+
+  if(existing){
+    existing.qty++;
+  }else{
+    cart.push({...d, qty:1});
+  }
+
+  alert(d.title+" added!");
 }
 
-/* SUMMARY */
-function openSummary() {
-  summaryPage.style.display = "block";
+/* RECEIPT */
+function openSummary(){
+  summaryPage.style.display="block";
+  renderCart();
+}
 
-  const list = document.getElementById("orderList");
-  list.innerHTML = "";
+function renderCart(){
+  orderList.innerHTML="";
+  let total=0;
 
-  let total = 0;
+  cart.forEach((item,index)=>{
+    const div=document.createElement("div");
+    div.className="item";
 
-  cart.forEach(item => {
-    const div = document.createElement("div");
-    div.textContent = item.title + " - RM " + item.price;
-    list.appendChild(div);
-    total += item.price;
+    div.innerHTML=`
+      <span>${item.title}</span>
+      <div class="qty">
+        <button onclick="changeQty(${index},-1)">-</button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${index},1)">+</button>
+      </div>
+      <span>RM ${item.price*item.qty}</span>
+      <button class="delete" onclick="removeItem(${index})">X</button>
+    `;
+
+    orderList.appendChild(div);
+    total += item.price*item.qty;
   });
 
-  document.getElementById("total").textContent = "Total: RM " + total;
+  totalDiv = document.getElementById("total");
+  totalDiv.textContent = "Total: RM "+total;
 }
 
-function closeSummary() {
-  summaryPage.style.display = "none";
+function changeQty(i,delta){
+  cart[i].qty += delta;
+  if(cart[i].qty<=0) cart.splice(i,1);
+  renderCart();
+}
+
+function removeItem(i){
+  cart.splice(i,1);
+  renderCart();
+}
+
+function closeSummary(){
+  summaryPage.style.display="none";
 }
 
 /* CHECKOUT */
-function checkout() {
-  let text = "Order:%0A";
-  let total = 0;
+function checkout(){
+  let text="Order:%0A";
+  let total=0;
 
-  cart.forEach(item => {
-    text += item.title + " RM " + item.price + "%0A";
-    total += item.price;
+  cart.forEach(item=>{
+    text+=`${item.title} x${item.qty} RM ${item.price*item.qty}%0A`;
+    total += item.price*item.qty;
   });
 
-  text += "%0ATotal: RM " + total;
+  text+=`%0ATotal: RM ${total}`;
 
-  window.open("https://wa.me/60123456789?text=" + text);
+  window.open("https://wa.me/60123456789?text="+text);
 }
 
-/* INIT */
 window.onload = generateMenu;
 </script>
 
