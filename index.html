@@ -3,270 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AR Coffee - Aesthetic</title>
-
-<script type="module"
-src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #f7f3ef, #e8dfd8);
-  color: #3b2f2f;
-}
-
-/* START SCREEN */
-#startScreen {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg,#6f4e37,#3b2f2f);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-#startScreen button {
-  margin-top: 20px;
-  padding: 12px 20px;
-  border-radius: 20px;
-  background: white;
-  color: #6f4e37;
-  font-weight: bold;
-}
-
-#app { display: none; }
-
-header {
-  text-align: center;
-  padding: 15px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-model-viewer {
-  width: 100%;
-  height: 45vh;
-}
-
-/* GLASS PANEL */
-.glass {
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(12px);
-  margin: 10px;
-  padding: 10px;
-  border-radius: 16px;
-}
-
-/* BUTTONS */
-.buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-button {
-  border: none;
-  padding: 8px 14px;
-  border-radius: 20px;
-  background: #6f4e37;
-  color: white;
-  cursor: pointer;
-}
-
-/* FLOAT CART */
-#cartBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #3b2f2f;
-  padding: 14px;
-  border-radius: 50%;
-}
-
-/* RECEIPT OVERLAY */
-#summaryPage {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh; /* 🔥 important */
-  background: rgba(0,0,0,0.4);
-  display: none;
-
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* 🔥 smooth mobile scroll */
-}
-
-/* RECEIPT BOX */
-.receipt {
-  background: rgba(255,255,255,0.9);
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-  border-radius: 20px;
-
-  max-height: 85vh; /* 🔥 slightly bigger */
-  overflow-y: auto;
-}
-
-.item {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-}
-
-.total {
-  border-top: 1px dashed #000;
-  margin-top: 10px;
-  padding-top: 10px;
-  font-weight: bold;
-}
-body.no-scroll {
-  overflow: hidden;
-  }
-
-/* SUCCESS SCREEN */
-#successPage {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg,#6f4e37,#3b2f2f);
-  color: white;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-}
-</style>
-</head>
-
-<body>
-
-<!-- START -->
-<div id="startScreen">
-  <h1>☕ AR Coffee</h1>
-  <button onclick="startApp()">Start</button>
-</div>
-
-<div id="app">
-
-<header>☕ AR Coffee</header>
-
-<model-viewer id="viewer" src="matchaCat.glb" camera-controls auto-rotate></model-viewer>
-
-<div class="glass">
-  <div class="buttons">
-    <button onclick="switchCategory('drinks')">☕</button>
-    <button onclick="switchCategory('cookies')">🍪</button>
-    <button onclick="switchCategory('chocolate')">🍫</button>
-  </div>
-</div>
-
-<div class="glass">
-  <div class="buttons" id="menuButtons"></div>
-</div>
-
-<div class="glass">
-  <h3 id="title"></h3>
-  <p id="desc"></p>
-  <strong id="price"></strong>
-  <button onclick="addToCart()">Add to Cart</button>
-</div>
-
-</div>
-
-<button id="cartBtn" onclick="openSummary()">🛒</button>
-
-<!-- RECEIPT -->
-<div id="summaryPage">
-  <div class="receipt">
-    <h2>🧾 Receipt</h2>
-
-    <input id="customerName" placeholder="Name"><br><br>
-    <input id="tableNo" placeholder="Table"><br><br>
-
-    <div id="orderList"></div>
-    <div class="total" id="total"></div>
-
-    <button onclick="checkout()">Checkout</button>
-    <button onclick="closeSummary()">Close</button>
-  </div>
-</div>
-
-<!-- SUCCESS PAGE -->
-<div id="successPage">
-  <h1>✅ Order Sent!</h1>
-  <p id="orderInfo"></p>
-  <button onclick="restart()">Back to Menu</button>
-</div>
-
-<script>
-let cart=[];
-let currentCategory="drinks";
-let currentItem="";
-
-const menu={
-  drinks:{
-    matcha:{title:"Matcha",desc:"Smooth matcha latte",price:12,src:"matchaCat.glb"},
-    mocha:{title:"Mocha",desc:"Chocolate coffee",price:13,src:"mochaCat.glb"}
-  },
-  cookies:{
-    cookie:{title:"Cookie",desc:"Sweet treat",price:6,src:"matchaCat.glb"}
-  },
-  chocolate:{
-    choco:{title:"Hot Choco",desc:"Warm cocoa",price:10,src:"matchaCat.glb"}
-  }
-};
-
-function startApp(){
-  startScreen.style.display="none";
-  app.style.display="block";
-  loadMenu();
-}
-
-function loadMenu(){
-  menuButtons.innerHTML="";
-  Object.keys(menu[currentCategory]).forEach((key,i)=>{
-    const btn=document.createElement("button");
-    btn.textContent=menu[currentCategory][key].title;
-    btn.onclick=()=>loadItem(key);
-    menuButtons.appendChild(btn);
-    if(i===0) loadItem(key);
-  });
-}
-
-function switchCategory(cat){
-  currentCategory=cat;
-  loadMenu();
-}
-
-function loadItem(key){
-  currentItem=key;
-  const d=menu[currentCategory][key];
-
-  viewer.src = d.src; // 🔥 FIX MODEL
-
-  title.textContent=d.title;
-  desc.textContent=d.desc;
-  price.textContent="RM "+d.price;
-}
-
-function addToCart(){
-  const d=menu[currentCategory][currentItem];
-  const exist=cart.find(i=>i.title===d.title);
-
-  if(exist){exist.qty++;}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AR Coffee</title>
 
 <script type="module"
@@ -275,8 +11,8 @@ src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
 body {
   margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #f7f3ef, #e8dfd8);
+  font-family: sans-serif;
+  background: #f5f5f5;
 }
 
 /* LOCK SCROLL */
@@ -284,7 +20,7 @@ body.no-scroll {
   overflow: hidden;
 }
 
-/* START */
+/* START SCREEN */
 #startScreen {
   position: fixed;
   width: 100%;
@@ -304,15 +40,15 @@ model-viewer {
   height: 45vh;
 }
 
-/* PANELS */
+/* BOX */
 .glass {
-  background: rgba(255,255,255,0.6);
+  background: white;
   margin: 10px;
   padding: 10px;
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
-/* BUTTONS */
+/* BUTTON */
 button {
   padding: 8px 14px;
   border-radius: 20px;
@@ -321,7 +57,7 @@ button {
   border: none;
 }
 
-/* CART BTN */
+/* CART */
 #cartBtn {
   position: fixed;
   bottom: 20px;
@@ -330,7 +66,7 @@ button {
   padding: 14px;
 }
 
-/* RECEIPT OVERLAY */
+/* RECEIPT */
 #summaryPage {
   position: fixed;
   top:0;
@@ -339,19 +75,16 @@ button {
   height:100vh;
   background: rgba(0,0,0,0.4);
   display:none;
-
   overflow-y:auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* RECEIPT BOX */
 .receipt {
   background:white;
   max-width:400px;
   margin:40px auto;
   padding:20px;
   border-radius:20px;
-
   max-height:85vh;
   overflow-y:auto;
 }
@@ -380,9 +113,10 @@ button {
 
 <body>
 
+<!-- START -->
 <div id="startScreen">
   <h1>☕ AR Coffee</h1>
-  <button onclick="startApp()">Start</button>
+  <button onclick="startApp()">Start Experience</button>
 </div>
 
 <div id="app">
@@ -398,7 +132,6 @@ button {
 
 <div class="glass">
   <h3 id="title"></h3>
-  <p id="desc"></p>
   <strong id="price"></strong><br><br>
   <button onclick="addToCart()">Add</button>
 </div>
@@ -445,14 +178,18 @@ const menu={
   }
 };
 
+/* START APP */
 function startApp(){
-  startScreen.style.display="none";
-  app.style.display="block";
+  document.getElementById("startScreen").style.display="none";
+  document.getElementById("app").style.display="block";
   loadMenu();
 }
 
+/* MENU */
 function loadMenu(){
+  const menuButtons=document.getElementById("menuButtons");
   menuButtons.innerHTML="";
+
   Object.keys(menu[currentCategory]).forEach((key,i)=>{
     const btn=document.createElement("button");
     btn.textContent=menu[currentCategory][key].title;
@@ -471,12 +208,12 @@ function loadItem(key){
   currentItem=key;
   const d=menu[currentCategory][key];
 
-  viewer.src = d.src;
-
-  title.textContent=d.title;
-  price.textContent="RM "+d.price;
+  document.getElementById("viewer").src=d.src;
+  document.getElementById("title").textContent=d.title;
+  document.getElementById("price").textContent="RM "+d.price;
 }
 
+/* CART */
 function addToCart(){
   const d=menu[currentCategory][currentItem];
   const exist=cart.find(i=>i.title===d.title);
@@ -486,17 +223,20 @@ function addToCart(){
 }
 
 function openSummary(){
-  summaryPage.style.display="block";
+  document.getElementById("summaryPage").style.display="block";
   document.body.classList.add("no-scroll");
   renderCart();
 }
 
 function closeSummary(){
-  summaryPage.style.display="none";
+  document.getElementById("summaryPage").style.display="none";
   document.body.classList.remove("no-scroll");
 }
 
 function renderCart(){
+  const orderList=document.getElementById("orderList");
+  const total=document.getElementById("total");
+
   orderList.innerHTML="";
   let sum=0;
 
@@ -520,6 +260,7 @@ function removeItem(i){
   renderCart();
 }
 
+/* CHECKOUT */
 function checkout(){
   const name=document.getElementById("customerName").value || "Guest";
   const table=document.getElementById("tableNo").value || "-";
@@ -529,21 +270,21 @@ function checkout(){
   orders.push({orderId,name,table,cart});
   localStorage.setItem("orders",JSON.stringify(orders));
 
-  summaryPage.style.display="none";
-  successPage.style.display="flex";
+  document.getElementById("summaryPage").style.display="none";
+  document.getElementById("successPage").style.display="flex";
 
-  orderInfo.innerHTML=`
-    Order ID: ${orderId}<br>
-    ${cart.map(i=>i.title+" x"+i.qty).join("<br>")}
-    <br><br>☕ Preparing...
-  `;
+  document.getElementById("orderInfo").innerHTML=
+    "Order ID: "+orderId+"<br>"+
+    cart.map(i=>i.title+" x"+i.qty).join("<br>")+
+    "<br><br>☕ Preparing...";
 }
 
+/* RESET */
 function restart(){
-  successPage.style.display="none";
-  app.style.display="block";
+  document.getElementById("successPage").style.display="none";
+  document.getElementById("app").style.display="block";
 
-  cart=[];              // 🔥 moved here
+  cart=[];
   renderCart();
 }
 </script>
