@@ -91,11 +91,15 @@ button {
 /* RECEIPT OVERLAY */
 #summaryPage {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh; /* 🔥 important */
   background: rgba(0,0,0,0.4);
   display: none;
-  overflow-y: auto; /* 🔥 FIX SCROLL */
+
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* 🔥 smooth mobile scroll */
 }
 
 /* RECEIPT BOX */
@@ -106,7 +110,7 @@ button {
   padding: 20px;
   border-radius: 20px;
 
-  max-height: 80vh; /* 🔥 FIX SCROLL */
+  max-height: 85vh; /* 🔥 slightly bigger */
   overflow-y: auto;
 }
 
@@ -122,6 +126,9 @@ button {
   padding-top: 10px;
   font-weight: bold;
 }
+body.no-scroll {
+  overflow: hidden;
+  }
 
 /* SUCCESS SCREEN */
 #successPage {
@@ -260,7 +267,13 @@ function addToCart(){
 
 function openSummary(){
   summaryPage.style.display="block";
+  document.body.classList.add("no-scroll"); // 🔥 lock background
   renderCart();
+}
+
+function closeSummary(){
+  summaryPage.style.display="none";
+  document.body.classList.remove("no-scroll"); // 🔥 unlock
 }
 
 function renderCart(){
@@ -293,9 +306,7 @@ function removeItem(i){
   renderCart();
 }
 
-function closeSummary(){
-  summaryPage.style.display="none";
-}
+
 
 function checkout(){
   const name=document.getElementById("customerName").value || "Guest";
