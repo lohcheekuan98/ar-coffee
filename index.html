@@ -251,6 +251,9 @@ function loadItem(key){
   currentItem=key;
   const d=menu[currentCategory][key];
 
+  // 🔥 THIS LINE FIXES YOUR PROBLEM
+  viewer.src = d.src;
+
   viewer.cameraOrbit="0deg 75deg 105%";
   setTimeout(()=>viewer.cameraOrbit="0deg 75deg 85%",200);
 
@@ -268,7 +271,7 @@ function loadItem(key){
     price.classList.remove("fade");
   },300);
 }
-
+  
 function addToCart(){
   const d=menu[currentCategory][currentItem];
   const exist=cart.find(i=>i.title===d.title);
