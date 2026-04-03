@@ -1,55 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accessible Coffee Shop</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AR Café Menu</title>
+
+<script type="module"
+  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f7f3ef;
+  color: #3b2f2f;
+}
+
+/* 🔥 START SCREEN */
+#startScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #6f4e37;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+#startScreen h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+#startScreen button {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: #6f4e37;
+  cursor: pointer;
+}
+
+/* MAIN APP */
+#app {
+  display: none;
+}
+
+header {
+  padding: 14px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  background: #6f4e37;
+  color: white;
+}
+
+model-viewer {
+  width: 100%;
+  height: 55vh;
+  background: #ffffff;
+  transition: opacity 0.25s ease;
+}
+
+.menu {
+  padding: 16px;
+}
+
+.drink-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.drink-desc {
+  font-size: 16px;
+  margin-top: 6px;
+  opacity: 0.85;
+}
+
+.drink-price {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: center; /* 🔥 center buttons */
+  flex-wrap: wrap; /* 🔥 wrap nicely on small screen */
+}
+
+button {
+  padding: 8px 14px;
+  font-size: 13px;
+  border: none;
+  border-radius: 20px;
+  background: #6f4e37;
+  color: white;
+  cursor: pointer;
+  opacity: 0.7;
+  flex: unset; /* 🔥 remove full stretch */
+  min-width: 60px;
+}
+  
+button.active {
+  opacity: 1;
+  background: #5a3d2b;
+}
+
+#loading {
+  text-align: center;
+  display: none;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.hint {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+</style>
 </head>
+
 <body>
-    <header>
-        <h1>Welcome to Our Coffee Shop</h1>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#menu">Menu</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section id="home">
-            <h2>Our Specialty Coffee</h2>
-            <p>Discover the best coffee brewed from the finest beans.</p>
-        </section>
-        <section id="about">
-            <h2>About Us</h2>
-            <p>We are dedicated to providing high-quality coffee and excellent service.</p>
-        </section>
-        <section id="menu">
-            <h2>Menu</h2>
-            <ul>
-                <li>Cappuccino</li>
-                <li>Latte</li>
-                <li>Espresso</li>
-                <li>Americano</li>
-            </ul>
-        </section>
-        <section id="contact">
-            <h2>Contact Us</h2>
-            <form action="#" method="post">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                <button type="submit">Submit</button>
-            </form>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 Accessible Coffee Shop. All rights reserved.</p>
-    </footer>
+
+<!-- 🔥 MAIN MENU -->
+<div id="startScreen">
+  <h1>☕ AR Coffee</h1>
+  <p>Experience your drink in AR ✨</p>
+  <button onclick="startApp()">Start Experience</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+<header>☕ AR Café Menu</header>
+
+<model-viewer
+  id="viewer"
+  src="matchaCat.glb"
+  ar
+  ar-modes="scene-viewer webxr quick-look"
+  camera-controls
+  auto-rotate
+  exposure="1"
+  shadow-intensity="1"
+  field-of-view="45deg"
+  auto-scale
+  camera-target="auto"
+  camera-orbit="auto">
+</model-viewer>
+
+<div id="loading">Brewing your drink... ☕</div>
+<div class="hint">Tap cube icon to view in AR 📦✨</div>
+
+<div class="menu">
+  <div class="drink-title" id="title">Matcha Cat</div>
+  <div class="drink-desc" id="desc">
+    Creamy Japanese matcha latte with a smooth, earthy finish.
+  </div>
+  <div class="drink-price" id="price">RM 12</div>
+
+  <!-- Drink buttons -->
+  <div class="buttons" id="drinkButtons">
+    <button onclick="loadDrink('matcha', this)" class="active">Matcha</button>
+    <button onclick="loadDrink('mocha', this)">Mocha</button>
+  </div>
+
+  <!-- Size buttons -->
+  <div class="buttons" id="sizeButtons">
+    <button onclick="setSize('S', this)">S</button>
+    <button onclick="setSize('M', this)" class="active">M</button>
+    <button onclick="setSize('L', this)">L</button>
+  </div>
+
+  <!-- Extra -->
+  <div class="buttons">
+    <button onclick="toggleRotate()">Toggle Spin</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const viewer = document.getElementById("viewer");
+const loading = document.getElementById("loading");
+
+let currentDrink = "matcha";
+let currentSize = "M";
+
+const sizeScale = {
+  S: 0.8,
+  M: 1,
+  L: 1.3
+};
+
+const drinks = {
+  matcha: {
+    src: "matchaCat.glb",
+    baseScale: 1,
+    title: "Matcha Cat",
+    desc: "Creamy Japanese matcha latte with a smooth, earthy finish.",
+    price: "RM 12"
+  },
+  mocha: {
+    src: "mochaCat.glb",
+    baseScale: 0.55,
+    title: "Mocha Cat",
+    desc: "Rich chocolate espresso blend with gentle sweetness.",
+    price: "RM 13"
+  }
+};
+
+/* 🔥 START APP */
+function startApp() {
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("app").style.display = "block";
+}
+
+/* SCALE */
+function applyScale() {
+  const d = drinks[currentDrink];
+  const finalScale = d.baseScale * sizeScale[currentSize];
+  viewer.scale = `${finalScale} ${finalScale} ${finalScale}`;
+}
+
+/* LOAD DRINK */
+function loadDrink(type, btn) {
+  currentDrink = type;
+
+  document.querySelectorAll("#drinkButtons button").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+
+  const d = drinks[type];
+
+  loading.style.display = "block";
+  viewer.style.opacity = 0;
+
+  viewer.src = "";
+
+  setTimeout(() => {
+    viewer.src = d.src;
+
+    viewer.addEventListener("load", async () => {
+      await viewer.updateComplete;
+
+      viewer.cameraTarget = "auto";
+      viewer.cameraOrbit = "auto";
+
+      applyScale();
+
+      document.getElementById("title").textContent = d.title;
+      document.getElementById("desc").textContent = d.desc;
+      document.getElementById("price").textContent = d.price;
+
+      viewer.style.opacity = 1;
+      loading.style.display = "none";
+    }, { once: true });
+
+  }, 100);
+}
+
+/* SIZE */
+function setSize(size, btn) {
+  currentSize = size;
+
+  document.querySelectorAll("#sizeButtons button").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+
+  applyScale();
+}
+
+/* ROTATE */
+function toggleRotate() {
+  viewer.autoRotate = !viewer.autoRotate;
+}
+
+window.addEventListener("load", () => {
+  applyScale();
+});
+</script>
+
 </body>
 </html>
