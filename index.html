@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AR Café Menu</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR Coffee</title>
 
 <script type="module"
-  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-</script>
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
   background: #f7f3ef;
-  color: #3b2f2f;
 }
 
-/* 🔥 START SCREEN */
+/* START SCREEN */
 #startScreen {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   background: #6f4e37;
@@ -30,65 +26,35 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  z-index: 10;
 }
 
-#startScreen h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-#startScreen p {
-  margin-bottom: 20px;
-  opacity: 0.9;
-}
-
-#startScreen button {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  background: white;
-  color: #6f4e37;
-  cursor: pointer;
-}
-
-/* MAIN APP */
-#app {
-  display: none;
-}
+#app { display: none; }
 
 header {
-  padding: 14px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
   background: #6f4e37;
   color: white;
+  padding: 14px;
+  text-align: center;
 }
 
 model-viewer {
   width: 100%;
-  height: 55vh;
-  background: #ffffff;
+  height: 50vh;
 }
 
-.menu {
-  padding: 16px;
-}
-
+/* BUTTONS */
 .buttons {
   display: flex;
-  gap: 8px;
-  margin-top: 12px;
   justify-content: center;
+  gap: 8px;
   flex-wrap: wrap;
+  padding: 10px;
 }
 
 button {
   padding: 8px 14px;
-  font-size: 13px;
-  border: none;
   border-radius: 20px;
+  border: none;
   background: #6f4e37;
   color: white;
   cursor: pointer;
@@ -97,52 +63,86 @@ button {
 
 button.active {
   opacity: 1;
-  background: #5a3d2b;
   transform: scale(1.05);
+}
+
+/* ORDER BUTTON */
+#orderBtn {
+  width: 90%;
+  margin: 10px auto;
+  display: block;
+  padding: 12px;
+  border-radius: 10px;
+  background: #3b2f2f;
+}
+
+/* CART */
+#cartBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #3b2f2f;
+  padding: 12px;
+  border-radius: 50%;
+}
+
+/* SUMMARY PAGE */
+#summaryPage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  display: none;
+  padding: 20px;
+  overflow: auto;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🔥 START SCREEN -->
+<!-- START -->
 <div id="startScreen">
   <h1>☕ AR Coffee</h1>
-  <p>Experience your drinks in AR ✨</p>
-  <button onclick="startApp()">Start Experience</button>
+  <button onclick="startApp()">Start</button>
 </div>
 
-<!-- 🔥 MAIN APP -->
+<!-- APP -->
 <div id="app">
 
-<header>☕ AR Café Menu</header>
+<header>☕ AR Coffee</header>
 
-<model-viewer
-  id="viewer"
-  src="matchaCat.glb"
-  ar
-  camera-controls
-  auto-rotate>
-</model-viewer>
+<model-viewer id="viewer" src="matchaCat.glb" ar camera-controls auto-rotate></model-viewer>
 
-<div class="menu">
+<div class="buttons" id="categoryButtons">
+  <button onclick="switchCategory('drinks', this)" class="active">☕</button>
+  <button onclick="switchCategory('cookies', this)">🍪</button>
+  <button onclick="switchCategory('chocolate', this)">🍫</button>
+</div>
 
-  <!-- CATEGORY -->
-  <div class="buttons" id="categoryButtons">
-    <button onclick="switchCategory('drinks', this)" class="active">Drinks</button>
-    <button onclick="switchCategory('cookies', this)">Cookies</button>
-    <button onclick="switchCategory('chocolate', this)">Chocolate</button>
-  </div>
+<div class="buttons" id="drinkButtons"></div>
 
-  <!-- ITEMS -->
-  <div class="buttons" id="drinkButtons"></div>
+<h3 id="title"></h3>
+<p id="desc"></p>
+<strong id="price"></strong>
 
-  <h3 id="title">...</h3>
-  <p id="desc"></p>
-  <strong id="price"></strong>
+<button id="orderBtn" onclick="addToCart()">Add to Cart</button>
 
 </div>
 
+<!-- CART BUTTON -->
+<button id="cartBtn" onclick="openSummary()">🛒</button>
+
+<!-- SUMMARY -->
+<div id="summaryPage">
+  <h2>Your Order</h2>
+  <div id="orderList"></div>
+  <h3 id="total"></h3>
+
+  <button onclick="checkout()">Checkout WhatsApp</button>
+  <button onclick="closeSummary()">Close</button>
 </div>
 
 <script>
@@ -150,107 +150,126 @@ const viewer = document.getElementById("viewer");
 
 let currentCategory = "drinks";
 let currentItem = "";
+let cart = [];
 
-/* 🔥 MENU SYSTEM */
+/* MENU */
 const menu = {
   drinks: {
-    matcha: {
-      src: "matchaCat.glb",
-      title: "Matcha Cat",
-      desc: "Creamy Japanese matcha latte.",
-      price: "RM 12"
-    },
-    mocha: {
-      src: "mochaCat.glb",
-      title: "Mocha Cat",
-      desc: "Chocolate espresso blend.",
-      price: "RM 13"
-    }
+    matcha: { src: "matchaCat.glb", title: "Matcha", desc: "Matcha latte", price: 12 },
+    mocha: { src: "mochaCat.glb", title: "Mocha", desc: "Chocolate coffee", price: 13 }
   },
-
   cookies: {
-    cookie1: {
-      src: "matchaCat.glb", // placeholder
-      title: "Choco Cookie",
-      desc: "Crunchy and sweet.",
-      price: "RM 6"
-    }
+    cookie1: { src: "matchaCat.glb", title: "Cookie", desc: "Sweet cookie", price: 6 }
   },
-
   chocolate: {
-    choco1: {
-      src: "matchaCat.glb", // placeholder
-      title: "Hot Chocolate",
-      desc: "Rich cocoa drink.",
-      price: "RM 10"
-    }
+    choco1: { src: "matchaCat.glb", title: "Hot Choco", desc: "Cocoa drink", price: 10 }
   }
 };
 
-/* 🔥 START APP */
+/* START */
 function startApp() {
-  document.getElementById("startScreen").style.display = "none";
-  document.getElementById("app").style.display = "block";
+  startScreen.style.display = "none";
+  app.style.display = "block";
 }
 
-/* 🔥 GENERATE MENU */
+/* MENU GENERATE */
 function generateMenu() {
   const container = document.getElementById("drinkButtons");
   container.innerHTML = "";
 
   const items = menu[currentCategory];
 
-  Object.keys(items).forEach((key, index) => {
+  Object.keys(items).forEach((key, i) => {
     const btn = document.createElement("button");
-    btn.textContent = items[key].title.split(" ")[0];
+    btn.textContent = items[key].title;
 
-    if (index === 0) {
+    if (i === 0) {
       btn.classList.add("active");
       loadItem(key, btn, true);
     }
 
     btn.onclick = () => loadItem(key, btn);
-
     container.appendChild(btn);
   });
 }
 
-/* 🔥 SWITCH CATEGORY */
-function switchCategory(category, btn) {
-  currentCategory = category;
+/* SWITCH */
+function switchCategory(cat, btn) {
+  currentCategory = cat;
 
   document.querySelectorAll("#categoryButtons button")
     .forEach(b => b.classList.remove("active"));
 
-  if (btn) btn.classList.add("active");
-
+  btn.classList.add("active");
   generateMenu();
 }
 
-/* 🔥 LOAD ITEM */
-function loadItem(type, btn, auto=false) {
-  currentItem = type;
+/* LOAD */
+function loadItem(key, btn, auto=false) {
+  currentItem = key;
 
   if (!auto) {
     document.querySelectorAll("#drinkButtons button")
       .forEach(b => b.classList.remove("active"));
-
-    if (btn) btn.classList.add("active");
+    btn.classList.add("active");
   }
 
-  const d = menu[currentCategory][type];
+  const d = menu[currentCategory][key];
 
-  viewer.src = d.src || "matchaCat.glb";
+  viewer.src = d.src;
 
-  document.getElementById("title").textContent = d.title;
-  document.getElementById("desc").textContent = d.desc;
-  document.getElementById("price").textContent = d.price;
+  title.textContent = d.title;
+  desc.textContent = d.desc;
+  price.textContent = "RM " + d.price;
+}
+
+/* CART */
+function addToCart() {
+  const d = menu[currentCategory][currentItem];
+  cart.push(d);
+  alert(d.title + " added to cart!");
+}
+
+/* SUMMARY */
+function openSummary() {
+  summaryPage.style.display = "block";
+
+  const list = document.getElementById("orderList");
+  list.innerHTML = "";
+
+  let total = 0;
+
+  cart.forEach(item => {
+    const div = document.createElement("div");
+    div.textContent = item.title + " - RM " + item.price;
+    list.appendChild(div);
+    total += item.price;
+  });
+
+  document.getElementById("total").textContent = "Total: RM " + total;
+}
+
+function closeSummary() {
+  summaryPage.style.display = "none";
+}
+
+/* CHECKOUT */
+function checkout() {
+  let text = "Order:%0A";
+  let total = 0;
+
+  cart.forEach(item => {
+    text += item.title + " RM " + item.price + "%0A";
+    total += item.price;
+  });
+
+  text += "%0ATotal: RM " + total;
+
+  window.open("https://wa.me/60123456789?text=" + text);
 }
 
 /* INIT */
-window.addEventListener("load", () => {
-  generateMenu();
-});
+window.onload = generateMenu;
 </script>
 
 </body>
