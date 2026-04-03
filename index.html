@@ -262,27 +262,241 @@ function addToCart(){
   const exist=cart.find(i=>i.title===d.title);
 
   if(exist){exist.qty++;}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR Coffee</title>
+
+<script type="module"
+src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #f7f3ef, #e8dfd8);
+}
+
+/* LOCK SCROLL */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* START */
+#startScreen {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: #3b2f2f;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#app { display: none; }
+
+model-viewer {
+  width: 100%;
+  height: 45vh;
+}
+
+/* PANELS */
+.glass {
+  background: rgba(255,255,255,0.6);
+  margin: 10px;
+  padding: 10px;
+  border-radius: 16px;
+}
+
+/* BUTTONS */
+button {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #6f4e37;
+  color: white;
+  border: none;
+}
+
+/* CART BTN */
+#cartBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  padding: 14px;
+}
+
+/* RECEIPT OVERLAY */
+#summaryPage {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100vh;
+  background: rgba(0,0,0,0.4);
+  display:none;
+
+  overflow-y:auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* RECEIPT BOX */
+.receipt {
+  background:white;
+  max-width:400px;
+  margin:40px auto;
+  padding:20px;
+  border-radius:20px;
+
+  max-height:85vh;
+  overflow-y:auto;
+}
+
+.item {
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+}
+
+/* SUCCESS */
+#successPage {
+  position: fixed;
+  width:100%;
+  height:100%;
+  background:#3b2f2f;
+  color:white;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">
+  <h1>☕ AR Coffee</h1>
+  <button onclick="startApp()">Start</button>
+</div>
+
+<div id="app">
+
+<model-viewer id="viewer" src="matchaCat.glb" camera-controls auto-rotate></model-viewer>
+
+<div class="glass">
+  <button onclick="switchCategory('drinks')">☕</button>
+  <button onclick="switchCategory('cookies')">🍪</button>
+</div>
+
+<div class="glass" id="menuButtons"></div>
+
+<div class="glass">
+  <h3 id="title"></h3>
+  <p id="desc"></p>
+  <strong id="price"></strong><br><br>
+  <button onclick="addToCart()">Add</button>
+</div>
+
+</div>
+
+<button id="cartBtn" onclick="openSummary()">🛒</button>
+
+<!-- RECEIPT -->
+<div id="summaryPage">
+  <div class="receipt">
+    <h2>🧾 Receipt</h2>
+
+    <input id="customerName" placeholder="Name"><br><br>
+    <input id="tableNo" placeholder="Table"><br><br>
+
+    <div id="orderList"></div>
+    <h3 id="total"></h3>
+
+    <button onclick="checkout()">Checkout</button>
+    <button onclick="closeSummary()">Close</button>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div id="successPage">
+  <h1>✅ Order Sent!</h1>
+  <p id="orderInfo"></p>
+  <button onclick="restart()">Back</button>
+</div>
+
+<script>
+let cart=[];
+let currentCategory="drinks";
+let currentItem="";
+
+const menu={
+  drinks:{
+    matcha:{title:"Matcha",price:12,src:"matchaCat.glb"},
+    mocha:{title:"Mocha",price:13,src:"mochaCat.glb"}
+  },
+  cookies:{
+    cookie:{title:"Cookie",price:6,src:"matchaCat.glb"}
+  }
+};
+
+function startApp(){
+  startScreen.style.display="none";
+  app.style.display="block";
+  loadMenu();
+}
+
+function loadMenu(){
+  menuButtons.innerHTML="";
+  Object.keys(menu[currentCategory]).forEach((key,i)=>{
+    const btn=document.createElement("button");
+    btn.textContent=menu[currentCategory][key].title;
+    btn.onclick=()=>loadItem(key);
+    menuButtons.appendChild(btn);
+    if(i===0) loadItem(key);
+  });
+}
+
+function switchCategory(cat){
+  currentCategory=cat;
+  loadMenu();
+}
+
+function loadItem(key){
+  currentItem=key;
+  const d=menu[currentCategory][key];
+
+  viewer.src = d.src;
+
+  title.textContent=d.title;
+  price.textContent="RM "+d.price;
+}
+
+function addToCart(){
+  const d=menu[currentCategory][currentItem];
+  const exist=cart.find(i=>i.title===d.title);
+
+  if(exist){exist.qty++;}
   else{cart.push({...d,qty:1});}
 }
 
 function openSummary(){
   summaryPage.style.display="block";
-  document.body.classList.add("no-scroll"); // 🔥 lock background
+  document.body.classList.add("no-scroll");
   renderCart();
 }
 
 function closeSummary(){
   summaryPage.style.display="none";
-  document.body.classList.remove("no-scroll"); // 🔥 unlock
+  document.body.classList.remove("no-scroll");
 }
 
 function renderCart(){
-  if(cart.length===0){
-    orderList.innerHTML="<p>No items yet ☕</p>";
-    total.textContent="Total: RM 0";
-    return;
-  }
-
   orderList.innerHTML="";
   let sum=0;
 
@@ -306,16 +520,13 @@ function removeItem(i){
   renderCart();
 }
 
-
-
 function checkout(){
   const name=document.getElementById("customerName").value || "Guest";
   const table=document.getElementById("tableNo").value || "-";
   const orderId="ORD"+Math.floor(Math.random()*100000);
 
-  // SAVE ORDER
   const orders=JSON.parse(localStorage.getItem("orders")||"[]");
-  orders.push({orderId,name,table,cart,time:new Date().toLocaleString()});
+  orders.push({orderId,name,table,cart});
   localStorage.setItem("orders",JSON.stringify(orders));
 
   summaryPage.style.display="none";
@@ -323,17 +534,17 @@ function checkout(){
 
   orderInfo.innerHTML=`
     Order ID: ${orderId}<br>
-    Name: ${name}<br>
-    Table: ${table}<br><br>
-    ☕ Preparing your drinks...
+    ${cart.map(i=>i.title+" x"+i.qty).join("<br>")}
+    <br><br>☕ Preparing...
   `;
-
-  cart=[];
 }
 
 function restart(){
   successPage.style.display="none";
   app.style.display="block";
+
+  cart=[];              // 🔥 moved here
+  renderCart();
 }
 </script>
 
