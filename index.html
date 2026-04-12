@@ -20,10 +20,7 @@ body { margin:0; font-family:sans-serif; background:#f5f5f5; }
   z-index:999; text-align:center;
 }
 
-.logo{
-  font-size:26px;
-  animation:float 2s infinite;
-}
+.logo{ font-size:26px; animation:float 2s infinite; }
 
 #startScreen img{
   width:100px;
@@ -55,20 +52,20 @@ body { margin:0; font-family:sans-serif; background:#f5f5f5; }
   align-items:center;
   gap:10px;
   padding:10px;
-  background:white;
   position:sticky;
   top:0;
   z-index:5;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:blur(10px);
 }
+
 .header img{
-  width:40px; height:40px;
+  width:40px;
+  height:auto; /* FIXED LOGO */
   border-radius:8px;
 }
-.header h2{
-  margin:0;
-  font-size:18px;
-}
+
+.header h2{ margin:0; font-size:18px; }
 
 /* MODEL */
 model-viewer{ width:100%; height:40vh; }
@@ -85,7 +82,9 @@ button{
   border-radius:20px;
   background:#6f4e37;
   color:white; border:none; margin:3px;
+  transition:0.2s;
 }
+button:active{ transform:scale(0.92); }
 
 /* BADGE */
 .badge{
@@ -109,7 +108,8 @@ button{
   position:fixed; top:0;
   width:85%; max-width:400px;
   height:100%; background:white;
-  overflow:auto; transition:0.3s;
+  overflow-y:auto;
+  transition:0.3s;
   z-index:10;
 }
 #cartPanel{ right:-100%; }
@@ -153,13 +153,12 @@ button{
 
 <!-- MODEL -->
 <model-viewer id="viewer" src="matchaCat.glb"
-camera-controls auto-rotate
-shadow-intensity="1" exposure="1"></model-viewer>
+camera-controls auto-rotate></model-viewer>
 
 <!-- CATEGORY -->
 <div class="glass">
-  <button onclick="switchCategory('drinks')">☕</button>
-  <button onclick="switchCategory('cookies')">🍪</button>
+  <button onclick="switchCategory('drinks')">☕ Drinks</button>
+  <button onclick="switchCategory('pastry')">🥐 Pastry</button>
 </div>
 
 <!-- MENU -->
@@ -209,14 +208,17 @@ let currentItem="";
 /* MENU */
 const menu={
   drinks:{
-    coffeeBear:{title:"Coffee Bear",price:14,desc:"Rich espresso with creamy milk 🐻",src:"coffeeBear.glb",best:true},
-    coffeeCup:{title:"Coffee Cup",price:10,desc:"Classic hot coffee ☕",src:"coffeeCup.glb"},
-    coffeeCupsPoly:{title:"Low Poly Coffee",price:9,desc:"Modern aesthetic coffee ✨",src:"coffeeCupsPoly.glb"},
-    matchaCat:{title:"Matcha Cat",price:12,desc:"Premium matcha 🍵🐱",src:"matchaCat.glb",best:true},
-    mochaCat:{title:"Mocha Cat",price:13,desc:"Chocolate coffee 🍫🐱",src:"mochaCat.glb"}
+    coffeeBear:{title:"Coffee Bear",price:14,desc:"Rich espresso 🐻",src:"coffeeBear.glb",best:true},
+    coffeeCup:{title:"Coffee Cup",price:10,desc:"Classic ☕",src:"coffeeCup.glb"},
+    matchaCat:{title:"Matcha Cat",price:12,desc:"Premium 🍵🐱",src:"matchaCat.glb"}
   },
-  cookies:{
-    polyCookies:{title:"Cookies",price:6,desc:"Crunchy butter cookies 🍪",src:"polyCookies.glb"}
+
+  pastry:{
+    cookies:{title:"Cookies",price:6,desc:"Crunchy 🍪",src:"polyCookies.glb"},
+    croissant:{title:"Croissant",price:8,desc:"Buttery 🥐",src:"crossaint.glb",best:true},
+    donuts:{title:"Donuts",price:7,desc:"Sweet 🍩",src:"donuts.glb"},
+    garlicBread:{title:"Garlic Bread",price:9,desc:"Savory 🧄🍞",src:"garlicBread.glb"},
+    pastries:{title:"Pastry Set",price:12,desc:"Mixed pastries 🧁",src:"pastries.glb"}
   }
 };
 
@@ -229,7 +231,7 @@ window.onload=()=>{
 /* LOADER */
 let progress=0;
 const loader=setInterval(()=>{
-  progress+=Math.random()*20;
+  progress+=20;
   if(progress>=100){
     progress=100;
     clearInterval(loader);
@@ -252,7 +254,7 @@ function loadMenu(){
   Object.keys(menu[currentCategory]).forEach(key=>{
     const item=menu[currentCategory][key];
     const btn=document.createElement("button");
-    btn.innerHTML=item.title + (item.best ? " 🔥" : "");
+    btn.innerHTML=item.best ? `🔥 ${item.title}` : item.title;
     btn.onclick=()=>loadItem(key);
     menuButtons.appendChild(btn);
   });
@@ -288,7 +290,7 @@ function updateLiveTotal(){
   liveTotal.textContent="Cart: RM "+sum;
 }
 
-/* TOGGLE (FIXED) */
+/* TOGGLE */
 function toggleCart(){
   cartPanel.classList.toggle("active");
   adminPanel.classList.remove("active");
@@ -304,6 +306,12 @@ function toggleAdmin(){
 /* CART VIEW */
 function renderCart(){
   orderList.innerHTML="";
+  if(cart.length===0){
+    orderList.innerHTML="<p>Cart empty 🛒</p>";
+    total.textContent="Total: RM 0";
+    return;
+  }
+
   let sum=0;
   cart.forEach((item,i)=>{
     const div=document.createElement("div");
@@ -335,7 +343,8 @@ function checkout(){
   orders.push({orderId,name,table,cart:JSON.parse(JSON.stringify(cart))});
   localStorage.setItem("orders",JSON.stringify(orders));
 
-  alert("✅ Order Sent!");
+  alert(`✅ Order Sent!
+ID: ${orderId}`);
   cart=[];
   updateLiveTotal();
   toggleCart();
@@ -345,30 +354,29 @@ function checkout(){
 function loadAdmin(){
   const orders=JSON.parse(localStorage.getItem("orders")||"[]");
   adminOrders.innerHTML="";
-  let totalRevenue=0;
+  let revenue=0;
 
   orders.forEach(order=>{
-    let orderTotal=0;
+    let total=0;
     const items=order.cart.map(i=>{
-      orderTotal+=i.price*i.qty;
+      total+=i.price*i.qty;
       return `${i.title} x${i.qty}`;
     }).join("<br>");
-    totalRevenue+=orderTotal;
+    revenue+=total;
 
     const div=document.createElement("div");
-    div.innerHTML=`<b>${order.orderId}</b><br>${order.name} | Table ${order.table}<br>${items}<br>RM ${orderTotal}<hr>`;
+    div.innerHTML=`<b>${order.orderId}</b><br>${items}<br>RM ${total}<hr>`;
     adminOrders.appendChild(div);
   });
 
   totalOrders.textContent="Orders: "+orders.length;
-  totalRevenue.textContent="Sales: RM "+totalRevenue;
+  totalRevenue.textContent="Sales: RM "+revenue;
 }
 
 function clearOrders(){
   if(confirm("Delete all data?")){
     localStorage.removeItem("orders");
     loadAdmin();
-    adminPanel.classList.remove("active"); // FIX
   }
 }
 </script>
