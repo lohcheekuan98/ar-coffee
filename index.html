@@ -9,77 +9,89 @@
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background: #f5f5f5;
+body { margin:0; font-family:sans-serif; background:#f5f5f5; }
+
+/* START SCREEN */
+#startScreen{
+  position:fixed; width:100%; height:100%;
+  background:linear-gradient(#3b2f2f,#1e1a1a);
+  color:white; display:flex; justify-content:center;
+  align-items:center; flex-direction:column;
+  z-index:999; text-align:center;
+}
+
+.logo{
+  font-size:32px;
+  animation:float 2s infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+  100%{transform:translateY(0);}
+}
+
+.progressBar{
+  width:70%; height:10px;
+  background:#555; border-radius:10px;
+  margin:20px 0;
+}
+
+#progressFill{
+  height:100%; width:0%;
+  background:#6f4e37;
 }
 
 /* MODEL */
-model-viewer {
-  width: 100%;
-  height: 40vh;
-}
+model-viewer{ width:100%; height:40vh; }
 
 /* BOX */
-.glass {
-  background: white;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 12px;
+.glass{
+  background:white; margin:10px;
+  padding:10px; border-radius:12px;
 }
 
 /* BUTTON */
-button {
-  padding: 8px 14px;
-  border-radius: 20px;
-  background: #6f4e37;
-  color: white;
-  border: none;
-  margin: 3px;
+button{
+  padding:8px 14px;
+  border-radius:20px;
+  background:#6f4e37;
+  color:white; border:none; margin:3px;
 }
 
-/* FLOAT BUTTONS */
-#cartBtn, #adminBtn {
-  position: fixed;
-  bottom: 20px;
-  border-radius: 50%;
-  padding: 14px;
+/* BADGE */
+.badge{
+  background:red;
+  color:white;
+  padding:2px 8px;
+  border-radius:10px;
+  font-size:12px;
+  margin-left:5px;
 }
 
-#cartBtn { right: 20px; }
-#adminBtn { left: 20px; background:#222; }
+/* FLOAT */
+#cartBtn,#adminBtn{
+  position:fixed; bottom:20px;
+  padding:14px; border-radius:50%;
+}
+#cartBtn{ right:20px; }
+#adminBtn{ left:20px; background:#222; }
 
-/* SIDE PANELS */
-.panel {
-  position: fixed;
-  top: 0;
-  width: 85%;
-  max-width: 400px;
-  height: 100%;
-  background: white;
-  overflow-y: auto;
-  transition: 0.3s;
-  z-index: 10;
+/* PANEL */
+.panel{
+  position:fixed; top:0;
+  width:85%; max-width:400px;
+  height:100%; background:white;
+  overflow:auto; transition:0.3s;
+  z-index:10;
 }
+#cartPanel{ right:-100%; }
+#cartPanel.active{ right:0; }
 
-/* CART RIGHT */
-#cartPanel {
-  right: -100%;
-}
-#cartPanel.active {
-  right: 0;
-}
+#adminPanel{ left:-100%; }
+#adminPanel.active{ left:0; }
 
-/* ADMIN LEFT */
-#adminPanel {
-  left: -100%;
-}
-#adminPanel.active {
-  left: 0;
-}
-
-.item {
+.item{
   display:flex;
   justify-content:space-between;
   margin:10px 0;
@@ -89,67 +101,65 @@ button {
 
 <body>
 
-<!-- MODEL -->
-<model-viewer 
-  id="viewer" 
-  src="matchaCat.glb" 
-  camera-controls 
-  auto-rotate
-  shadow-intensity="1"
-  exposure="1"
-  environment-image="neutral">
-</model-viewer>
+<!-- START -->
+<div id="startScreen">
+  <h1 class="logo">☕ AR Coffee</h1>
+  <p>Preparing your experience...</p>
 
-<!-- CATEGORY -->
-<div class="glass">
-  <button onclick="switchCategory('drinks')">☕ Drinks</button>
-  <button onclick="switchCategory('cookies')">🍪 Cookies</button>
+  <div class="progressBar">
+    <div id="progressFill"></div>
+  </div>
+
+  <button id="startBtn" onclick="startApp()" disabled>Loading...</button>
+
+  <audio id="bgMusic" loop>
+    <source src="cafe.mp3" type="audio/mpeg">
+  </audio>
 </div>
 
-<!-- MENU -->
+<!-- MAIN -->
+<model-viewer id="viewer" src="matchaCat.glb"
+camera-controls auto-rotate
+shadow-intensity="1" exposure="1"></model-viewer>
+
+<div class="glass">
+  <button onclick="switchCategory('drinks')">☕</button>
+  <button onclick="switchCategory('cookies')">🍪</button>
+</div>
+
 <div class="glass" id="menuButtons"></div>
 
-<!-- ITEM -->
 <div class="glass">
   <h3 id="title"></h3>
-  <strong id="price"></strong><br><br>
+  <strong id="price"></strong>
+  <p id="desc"></p>
   <button onclick="addToCart()">Add</button>
   <p id="liveTotal">Cart: RM 0</p>
 </div>
 
-<!-- FLOAT BUTTONS -->
 <button id="cartBtn" onclick="toggleCart()">🛒</button>
 <button id="adminBtn" onclick="toggleAdmin()">📊</button>
 
-<!-- CART PANEL -->
+<!-- CART -->
 <div id="cartPanel" class="panel">
   <div style="padding:20px;">
     <h2>🧾 Cart</h2>
-
     <input id="customerName" placeholder="Name"><br><br>
     <input id="tableNo" placeholder="Table"><br><br>
-
     <div id="orderList"></div>
     <h3 id="total"></h3>
-
     <button onclick="checkout()">Checkout</button>
-    <button onclick="toggleCart()">Close</button>
   </div>
 </div>
 
-<!-- ADMIN PANEL -->
+<!-- ADMIN -->
 <div id="adminPanel" class="panel">
   <div style="padding:20px;">
     <h2>📊 Dashboard</h2>
-
     <h3 id="totalOrders"></h3>
     <h3 id="totalRevenue"></h3>
-
     <div id="adminOrders"></div>
-
-    <br>
     <button onclick="clearOrders()">🗑 Clear</button>
-    <button onclick="toggleAdmin()">Close</button>
   </div>
 </div>
 
@@ -159,33 +169,53 @@ let currentCategory="drinks";
 let currentItem="";
 
 /* MENU */
-const menu = {
-  drinks: {
-    coffeeBear:{title:"Coffee Bear",price:14,src:"coffeeBear.glb"},
-    coffeeCup:{title:"Coffee Cup",price:10,src:"coffeeCup.glb"},
-    coffeeCupsPoly:{title:"Coffee Cups (Low Poly)",price:9,src:"coffeeCupsPoly.glb"},
-    matchaCat:{title:"Matcha Cat",price:12,src:"matchaCat.glb"},
-    mochaCat:{title:"Mocha Cat",price:13,src:"mochaCat.glb"}
+const menu={
+  drinks:{
+    coffeeBear:{title:"Coffee Bear",price:14,desc:"Rich espresso with creamy milk 🐻",src:"coffeeBear.glb",best:true},
+    coffeeCup:{title:"Coffee Cup",price:10,desc:"Classic hot coffee ☕",src:"coffeeCup.glb"},
+    coffeeCupsPoly:{title:"Low Poly Coffee",price:9,desc:"Modern aesthetic coffee ✨",src:"coffeeCupsPoly.glb"},
+    matchaCat:{title:"Matcha Cat",price:12,desc:"Premium matcha 🍵🐱",src:"matchaCat.glb",best:true},
+    mochaCat:{title:"Mocha Cat",price:13,desc:"Chocolate coffee 🍫🐱",src:"mochaCat.glb"}
   },
-  cookies: {
-    polyCookies:{title:"Cookies (Low Poly)",price:6,src:"polyCookies.glb"}
+  cookies:{
+    polyCookies:{title:"Cookies",price:6,desc:"Crunchy butter cookies 🍪",src:"polyCookies.glb"}
   }
 };
 
-/* INIT */
-window.onload = () => {
+/* LOAD */
+window.onload=()=>{
   loadMenu();
   loadItem(Object.keys(menu[currentCategory])[0]);
 };
 
+/* LOADER */
+let progress=0;
+const loader=setInterval(()=>{
+  progress+=Math.random()*20;
+  if(progress>=100){
+    progress=100;
+    clearInterval(loader);
+    startBtn.disabled=false;
+    startBtn.textContent="Start Experience ☕";
+  }
+  progressFill.style.width=progress+"%";
+},400);
+
+/* START */
+function startApp(){
+  startScreen.style.display="none";
+  const music=bgMusic;
+  music.volume=0.4;
+  music.play().catch(()=>{});
+}
+
 /* MENU */
 function loadMenu(){
-  const menuButtons=document.getElementById("menuButtons");
   menuButtons.innerHTML="";
-
   Object.keys(menu[currentCategory]).forEach(key=>{
+    const item=menu[currentCategory][key];
     const btn=document.createElement("button");
-    btn.textContent=menu[currentCategory][key].title;
+    btn.innerHTML=item.title + (item.best ? " <span class='badge'>🔥</span>" : "");
     btn.onclick=()=>loadItem(key);
     menuButtons.appendChild(btn);
   });
@@ -200,20 +230,18 @@ function switchCategory(cat){
 function loadItem(key){
   currentItem=key;
   const d=menu[currentCategory][key];
-
   viewer.src=d.src;
   title.textContent=d.title;
   price.textContent="RM "+d.price;
+  desc.textContent=d.desc;
 }
 
 /* CART */
 function addToCart(){
   const d=menu[currentCategory][currentItem];
   const exist=cart.find(i=>i.title===d.title);
-
   if(exist) exist.qty++;
   else cart.push({...d,qty:1});
-
   updateLiveTotal();
 }
 
@@ -223,7 +251,7 @@ function updateLiveTotal(){
   liveTotal.textContent="Cart: RM "+sum;
 }
 
-/* PANEL TOGGLE */
+/* PANEL */
 function toggleCart(){
   cartPanel.classList.toggle("active");
   renderCart();
@@ -234,11 +262,10 @@ function toggleAdmin(){
   loadAdmin();
 }
 
-/* RENDER CART */
+/* CART VIEW */
 function renderCart(){
   orderList.innerHTML="";
   let sum=0;
-
   cart.forEach((item,i)=>{
     const div=document.createElement("div");
     div.className="item";
@@ -250,7 +277,6 @@ function renderCart(){
     orderList.appendChild(div);
     sum+=item.price*item.qty;
   });
-
   total.textContent="Total: RM "+sum;
 }
 
@@ -262,23 +288,15 @@ function removeItem(i){
 
 /* CHECKOUT */
 function checkout(){
-  const name=customerName.value || "Guest";
-  const table=tableNo.value || "-";
+  const name=customerName.value||"Guest";
+  const table=tableNo.value||"-";
   const orderId="ORD"+Math.floor(Math.random()*100000);
 
   const orders=JSON.parse(localStorage.getItem("orders")||"[]");
-
-  orders.push({
-    orderId,
-    name,
-    table,
-    cart: JSON.parse(JSON.stringify(cart))
-  });
-
+  orders.push({orderId,name,table,cart:JSON.parse(JSON.stringify(cart))});
   localStorage.setItem("orders",JSON.stringify(orders));
 
   alert("✅ Order Sent!");
-
   cart=[];
   updateLiveTotal();
   toggleCart();
@@ -286,34 +304,25 @@ function checkout(){
 
 /* ADMIN */
 function loadAdmin(){
-  const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-
+  const orders=JSON.parse(localStorage.getItem("orders")||"[]");
   adminOrders.innerHTML="";
   let totalRevenue=0;
 
   orders.forEach(order=>{
     let orderTotal=0;
-
     const items=order.cart.map(i=>{
       orderTotal+=i.price*i.qty;
       return `${i.title} x${i.qty}`;
     }).join("<br>");
-
     totalRevenue+=orderTotal;
 
     const div=document.createElement("div");
-    div.style.borderBottom="1px solid #ccc";
-    div.innerHTML=`
-      <strong>${order.orderId}</strong><br>
-      ${order.name} | Table ${order.table}<br>
-      ${items}<br>
-      💰 RM ${orderTotal}
-    `;
+    div.innerHTML=`<b>${order.orderId}</b><br>${order.name} | Table ${order.table}<br>${items}<br>RM ${orderTotal}<hr>`;
     adminOrders.appendChild(div);
   });
 
-  totalOrders.textContent="Total Orders: "+orders.length;
-  totalRevenue.textContent="Total Sales: RM "+totalRevenue;
+  totalOrders.textContent="Orders: "+orders.length;
+  totalRevenue.textContent="Sales: RM "+totalRevenue;
 }
 
 function clearOrders(){
