@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AR Coffee</title>
+<title>Kopi Kesidangan</title>
 
 <script type="module"
 src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -21,7 +21,14 @@ body { margin:0; font-family:sans-serif; background:#f5f5f5; }
 }
 
 .logo{
-  font-size:32px;
+  font-size:26px;
+  animation:float 2s infinite;
+}
+
+#startScreen img{
+  width:100px;
+  border-radius:12px;
+  margin-bottom:10px;
   animation:float 2s infinite;
 }
 
@@ -40,6 +47,27 @@ body { margin:0; font-family:sans-serif; background:#f5f5f5; }
 #progressFill{
   height:100%; width:0%;
   background:#6f4e37;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  background:white;
+  position:sticky;
+  top:0;
+  z-index:5;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+.header img{
+  width:40px; height:40px;
+  border-radius:8px;
+}
+.header h2{
+  margin:0;
+  font-size:18px;
 }
 
 /* MODEL */
@@ -66,10 +94,9 @@ button{
   padding:2px 8px;
   border-radius:10px;
   font-size:12px;
-  margin-left:5px;
 }
 
-/* FLOAT */
+/* FLOAT BUTTONS */
 #cartBtn,#adminBtn{
   position:fixed; bottom:20px;
   padding:14px; border-radius:50%;
@@ -101,9 +128,10 @@ button{
 
 <body>
 
-<!-- START -->
+<!-- START SCREEN -->
 <div id="startScreen">
-  <h1 class="logo">☕ AR Coffee</h1>
+  <img src="kopiKesidangan.jpg">
+  <h1 class="logo">Kopi Kesidangan</h1>
   <p>Preparing your experience...</p>
 
   <div class="progressBar">
@@ -117,18 +145,27 @@ button{
   </audio>
 </div>
 
-<!-- MAIN -->
+<!-- HEADER -->
+<div class="header">
+  <img src="kopiKesidangan.jpg">
+  <h2>Kopi Kesidangan Menu</h2>
+</div>
+
+<!-- MODEL -->
 <model-viewer id="viewer" src="matchaCat.glb"
 camera-controls auto-rotate
 shadow-intensity="1" exposure="1"></model-viewer>
 
+<!-- CATEGORY -->
 <div class="glass">
   <button onclick="switchCategory('drinks')">☕</button>
   <button onclick="switchCategory('cookies')">🍪</button>
 </div>
 
+<!-- MENU -->
 <div class="glass" id="menuButtons"></div>
 
+<!-- ITEM -->
 <div class="glass">
   <h3 id="title"></h3>
   <strong id="price"></strong>
@@ -137,10 +174,11 @@ shadow-intensity="1" exposure="1"></model-viewer>
   <p id="liveTotal">Cart: RM 0</p>
 </div>
 
+<!-- FLOAT BUTTONS -->
 <button id="cartBtn" onclick="toggleCart()">🛒</button>
 <button id="adminBtn" onclick="toggleAdmin()">📊</button>
 
-<!-- CART -->
+<!-- CART PANEL -->
 <div id="cartPanel" class="panel">
   <div style="padding:20px;">
     <h2>🧾 Cart</h2>
@@ -152,7 +190,7 @@ shadow-intensity="1" exposure="1"></model-viewer>
   </div>
 </div>
 
-<!-- ADMIN -->
+<!-- ADMIN PANEL -->
 <div id="adminPanel" class="panel">
   <div style="padding:20px;">
     <h2>📊 Dashboard</h2>
@@ -182,7 +220,7 @@ const menu={
   }
 };
 
-/* LOAD */
+/* INIT */
 window.onload=()=>{
   loadMenu();
   loadItem(Object.keys(menu[currentCategory])[0]);
@@ -204,9 +242,8 @@ const loader=setInterval(()=>{
 /* START */
 function startApp(){
   startScreen.style.display="none";
-  const music=bgMusic;
-  music.volume=0.4;
-  music.play().catch(()=>{});
+  bgMusic.volume=0.4;
+  bgMusic.play().catch(()=>{});
 }
 
 /* MENU */
@@ -215,7 +252,7 @@ function loadMenu(){
   Object.keys(menu[currentCategory]).forEach(key=>{
     const item=menu[currentCategory][key];
     const btn=document.createElement("button");
-    btn.innerHTML=item.title + (item.best ? " <span class='badge'>🔥</span>" : "");
+    btn.innerHTML=item.title + (item.best ? " 🔥" : "");
     btn.onclick=()=>loadItem(key);
     menuButtons.appendChild(btn);
   });
@@ -251,14 +288,16 @@ function updateLiveTotal(){
   liveTotal.textContent="Cart: RM "+sum;
 }
 
-/* PANEL */
+/* TOGGLE (FIXED) */
 function toggleCart(){
   cartPanel.classList.toggle("active");
+  adminPanel.classList.remove("active");
   renderCart();
 }
 
 function toggleAdmin(){
   adminPanel.classList.toggle("active");
+  cartPanel.classList.remove("active");
   loadAdmin();
 }
 
@@ -329,6 +368,7 @@ function clearOrders(){
   if(confirm("Delete all data?")){
     localStorage.removeItem("orders");
     loadAdmin();
+    adminPanel.classList.remove("active"); // FIX
   }
 }
 </script>
