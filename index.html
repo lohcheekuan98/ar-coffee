@@ -365,7 +365,12 @@ function loadAdmin(){
     revenue+=total;
 
     const div=document.createElement("div");
-    div.innerHTML=`<b>${order.orderId}</b><br>${items}<br>RM ${total}<hr>`;
+    div.innerHTML=`<b>${order.orderId}</b><br>
+  ${order.name} | Table ${order.table}<br>
+  ${items}<br>
+  RM ${total}<br>
+  <button onclick="viewReceipt('${order.orderId}')">🧾 Receipt</button>
+  <hr>`;
     adminOrders.appendChild(div);
   });
 
@@ -373,6 +378,36 @@ function loadAdmin(){
   totalRevenue.textContent="Sales: RM "+revenue;
 }
 
+  function viewReceipt(id){
+  const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  const order = orders.find(o => o.orderId === id);
+
+  if(!order) return;
+
+  let total = 0;
+
+  let items = order.cart.map(i=>{
+    total += i.price * i.qty;
+    return `${i.title} x${i.qty} - RM ${i.price * i.qty}`;
+  }).join("\n");
+
+  const receipt = `
+🧾 Kopi Kesidangan
+-------------------------
+Order ID: ${order.orderId}
+Name: ${order.name}
+Table: ${order.table}
+
+${items}
+
+-------------------------
+Total: RM ${total}
+Thank you ☕
+`;
+
+  alert(receipt);
+  }
+  
 function clearOrders(){
   if(confirm("Delete all data?")){
     localStorage.removeItem("orders");
