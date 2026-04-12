@@ -15,30 +15,10 @@ body {
   background: #f5f5f5;
 }
 
-/* LOCK SCROLL */
-body.no-scroll {
-  overflow: hidden;
-}
-
-/* START SCREEN */
-#startScreen {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: #3b2f2f;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-#app { display: none; }
-
 /* MODEL */
 model-viewer {
   width: 100%;
-  height: 45vh;
+  height: 40vh;
 }
 
 /* BOX */
@@ -59,33 +39,44 @@ button {
   margin: 3px;
 }
 
-/* CART BTN */
-#cartBtn {
+/* FLOAT BUTTONS */
+#cartBtn, #adminBtn {
   position: fixed;
   bottom: 20px;
-  right: 20px;
   border-radius: 50%;
   padding: 14px;
 }
 
-/* RECEIPT */
-#summaryPage {
+#cartBtn { right: 20px; }
+#adminBtn { left: 20px; background:#222; }
+
+/* SIDE PANELS */
+.panel {
   position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100vh;
-  background: rgba(0,0,0,0.4);
-  display:none;
-  overflow-y:auto;
+  top: 0;
+  width: 85%;
+  max-width: 400px;
+  height: 100%;
+  background: white;
+  overflow-y: auto;
+  transition: 0.3s;
+  z-index: 10;
 }
 
-.receipt {
-  background:white;
-  max-width:400px;
-  margin:40px auto;
-  padding:20px;
-  border-radius:20px;
+/* CART RIGHT */
+#cartPanel {
+  right: -100%;
+}
+#cartPanel.active {
+  right: 0;
+}
+
+/* ADMIN LEFT */
+#adminPanel {
+  left: -100%;
+}
+#adminPanel.active {
+  left: 0;
 }
 
 .item {
@@ -93,33 +84,12 @@ button {
   justify-content:space-between;
   margin:10px 0;
 }
-
-/* SUCCESS */
-#successPage {
-  position: fixed;
-  width:100%;
-  height:100%;
-  background:#3b2f2f;
-  color:white;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  text-align:center;
-}
 </style>
 </head>
 
 <body>
 
-<!-- START -->
-<div id="startScreen">
-  <h1>☕ AR Coffee</h1>
-  <button onclick="startApp()">Start Experience</button>
-</div>
-
-<div id="app">
-
+<!-- MODEL -->
 <model-viewer 
   id="viewer" 
   src="matchaCat.glb" 
@@ -130,13 +100,16 @@ button {
   environment-image="neutral">
 </model-viewer>
 
+<!-- CATEGORY -->
 <div class="glass">
   <button onclick="switchCategory('drinks')">☕ Drinks</button>
   <button onclick="switchCategory('cookies')">🍪 Cookies</button>
 </div>
 
+<!-- MENU -->
 <div class="glass" id="menuButtons"></div>
 
+<!-- ITEM -->
 <div class="glass">
   <h3 id="title"></h3>
   <strong id="price"></strong><br><br>
@@ -144,14 +117,14 @@ button {
   <p id="liveTotal">Cart: RM 0</p>
 </div>
 
-</div>
+<!-- FLOAT BUTTONS -->
+<button id="cartBtn" onclick="toggleCart()">🛒</button>
+<button id="adminBtn" onclick="toggleAdmin()">📊</button>
 
-<button id="cartBtn" onclick="openSummary()">🛒</button>
-
-<!-- RECEIPT -->
-<div id="summaryPage">
-  <div class="receipt">
-    <h2>🧾 Receipt</h2>
+<!-- CART PANEL -->
+<div id="cartPanel" class="panel">
+  <div style="padding:20px;">
+    <h2>🧾 Cart</h2>
 
     <input id="customerName" placeholder="Name"><br><br>
     <input id="tableNo" placeholder="Table"><br><br>
@@ -160,15 +133,24 @@ button {
     <h3 id="total"></h3>
 
     <button onclick="checkout()">Checkout</button>
-    <button onclick="closeSummary()">Close</button>
+    <button onclick="toggleCart()">Close</button>
   </div>
 </div>
 
-<!-- SUCCESS -->
-<div id="successPage">
-  <h1>✅ Order Sent!</h1>
-  <p id="orderInfo"></p>
-  <button onclick="restart()">Back</button>
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="panel">
+  <div style="padding:20px;">
+    <h2>📊 Dashboard</h2>
+
+    <h3 id="totalOrders"></h3>
+    <h3 id="totalRevenue"></h3>
+
+    <div id="adminOrders"></div>
+
+    <br>
+    <button onclick="clearOrders()">🗑 Clear</button>
+    <button onclick="toggleAdmin()">Close</button>
+  </div>
 </div>
 
 <script>
@@ -176,7 +158,7 @@ let cart=[];
 let currentCategory="drinks";
 let currentItem="";
 
-/* MENU DATA */
+/* MENU */
 const menu = {
   drinks: {
     coffeeBear:{title:"Coffee Bear",price:14,src:"coffeeBear.glb"},
@@ -190,23 +172,18 @@ const menu = {
   }
 };
 
-/* START */
-function startApp(){
-  document.getElementById("startScreen").style.display="none";
-  document.getElementById("app").style.display="block";
-
+/* INIT */
+window.onload = () => {
   loadMenu();
-
-  const firstKey = Object.keys(menu[currentCategory])[0];
-  loadItem(firstKey);
-}
+  loadItem(Object.keys(menu[currentCategory])[0]);
+};
 
 /* MENU */
 function loadMenu(){
   const menuButtons=document.getElementById("menuButtons");
   menuButtons.innerHTML="";
 
-  Object.keys(menu[currentCategory]).forEach((key)=>{
+  Object.keys(menu[currentCategory]).forEach(key=>{
     const btn=document.createElement("button");
     btn.textContent=menu[currentCategory][key].title;
     btn.onclick=()=>loadItem(key);
@@ -217,18 +194,16 @@ function loadMenu(){
 function switchCategory(cat){
   currentCategory=cat;
   loadMenu();
-
-  const firstKey = Object.keys(menu[currentCategory])[0];
-  loadItem(firstKey);
+  loadItem(Object.keys(menu[currentCategory])[0]);
 }
 
 function loadItem(key){
   currentItem=key;
   const d=menu[currentCategory][key];
 
-  document.getElementById("viewer").src=d.src;
-  document.getElementById("title").textContent=d.title;
-  document.getElementById("price").textContent="RM "+d.price;
+  viewer.src=d.src;
+  title.textContent=d.title;
+  price.textContent="RM "+d.price;
 }
 
 /* CART */
@@ -236,8 +211,8 @@ function addToCart(){
   const d=menu[currentCategory][currentItem];
   const exist=cart.find(i=>i.title===d.title);
 
-  if(exist){exist.qty++;}
-  else{cart.push({...d,qty:1});}
+  if(exist) exist.qty++;
+  else cart.push({...d,qty:1});
 
   updateLiveTotal();
 }
@@ -245,24 +220,22 @@ function addToCart(){
 function updateLiveTotal(){
   let sum=0;
   cart.forEach(i=>sum+=i.price*i.qty);
-  document.getElementById("liveTotal").textContent="Cart: RM "+sum;
+  liveTotal.textContent="Cart: RM "+sum;
 }
 
-function openSummary(){
-  document.getElementById("summaryPage").style.display="block";
-  document.body.classList.add("no-scroll");
+/* PANEL TOGGLE */
+function toggleCart(){
+  cartPanel.classList.toggle("active");
   renderCart();
 }
 
-function closeSummary(){
-  document.getElementById("summaryPage").style.display="none";
-  document.body.classList.remove("no-scroll");
+function toggleAdmin(){
+  adminPanel.classList.toggle("active");
+  loadAdmin();
 }
 
+/* RENDER CART */
 function renderCart(){
-  const orderList=document.getElementById("orderList");
-  const total=document.getElementById("total");
-
   orderList.innerHTML="";
   let sum=0;
 
@@ -289,8 +262,8 @@ function removeItem(i){
 
 /* CHECKOUT */
 function checkout(){
-  const name=document.getElementById("customerName").value || "Guest";
-  const table=document.getElementById("tableNo").value || "-";
+  const name=customerName.value || "Guest";
+  const table=tableNo.value || "-";
   const orderId="ORD"+Math.floor(Math.random()*100000);
 
   const orders=JSON.parse(localStorage.getItem("orders")||"[]");
@@ -304,22 +277,50 @@ function checkout(){
 
   localStorage.setItem("orders",JSON.stringify(orders));
 
-  document.getElementById("summaryPage").style.display="none";
-  document.getElementById("successPage").style.display="flex";
-
-  document.getElementById("orderInfo").innerHTML=
-    "Order ID: "+orderId+"<br>"+
-    cart.map(i=>i.title+" x"+i.qty).join("<br>")+
-    "<br><br>☕ Preparing...";
+  alert("✅ Order Sent!");
 
   cart=[];
   updateLiveTotal();
+  toggleCart();
 }
 
-/* RESET */
-function restart(){
-  document.getElementById("successPage").style.display="none";
-  document.getElementById("app").style.display="block";
+/* ADMIN */
+function loadAdmin(){
+  const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+
+  adminOrders.innerHTML="";
+  let totalRevenue=0;
+
+  orders.forEach(order=>{
+    let orderTotal=0;
+
+    const items=order.cart.map(i=>{
+      orderTotal+=i.price*i.qty;
+      return `${i.title} x${i.qty}`;
+    }).join("<br>");
+
+    totalRevenue+=orderTotal;
+
+    const div=document.createElement("div");
+    div.style.borderBottom="1px solid #ccc";
+    div.innerHTML=`
+      <strong>${order.orderId}</strong><br>
+      ${order.name} | Table ${order.table}<br>
+      ${items}<br>
+      💰 RM ${orderTotal}
+    `;
+    adminOrders.appendChild(div);
+  });
+
+  totalOrders.textContent="Total Orders: "+orders.length;
+  totalRevenue.textContent="Total Sales: RM "+totalRevenue;
+}
+
+function clearOrders(){
+  if(confirm("Delete all data?")){
+    localStorage.removeItem("orders");
+    loadAdmin();
+  }
 }
 </script>
 
