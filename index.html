@@ -379,6 +379,31 @@ function clearOrders(){
     loadAdmin();
   }
 }
+  document.addEventListener("click", function(e){
+
+  const isCartOpen = cartPanel.classList.contains("active");
+  const isAdminOpen = adminPanel.classList.contains("active");
+
+  // If Cart is open and click is outside
+  if(
+    isCartOpen &&
+    !cartPanel.contains(e.target) &&
+    !cartBtn.contains(e.target)
+  ){
+    cartPanel.classList.remove("active");
+  }
+
+  // If Admin is open and click is outside
+  if(
+    isAdminOpen &&
+    !adminPanel.contains(e.target) &&
+    !adminBtn.contains(e.target)
+  ){
+    adminPanel.classList.remove("active");
+  }
+
+});
+  
 </script>
 
 </body>
