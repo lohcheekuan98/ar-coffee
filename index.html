@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kopi Kesidangan</title>
+<title>Kopi Kesidang</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
@@ -148,8 +148,8 @@ select.inp{cursor:pointer}
 <body>
 
 <div id="startScreen">
-  <img src="kopiKesidangan.jpg" alt="Kopi Kesidangan">
-  <h1 class="logo">Kopi Kesidangan</h1>
+  <img src="kopiKesidangan.jpg" alt="Kopi Kesidang">
+  <h1 class="logo">Kopi Kesidang</h1>
   <p>Preparing your experience...</p>
   <div class="progressBar"><div id="progressFill"></div></div>
   <button id="startBtn" onclick="startApp()" disabled>Loading...</button>
@@ -160,7 +160,7 @@ select.inp{cursor:pointer}
 
 <div class="header">
   <img src="kopiKesidangan.jpg" alt="logo">
-  <h2>Kopi Kesidangan</h2>
+  <h2>Kopi Kesidang</h2>
 </div>
 
 <model-viewer id="viewer" src="matchaCat.glb" camera-controls auto-rotate></model-viewer>
@@ -306,7 +306,7 @@ select.inp{cursor:pointer}
 <div id="receiptModal" class="modal-wrap">
   <div class="modal-bg" onclick="closeReceipt()"></div>
   <div class="modal-box">
-    <h3>🧾 Kopi Kesidangan</h3>
+    <h3>🧾 Kopi Kesidang</h3>
     <p style="color:var(--text-soft);font-size:13px;margin:0 0 8px;">Receipt</p>
     <hr class="rdiv">
     <div id="receiptContent"></div>
@@ -537,7 +537,7 @@ function checkout(){
   if(phone){
     const tot=cart.reduce((a,i)=>a+i.price*i.qty,0);
     const lines=cart.map(i=>"• "+i.title+" x"+i.qty+(i.note?" ("+i.note+")":"")+" — RM "+(i.price*i.qty).toFixed(2)).join("%0A");
-    const msg="🧾 *Kopi Kesidangan*%0AHi "+name+"! Your order has been received.%0A%0A"+lines+"%0A%0A*Total: RM "+tot.toFixed(2)+"*%0ATable: "+table+"%0AOrder ID: "+orderId+"%0A%0AThank you ☕";
+    const msg="🧾 *Kopi Kesidang*%0AHi "+name+"! Your order has been received.%0A%0A"+lines+"%0A%0A*Total: RM "+tot.toFixed(2)+"*%0ATable: "+table+"%0AOrder ID: "+orderId+"%0A%0AThank you ☕";
     window.open("https://wa.me/"+phone.replace(/\D/g,"")+`?text=`+msg,"_blank");
   }
 
