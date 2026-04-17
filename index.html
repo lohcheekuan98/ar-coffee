@@ -143,9 +143,178 @@ select.inp{cursor:pointer}
 .rday{background:var(--cream);border-radius:12px;padding:12px 14px;margin-bottom:10px}
 .rdayh{display:flex;justify-content:space-between;font-weight:600;margin-bottom:6px}
 .ritem{display:flex;justify-content:space-between;font-size:13px;color:var(--text-soft);padding:2px 0}
+
+/* ── LANDING PAGE ── */
+#landingPage{position:fixed;inset:0;z-index:1000;overflow-y:auto;background:#1e1a1a;color:#fff;font-family:'DM Sans',sans-serif}
+#landingPage.hidden{display:none}
+
+/* Hero */
+.lp-hero{min-height:100vh;background:linear-gradient(160deg,#3b2f2f 0%,#1e1a1a 60%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
+.lp-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(200,149,108,0.15) 0%,transparent 70%);pointer-events:none}
+.lp-logo-wrap{position:relative;margin-bottom:20px}
+.lp-logo{width:110px;height:110px;border-radius:24px;box-shadow:0 12px 48px rgba(0,0,0,0.5),0 0 0 4px rgba(200,149,108,0.3);animation:float 3s ease-in-out infinite}
+.lp-badge{position:absolute;bottom:-6px;right:-6px;background:var(--brown);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.lp-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;margin:0 0 8px;letter-spacing:-0.5px}
+.lp-tagline{color:#c8956c;font-size:14px;font-weight:500;margin:0 0 10px;letter-spacing:1.5px;text-transform:uppercase}
+.lp-desc{color:#bbb;font-size:15px;line-height:1.6;max-width:320px;margin:0 0 32px}
+.lp-cta{background:linear-gradient(135deg,var(--brown),var(--brown-light));color:#fff;border:none;border-radius:50px;padding:15px 36px;font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;box-shadow:0 8px 30px rgba(111,78,55,0.5);transition:transform 0.2s,box-shadow 0.2s;letter-spacing:0.3px}
+.lp-cta:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(111,78,55,0.6)}
+.lp-cta:active{transform:scale(0.96)}
+.lp-scroll-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#666;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:6px;animation:bounce 2s infinite}
+.lp-scroll-hint span{font-size:18px}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* Sections */
+.lp-section{padding:60px 24px;max-width:480px;margin:0 auto}
+.lp-section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--brown-light);margin:0 0 10px}
+.lp-section h2{font-family:'Playfair Display',serif;font-size:28px;margin:0 0 16px;line-height:1.25}
+.lp-section p{color:#aaa;font-size:15px;line-height:1.7;margin:0 0 16px}
+
+/* About */
+#lp-about{background:#242020}
+.lp-values{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.lp-val{background:#2e2a2a;border-radius:16px;padding:16px;border:1px solid #3a3333}
+.lp-val .icon{font-size:26px;margin-bottom:8px}
+.lp-val h4{font-size:13px;font-weight:700;margin:0 0 4px;color:#fff}
+.lp-val p{font-size:12px;color:#888;margin:0;line-height:1.5}
+
+/* Menu teaser */
+#lp-menu{background:#1e1a1a}
+.lp-menu-cards{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.lp-menu-card{background:#2a2626;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;border-left:3px solid var(--brown)}
+.lp-menu-card .micon{font-size:32px;flex-shrink:0}
+.lp-menu-card h4{font-size:15px;font-weight:600;margin:0 0 3px;color:#fff}
+.lp-menu-card p{font-size:12px;color:#888;margin:0}
+
+/* Location/hours */
+#lp-info{background:#242020}
+.lp-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.lp-info-card{background:#2e2a2a;border-radius:16px;padding:16px;border:1px solid #3a3333}
+.lp-info-card .icon{font-size:22px;margin-bottom:8px}
+.lp-info-card h4{font-size:12px;font-weight:700;color:#c8956c;margin:0 0 6px;text-transform:uppercase;letter-spacing:0.8px}
+.lp-info-card p{font-size:13px;color:#bbb;margin:0;line-height:1.6}
+
+/* Bottom CTA */
+.lp-bottom-cta{background:linear-gradient(160deg,#3b2f2f,#1e1a1a);padding:60px 24px;text-align:center}
+.lp-bottom-cta h2{font-family:'Playfair Display',serif;font-size:28px;margin:0 0 12px}
+.lp-bottom-cta p{color:#aaa;font-size:14px;margin:0 0 28px}
+.lp-footer{background:#111;padding:24px;text-align:center;color:#555;font-size:12px}
+.lp-footer span{color:#6f4e37}
 </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════════════ -->
+<div id="landingPage">
+
+  <!-- HERO -->
+  <section class="lp-hero">
+    <div class="lp-logo-wrap">
+      <img class="lp-logo" src="kopiKesidangan.jpg" alt="Kopi Kesidang">
+      <span class="lp-badge">Est. 2024</span>
+    </div>
+    <h1 class="lp-title">Kopi Kesidang</h1>
+    <p class="lp-tagline">Artisan Coffee &amp; Pastry</p>
+    <p class="lp-desc">Where every cup tells a story. Handcrafted drinks and freshly baked pastries served with warmth, right at your table.</p>
+    <button class="lp-cta" onclick="enterExperience()">Browse Our Menu ☕</button>
+    <div class="lp-scroll-hint">
+      <span>↓</span>
+      <span style="font-size:11px;letter-spacing:1px;text-transform:uppercase;">Explore</span>
+    </div>
+  </section>
+
+  <!-- ABOUT US -->
+  <section id="lp-about">
+    <div class="lp-section">
+      <p class="lp-section-label">Our Story</p>
+      <h2>Crafted with passion, served with love</h2>
+      <p>Kopi Kesidang was born from a simple idea — that great coffee deserves a great experience. Named after the delicate <em>Kesidang</em> flower, we bring together the finest beans, locally inspired flavours, and a cosy atmosphere that feels like home.</p>
+      <p>Every item on our menu is prepared fresh, from our signature bear-shaped lattes to our flaky hand-rolled croissants.</p>
+      <div class="lp-values">
+        <div class="lp-val"><div class="icon">🌱</div><h4>Locally Sourced</h4><p>Ingredients from trusted Malaysian suppliers</p></div>
+        <div class="lp-val"><div class="icon">☕</div><h4>Specialty Coffee</h4><p>Single-origin beans, roasted in-house</p></div>
+        <div class="lp-val"><div class="icon">🤝</div><h4>Community</h4><p>A space to connect, work &amp; unwind</p></div>
+        <div class="lp-val"><div class="icon">✨</div><h4>Handcrafted</h4><p>Every cup made to order, with care</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU TEASER -->
+  <section id="lp-menu">
+    <div class="lp-section">
+      <p class="lp-section-label">What We Offer</p>
+      <h2>Something for every craving</h2>
+      <div class="lp-menu-cards">
+        <div class="lp-menu-card">
+          <div class="micon">☕</div>
+          <div>
+            <h4>Signature Drinks</h4>
+            <p>Lattes, matcha, cold brews &amp; seasonal specials — crafted to delight</p>
+          </div>
+        </div>
+        <div class="lp-menu-card">
+          <div class="micon">🥐</div>
+          <div>
+            <h4>Fresh Pastries</h4>
+            <p>Buttery croissants, warm cookies, donuts &amp; daily pastry sets</p>
+          </div>
+        </div>
+        <div class="lp-menu-card">
+          <div class="micon">🐻</div>
+          <div>
+            <h4>Fan Favourites</h4>
+            <p>Our Coffee Bear latte &amp; Matcha Cat are an Insta-worthy must-try</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOURS & LOCATION -->
+  <section id="lp-info">
+    <div class="lp-section">
+      <p class="lp-section-label">Find Us</p>
+      <h2>Visit us today</h2>
+      <div class="lp-info-grid">
+        <div class="lp-info-card">
+          <div class="icon">🕐</div>
+          <h4>Hours</h4>
+          <p>Mon – Fri<br>8:00 AM – 9:00 PM<br><br>Sat – Sun<br>9:00 AM – 10:00 PM</p>
+        </div>
+        <div class="lp-info-card">
+          <div class="icon">📍</div>
+          <h4>Location</h4>
+          <p>No. 12, Jalan Bunga,<br>Taman Kesidang,<br>50000 Kuala Lumpur</p>
+        </div>
+        <div class="lp-info-card">
+          <div class="icon">📞</div>
+          <h4>Contact</h4>
+          <p>+60 12-345 6789<br><br>kopikesidang<br>@gmail.com</p>
+        </div>
+        <div class="lp-info-card">
+          <div class="icon">📱</div>
+          <h4>Follow Us</h4>
+          <p>@kopikesidang<br>on Instagram &amp; TikTok<br><br>#KopiKesidang</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <div class="lp-bottom-cta">
+    <h2>Ready to order?</h2>
+    <p>Browse our interactive 3D menu and place your order right from your table.</p>
+    <button class="lp-cta" onclick="enterExperience()">Start the Experience ✨</button>
+  </div>
+
+  <div class="lp-footer">
+    <p>Made with <span>♥</span> by Kopi Kesidang · Kuala Lumpur, Malaysia</p>
+  </div>
+
+</div>
+<!-- END LANDING PAGE -->
 
 <div id="startScreen">
   <img src="kopiKesidangan.jpg" alt="Kopi Kesidang">
@@ -159,8 +328,8 @@ select.inp{cursor:pointer}
 <div id="overlay" onclick="closePanels()"></div>
 
 <div class="header">
-  <img src="kopiKesidangan.jpg" alt="logo">
-  <h2>Kopi Kesidang</h2>
+  <img src="kopiKesidangan.jpg" alt="logo" onclick="goHome()" style="cursor:pointer;" title="Back to Home">
+  <h2 onclick="goHome()" style="cursor:pointer;" title="Back to Home">Kopi Kesidang</h2>
 </div>
 
 <model-viewer id="viewer" src="matchaCat.glb" camera-controls auto-rotate></model-viewer>
@@ -402,6 +571,7 @@ let cart=[], curCat="", curKey="", curFilter="all", kTimer=null;
 
 // ── BOOT ──
 window.onload = () => {
+  // Pre-load menu data so it's ready, but don't start the progress animation yet
   const cats = getCats();
   curCat = Object.keys(cats)[0] || "drinks";
   buildCatBtns();
@@ -409,6 +579,11 @@ window.onload = () => {
   const m = getMenu();
   const fk = Object.keys(m[curCat]||{})[0];
   if (fk) showItem(fk);
+};
+
+function enterExperience(){
+  document.getElementById("landingPage").classList.add("hidden");
+  // Now start the loading animation
   let p=0;
   const t=setInterval(()=>{
     p+=20;
@@ -417,7 +592,13 @@ window.onload = () => {
       document.getElementById("startBtn").textContent="Start Experience ☕";}
     document.getElementById("progressFill").style.width=p+"%";
   },400);
-};
+}
+
+function goHome(){
+  closePanels();
+  document.getElementById("landingPage").classList.remove("hidden");
+  window.scrollTo(0,0);
+}
 
 function startApp(){
   document.getElementById("startScreen").style.display="none";
