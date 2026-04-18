@@ -185,33 +185,128 @@ select.inp{cursor:pointer}
 .empty-cart{text-align:center;padding:48px 20px;color:var(--op-soft)}
 .empty-cart .icon{font-size:36px;margin-bottom:10px;opacity:0.4}
 
+/* ── TRACK ORDER BUTTON ── */
+#trackOrderBtn{animation:track-glow 2s ease-in-out infinite}
+@keyframes track-glow{0%,100%{box-shadow:0 4px 16px rgba(26,15,6,0.15)}50%{box-shadow:0 4px 22px rgba(184,137,74,0.4);border-color:var(--op-gold)}}
+#trackOrderBtn.ready-state{background:linear-gradient(135deg,#1d6b62,#2a9d8f);color:#fff;border-color:transparent;animation:track-ready 0.8s ease-in-out infinite}
+@keyframes track-ready{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
 /* ── KITCHEN VIEW ── */
-#kitchenView{position:fixed;inset:0;z-index:100;background:#111;color:#fff;overflow-y:auto;font-family:'DM Sans',sans-serif;display:none}
-.kh{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#0a0a0a;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;position:sticky;top:0;z-index:1;border-bottom:1px solid #2a2a2a;letter-spacing:0.5px}
+#kitchenView{position:fixed;inset:0;z-index:100;background:#111;color:#fff;overflow-y:auto;font-family:'DM Sans',sans-serif;display:none;flex-direction:column}
+#kitchenView.active-display{display:flex}
+.kh{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#0a0a0a;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;position:sticky;top:0;z-index:2;border-bottom:1px solid #1a1a1a;letter-spacing:0.5px}
 .kclose{background:#222;color:#fff;border-radius:4px;font-size:12px;padding:7px 16px;margin:0;letter-spacing:1px;text-transform:uppercase;font-weight:700;border:1px solid #333}
-#kOrders{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;padding:16px}
-#kEmpty{text-align:center;padding:80px 20px;color:#444;font-size:16px;display:none}
-.kcard{background:#1a1a1a;border-radius:8px;padding:18px;border-top:3px solid #333}
+/* Kitchen stats bar */
+.k-stat{flex:1;text-align:center;padding:10px 4px;border-right:1px solid #1a1a1a}
+.k-stat:last-child{border-right:none}
+.k-stat-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#c8956c}
+.k-stat-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#444;margin-top:2px}
+/* Kitchen filter tabs */
+.k-filter-tab{background:#1a1a1a;border:1px solid #2a2a2a;color:#666;border-radius:20px;padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:1px;white-space:nowrap;cursor:pointer;margin:0;transition:all 0.15s;flex-shrink:0}
+.k-filter-tab.active{background:#fff;color:#1a0f06;border-color:#fff}
+.k-filter-tab::-webkit-scrollbar{display:none}
+/* Kitchen orders grid */
+#kOrders{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding:14px;flex:1}
+#kEmpty{text-align:center;padding:80px 20px;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+/* Kitchen card */
+.kcard{background:#1a1a1a;border-radius:8px;padding:16px;border-top:3px solid #333;position:relative}
 .kcard.kn{border-top-color:#e63946}.kcard.kp{border-top-color:#f4a261}.kcard.kr{border-top-color:#2a9d8f}
-.kchead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.koid{font-size:11px;color:#555;letter-spacing:1px}.ktbl{font-size:24px;font-weight:700;font-family:'Cormorant Garamond',serif;letter-spacing:0.5px}
-.kname{font-size:12px;color:#555;margin-bottom:10px}
-.kitems{margin-bottom:14px}
-.kitem{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid #222;font-size:14px}
+.kcard.kn{animation:new-pulse 2s ease-in-out infinite}
+@keyframes new-pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}50%{box-shadow:0 0 0 4px rgba(230,57,70,0.15)}}
+.kchead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.koid{font-size:10px;color:#444;letter-spacing:1px;text-transform:uppercase}
+.ktbl{font-size:26px;font-weight:700;font-family:'Cormorant Garamond',serif;letter-spacing:0.5px;color:#fff}
+.kname{font-size:12px;color:#555;margin-bottom:8px}
+.kts{font-size:10px;color:#333;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ktimer{font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:0.5px}
+.ktimer.t-ok{background:#1a2a1a;color:#4caf50}
+.ktimer.t-warn{background:#2a2010;color:#f4a261}
+.ktimer.t-late{background:#2a1010;color:#e63946;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0.4}}
+.kitems{margin-bottom:12px;border-top:1px solid #222;padding-top:10px}
+.kitem{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid #1e1e1e;font-size:14px}
 .kitem:last-child{border-bottom:none}
-.kiname{font-weight:600}
-.kiqty{background:#2a2a2a;border-radius:4px;padding:2px 8px;font-size:12px;font-weight:700;color:#aaa}
-.knote{font-size:11px;color:#c8956c;margin-top:4px;font-style:italic}
+.kiname{font-weight:600;color:#fff}
+.kiqty{background:#252525;border-radius:4px;padding:2px 8px;font-size:12px;font-weight:700;color:#888}
+.knote{font-size:11px;color:#c8956c;margin-top:3px;font-style:italic}
 .kspill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:1px;text-transform:uppercase}
 .kpn{background:#2a0e10;color:#e63946}.kpp{background:#2a1d08;color:#f4a261}.kpr{background:#081e1c;color:#2a9d8f}
-.kacts{display:flex;gap:8px}
-.kacts button{flex:1;border-radius:4px;padding:10px;font-size:12px;font-weight:700;margin:0;letter-spacing:1px;text-transform:uppercase}
-.kts{font-size:10px;color:#444;margin-bottom:10px;letter-spacing:0.5px}
+/* Kitchen action buttons */
+.kacts{display:flex;gap:6px;margin-top:10px}
+.kacts button{flex:1;border-radius:4px;padding:10px;font-size:11px;font-weight:700;margin:0;letter-spacing:1px;text-transform:uppercase}
+.k-call-btn{background:#1a1a2a;color:#7c8cf8;border:1px solid #2a2a3a;font-size:11px;font-weight:700;padding:7px 10px;border-radius:4px;cursor:pointer;margin:0;letter-spacing:1px;text-transform:uppercase;margin-top:6px;width:100%}
+.k-call-btn:hover{background:#2a2a4a}
 .rday{background:var(--op-bg);border-radius:8px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--op-border)}
 .rdayh{display:flex;justify-content:space-between;font-weight:600;margin-bottom:6px}
 .ritem{display:flex;justify-content:space-between;font-size:13px;color:var(--op-soft);padding:2px 0}
 
-/* ══ FEATURE: DAILY SPECIALS BANNER ══ */
+/* ══ PAYMENT MODAL ══ */
+#paymentModal{position:fixed;inset:0;z-index:40;background:rgba(26,15,6,0.6);display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+#paymentModal.active{display:flex}
+.pay-sheet{background:var(--op-surface);border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:0 0 32px;box-shadow:0 -12px 60px rgba(0,0,0,0.2);animation:slideUp 0.3s cubic-bezier(.4,0,.2,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.pay-handle{width:36px;height:3px;background:var(--op-border);border-radius:2px;margin:12px auto 20px}
+.pay-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;text-align:center;margin:0 0 4px;color:var(--op-text)}
+.pay-amount{text-align:center;font-size:28px;font-weight:800;color:var(--op-gold);font-family:'Cormorant Garamond',serif;margin:0 0 24px;letter-spacing:0.5px}
+.pay-methods{display:flex;flex-direction:column;gap:10px;padding:0 20px;margin-bottom:20px}
+.pay-method{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1.5px solid var(--op-border);border-radius:8px;cursor:pointer;transition:all 0.18s;background:var(--op-bg)}
+.pay-method.selected{border-color:var(--op-text);background:#fff;box-shadow:0 2px 12px rgba(26,15,6,0.1)}
+.pay-method-icon{font-size:26px;width:36px;text-align:center;flex-shrink:0}
+.pay-method-info h4{margin:0 0 2px;font-size:14px;font-weight:700;color:var(--op-text)}
+.pay-method-info p{margin:0;font-size:11px;color:var(--op-soft)}
+.pay-method-radio{margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid var(--op-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.18s}
+.pay-method.selected .pay-method-radio{border-color:var(--op-text);background:var(--op-text)}
+.pay-method.selected .pay-method-radio::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff}
+.pay-confirm{width:calc(100% - 40px);margin:0 20px;border-radius:4px;padding:15px;font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;background:var(--op-text);color:#fff;border:none;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s}
+.pay-confirm:hover{background:var(--brown)}
+/* QR payment sub-screen */
+.pay-qr-screen{display:none;padding:0 20px;text-align:center}
+.pay-qr-screen.active{display:block}
+.pay-qr-box{border:2px dashed var(--op-border);border-radius:8px;padding:24px;margin-bottom:16px;background:var(--op-bg)}
+.pay-qr-amount{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--op-gold);display:block;margin-bottom:4px}
+.pay-qr-hint{font-size:12px;color:var(--op-soft);display:block;margin-bottom:16px}
+.pay-qr-fake{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;width:120px;margin:0 auto 12px}
+.pay-qr-fake span{aspect-ratio:1;background:var(--op-text);border-radius:1px}
+.pay-qr-fake span.w{background:var(--op-bg)}
+.pay-timer{font-size:13px;color:var(--op-soft);font-weight:600}
+.pay-timer span{color:var(--op-gold)}
+/* Success animation */
+#paySuccess{position:fixed;inset:0;z-index:60;background:var(--op-bg);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}
+#paySuccess.active{display:flex}
+.success-ring{width:100px;height:100px;border-radius:50%;border:3px solid var(--op-border);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;animation:ring-in 0.5s ease forwards}
+@keyframes ring-in{from{transform:scale(0.6);opacity:0}to{transform:scale(1);opacity:1}}
+.success-ring svg{width:48px;height:48px;stroke:var(--op-gold);stroke-width:2.5;fill:none;stroke-dasharray:60;stroke-dashoffset:60;animation:draw-check 0.5s 0.3s ease forwards}
+@keyframes draw-check{to{stroke-dashoffset:0}}
+.success-ring::before{content:'';position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(184,137,74,0.2);animation:ripple 1.2s 0.5s ease-out forwards}
+@keyframes ripple{from{transform:scale(1);opacity:1}to{transform:scale(1.4);opacity:0}}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;margin:0 0 8px;color:var(--op-text);animation:fade-up 0.4s 0.4s both}
+.success-sub{color:var(--op-soft);font-size:13px;line-height:1.7;margin:0 0 8px;animation:fade-up 0.4s 0.5s both}
+.success-method{display:inline-block;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--op-gold);background:rgba(184,137,74,0.1);border:1px solid rgba(184,137,74,0.2);padding:4px 12px;border-radius:3px;margin-bottom:28px;animation:fade-up 0.4s 0.6s both}
+.success-ref{font-size:11px;color:rgba(184,137,74,0.6);letter-spacing:1px;animation:fade-up 0.4s 0.65s both;margin-bottom:32px}
+@keyframes fade-up{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.success-btn{background:var(--op-text);color:#fff;border:none;border-radius:4px;padding:14px 36px;font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;cursor:pointer;animation:fade-up 0.4s 0.7s both;margin:0}
+/* confetti particles */
+.confetti-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.conf{position:absolute;width:8px;height:8px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* ══ ADD-ON SUGGESTION ══ */
+#addonSheet{position:fixed;inset:0;z-index:35;background:rgba(26,15,6,0.5);display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+#addonSheet.active{display:flex}
+.addon-box{background:var(--op-surface);border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:0 0 28px;animation:slideUp 0.28s cubic-bezier(.4,0,.2,1)}
+.addon-drag{width:36px;height:3px;background:var(--op-border);border-radius:2px;margin:12px auto 18px}
+.addon-eyebrow{font-size:10px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--op-gold);text-align:center;display:block;margin-bottom:4px}
+.addon-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;text-align:center;margin:0 0 18px;color:var(--op-text)}
+.addon-items{display:flex;flex-direction:column;gap:8px;padding:0 16px;margin-bottom:16px}
+.addon-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--op-border);border-radius:6px;background:var(--op-bg);cursor:pointer;transition:all 0.15s}
+.addon-item:hover{border-color:var(--op-gold);background:#fff}
+.addon-item-emoji{font-size:24px;flex-shrink:0}
+.addon-item-info{flex:1}
+.addon-item-info h4{margin:0 0 2px;font-size:13px;font-weight:700;color:var(--op-text)}
+.addon-item-info p{margin:0;font-size:11px;color:var(--op-soft)}
+.addon-item-price{font-size:13px;font-weight:800;color:var(--op-gold)}
+.addon-item-add{background:var(--op-text);color:#fff;border:none;border-radius:3px;padding:7px 14px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:'DM Sans',sans-serif;cursor:pointer;margin:0;flex-shrink:0}
+.addon-skip{width:calc(100% - 32px);margin:0 16px;border-radius:4px;padding:12px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:transparent;color:var(--op-soft);border:1px solid var(--op-border);font-family:'DM Sans',sans-serif;cursor:pointer}
 #specialsBanner{background:linear-gradient(90deg,var(--op-text),#3a2010);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;border-bottom:1px solid rgba(184,137,74,0.3);position:relative;overflow:hidden}
 #specialsBanner::before{content:'✦';position:absolute;left:10px;color:var(--op-gold);font-size:10px;opacity:0.5}
 .banner-inner{display:flex;align-items:center;gap:10px;flex:1;padding-left:16px}
@@ -282,6 +377,35 @@ select.inp{cursor:pointer}
 .viewer-fallback{width:100%;height:42vh;display:none;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(180deg,#f5ede0,#fdf6ee)}
 .viewer-fallback .vf-icon{font-size:64px;margin-bottom:8px;opacity:0.35}
 .viewer-fallback .vf-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--op-soft);opacity:0.6}
+
+/* ══ EASTER EGG: CAT MODE ══ */
+body.cat-mode{--op-bg:#fff5e6;--op-surface:#fff9f0;--op-border:#f0d4a0;--op-gold:#d4821a;--op-text:#5c2d00;--op-soft:#a0621a}
+body.cat-mode .header{background:rgba(255,245,230,0.95);}
+body.cat-mode #addBtn::after{content:" 🐾"}
+body.cat-mode .cat-btn.active{background:#d4821a;border-color:#d4821a;}
+body.cat-mode .lp-cta{background:linear-gradient(135deg,#d4821a,#f0a040);}
+body.cat-mode #cartBtn{background:#5c2d00;}
+body.cat-mode button:not(.close-btn):not(.qty-btn):not(.item-remove):not(.banner-close):not(.addon-skip):not(.loyalty-btn-secondary):not(.pay-method):not(.os-btn)::before{content:"🐾 ";}
+body.cat-mode .item-detail-card::before{background:linear-gradient(90deg,#d4821a,#f0a040);}
+body.cat-mode #categoryGlass::after{content:"(=^ω^=)";display:block;font-size:11px;color:var(--op-gold);padding:0 0 4px 2px;opacity:0.7;}
+/* cat mode wiggle on items */
+body.cat-mode .cat-btn{animation:cat-wiggle 3s ease-in-out infinite;}
+@keyframes cat-wiggle{0%,90%,100%{transform:rotate(0)}93%{transform:rotate(-3deg)}96%{transform:rotate(3deg)}}
+/* cat cursor */
+body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext y='24' font-size='24'%3E🐾%3C/text%3E%3C/svg%3E") 16 16,auto}
+
+/* ══ EASTER EGG: COFFEE CATCH ══ */
+#coffeeGame{font-family:'DM Sans',sans-serif;}
+
+/* ══ EASTER EGG: SHAKE ══ */
+@keyframes shake-hint{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+
+/* ══ ORDER READY NOTIFICATION ══ */
+@keyframes ready-pulse{0%,100%{opacity:1}50%{opacity:0.85}}
+@keyframes ring-bounce{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
+
+/* ══ EASTER EGG: CIRCLE DRAW HINT ══ */
+#drawHint{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,15,6,0.75);color:rgba(255,255,255,0.6);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:20px;z-index:18;opacity:0;pointer-events:none;transition:opacity 0.4s;backdrop-filter:blur(6px);}
 
 /* ── LANDING PAGE ── */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
@@ -528,17 +652,17 @@ select.inp{cursor:pointer}
 <div id="overlay" onclick="closePanels()"></div>
 
 <div class="header">
-  <img src="kopiKesidangan.jpg" alt="logo" onclick="goHome()" style="cursor:pointer;" title="Back to Home">
-  <h2 onclick="goHome()" style="cursor:pointer;" title="Back to Home">Kopi Kesidang</h2>
+  <img src="kopiKesidangan.jpg" alt="logo" id="headerLogo" onclick="handleLogoTap()" style="cursor:pointer;" title="Back to Home">
+  <h2 id="headerTitle" onclick="goHome()" style="cursor:pointer;user-select:none;" title="Back to Home">Kopi Kesidang</h2>
   <div class="header-right"><span class="header-tag">Table Menu</span></div>
 </div>
 
 <!-- ══ DAILY SPECIALS BANNER ══ -->
-<div id="specialsBanner">
+<div id="specialsBanner" class="hidden">
   <div class="banner-inner">
     <span class="banner-tag">Today</span>
-    <span class="banner-text" id="bannerText">Iced Hojicha Latte</span>
-    <span class="banner-price" id="bannerPrice">RM 11</span>
+    <span class="banner-text" id="bannerText"></span>
+    <span class="banner-price" id="bannerPrice"></span>
   </div>
   <button class="banner-close" onclick="dismissBanner()">✕</button>
 </div>
@@ -614,12 +738,34 @@ select.inp{cursor:pointer}
 </div>
 
 <div class="fab-stack">
+  <!-- Track My Order button — appears after checkout -->
+  <button id="trackOrderBtn" onclick="openTrackOrder()" style="display:none;background:#fff;color:var(--op-text);border:2px solid var(--op-border);border-radius:20px;padding:8px 14px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 4px 16px rgba(26,15,6,0.15);white-space:nowrap;margin:0;transition:all 0.2s;width:auto;height:auto;">
+    <span id="trackOrderIcon">☕</span> <span id="trackOrderLabel">Track Order</span>
+  </button>
   <div class="fab-cart-wrap">
     <button id="cartBtn" onclick="toggleCart()">🛒</button>
     <div id="cartCount"></div>
   </div>
-  <button id="adminBtn" onclick="openAdminWithPin()">📊</button>
-  <button id="kitchenBtn" onclick="openKitchen()">👨‍🍳</button>
+  <!-- Staff buttons — hidden from customers, revealed via long-press on logo -->
+  <button id="adminBtn" onclick="openAdminWithPin()" style="display:none;">📊</button>
+  <button id="kitchenBtn" onclick="openKitchen()" style="display:none;">👨‍🍳</button>
+</div>
+
+<!-- ══ STAFF ACCESS HINT (briefly visible on long-press) ══ -->
+<div id="staffToast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,15,6,0.85);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;border-radius:20px;z-index:50;opacity:0;pointer-events:none;transition:opacity 0.3s;backdrop-filter:blur(8px);">Staff Mode</div>
+
+<!-- ══ STAFF ACCESS POPUP ══ -->
+<div id="staffPopup" style="display:none;position:fixed;inset:0;z-index:25;background:rgba(26,15,6,0.5);align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:var(--op-surface);border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:24px 20px 36px;animation:slideUp 0.25s ease;">
+    <div style="width:36px;height:3px;background:var(--op-border);border-radius:2px;margin:0 auto 20px;"></div>
+    <p style="font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--op-gold);text-align:center;margin:0 0 6px;">Staff Access</p>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:22px;text-align:center;margin:0 0 20px;color:var(--op-text);">Where would you like to go?</h3>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="closeStaffPopup();openAdminWithPin();" style="width:100%;border-radius:4px;padding:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:var(--op-text);color:#fff;">📊 Admin Dashboard</button>
+      <button onclick="closeStaffPopup();openKitchen();" style="width:100%;border-radius:4px;padding:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:#1d6b62;color:#fff;">👨‍🍳 Kitchen View</button>
+      <button onclick="closeStaffPopup();" style="width:100%;border-radius:4px;padding:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:var(--op-bg);color:var(--op-soft);border:1px solid var(--op-border);">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <!-- CART -->
@@ -634,7 +780,7 @@ select.inp{cursor:pointer}
     <input class="inp" type="tel" id="customerPhone" placeholder="WhatsApp no. e.g. 60123456789">
     <div id="orderList"></div>
     <h3 id="cartTotal" style="color:var(--brown);margin:12px 0 0;"></h3>
-    <button id="checkoutBtn" onclick="checkout()" style="width:100%;border-radius:12px;padding:13px;font-size:15px;margin-top:8px;">Checkout ✓</button>
+    <button id="checkoutBtn" onclick="startCheckoutFlow()" style="width:100%;border-radius:12px;padding:13px;font-size:15px;margin-top:8px;">Checkout ✓</button>
   </div>
 </div>
 
@@ -659,6 +805,11 @@ select.inp{cursor:pointer}
         <div class="scard"><div class="num" id="statTotal">0</div><div class="lbl">Total</div></div>
         <div class="scard"><div class="num" id="statPending">0</div><div class="lbl">Pending</div></div>
         <div class="scard"><div class="num" id="statRevenue">RM 0</div><div class="lbl">Revenue</div></div>
+      </div>
+      <!-- TOP SALES -->
+      <div id="topSalesWrap" style="margin-bottom:14px;display:none;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--op-soft);margin-bottom:8px;">🏆 Top Sellers</div>
+        <div id="topSalesList" style="display:flex;flex-direction:column;gap:6px;"></div>
       </div>
       <div class="ftabs">
         <button class="ftab active" onclick="filterOrders('all',this)">All</button>
@@ -737,22 +888,174 @@ select.inp{cursor:pointer}
       <hr style="border:none;border-top:1px solid var(--cream-dark);margin:16px 0 10px;">
       <button onclick="resetMenu()" style="width:100%;border-radius:12px;padding:10px;background:var(--cream-dark);color:var(--text);font-size:13px;">↺ Reset to Default Menu</button>
       <p style="font-size:11px;color:var(--text-soft);text-align:center;margin:4px 0 0;">Tap twice to confirm. Restores original items.</p>
+    </div><!-- end tabMenu -->
+
+    <!-- QR CODE GENERATOR -->
+    <div id="tabQr" style="display:none;">
+      <p style="font-size:12px;color:var(--op-soft);margin:0 0 12px;line-height:1.6;">Generate a QR code per table. Customers scan it to open the menu with their table number pre-filled.</p>
+      <div class="qr-grid" id="qrTableGrid"></div>
+      <div class="qr-wrap" id="qrOutput" style="display:none;margin-top:16px;">
+        <canvas class="qr-canvas" id="qrCanvas" width="160" height="160"></canvas>
+        <div class="qr-label" id="qrTableLabel" style="margin-bottom:10px;"></div>
+        <button onclick="downloadQR()" style="width:100%;border-radius:3px;padding:11px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;">⬇ Download QR</button>
+      </div>
+    </div>
+
+    <!-- DAILY SPECIAL EDITOR -->
+    <div id="tabSpecial" style="display:none;">
+      <p style="font-size:12px;color:var(--op-soft);margin:0 0 14px;line-height:1.6;">Set today's special — it shows as a banner at the top of the menu for all customers.</p>
+      <label class="item-note-label">Special Item Name</label>
+      <input class="inp" id="specialName" type="text" placeholder="e.g. Iced Hojicha Latte">
+      <label class="item-note-label">Price</label>
+      <input class="inp" id="specialPrice" type="text" placeholder="e.g. RM 11">
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button onclick="saveSpecial()" style="flex:1;border-radius:3px;padding:11px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;">Save &amp; Show</button>
+        <button onclick="clearSpecial()" style="flex:1;border-radius:3px;padding:11px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:var(--op-bg);color:var(--op-soft);border:1px solid var(--op-border);">Hide Banner</button>
+      </div>
+      <div id="specialPreview" style="margin-top:16px;display:none;">
+        <div class="item-note-label" style="margin-bottom:6px;">Preview</div>
+        <div style="background:linear-gradient(90deg,var(--op-text),#3a2010);color:#fff;padding:10px 16px;border-radius:4px;font-size:13px;display:flex;gap:10px;align-items:center;">
+          <span style="font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--op-gold);background:rgba(184,137,74,0.15);border:1px solid rgba(184,137,74,0.3);padding:2px 8px;border-radius:2px;">Today</span>
+          <span id="spvName" style="flex:1;"></span>
+          <span id="spvPrice" style="font-weight:800;color:var(--op-gold);"></span>
+        </div>
+      </div>
     </div><!-- end tabSpecial -->
+
   </div><!-- end panel-body -->
 </div><!-- end adminPanel -->
+
+<!-- ══ PAYMENT MODAL ══ -->
+<div id="paymentModal">
+  <div class="pay-sheet">
+    <div class="pay-handle"></div>
+    <div class="pay-title">Choose Payment</div>
+    <div class="pay-amount" id="payAmount">RM 0.00</div>
+    <div class="pay-methods" id="payMethods">
+      <div class="pay-method selected" onclick="selectPayMethod(this,'cash')">
+        <div class="pay-method-icon">💵</div>
+        <div class="pay-method-info"><h4>Cash</h4><p>Pay at the counter</p></div>
+        <div class="pay-method-radio"></div>
+      </div>
+      <div class="pay-method" onclick="selectPayMethod(this,'debit')">
+        <div class="pay-method-icon">💳</div>
+        <div class="pay-method-info"><h4>Debit / Credit Card</h4><p>Tap or insert card</p></div>
+        <div class="pay-method-radio"></div>
+      </div>
+      <div class="pay-method" onclick="selectPayMethod(this,'qr')">
+        <div class="pay-method-icon">📲</div>
+        <div class="pay-method-info"><h4>QR Pay</h4><p>DuitNow · Touch 'n Go · Boost</p></div>
+        <div class="pay-method-radio"></div>
+      </div>
+    </div>
+    <!-- QR sub-screen -->
+    <div class="pay-qr-screen" id="payQrScreen">
+      <div class="pay-qr-box">
+        <span class="pay-qr-amount" id="payQrAmount">RM 0.00</span>
+        <span class="pay-qr-hint">Scan with DuitNow · Touch 'n Go · Boost</span>
+        <div class="pay-qr-fake" id="payQrGrid"></div>
+        <div class="pay-timer">Expires in <span id="payTimer">60</span>s</div>
+      </div>
+      <button class="pay-confirm" onclick="simulatePayment()">I've Paid ✓</button>
+    </div>
+    <button class="pay-confirm" id="payConfirmBtn" onclick="proceedPayment()">Confirm &amp; Pay</button>
+  </div>
+</div>
+
+<!-- ══ PAYMENT SUCCESS ══ -->
+<div id="paySuccess">
+  <div class="confetti-wrap" id="confettiWrap"></div>
+  <div class="success-ring">
+    <svg viewBox="0 0 48 48"><polyline points="8,24 20,36 40,14"/></svg>
+  </div>
+  <h2 class="success-title">Payment Successful</h2>
+  <p class="success-sub" id="successSub">Your order has been placed.<br>We'll start preparing it right away!</p>
+  <span class="success-method" id="successMethod">Cash</span>
+  <p class="success-ref" id="successRef">REF: KK-000000</p>
+  <button class="success-btn" onclick="afterPaymentSuccess()">View Order Status</button>
+</div>
+
+<!-- ══ ADD-ON SUGGESTION SHEET ══ -->
+<div id="addonSheet">
+  <div class="addon-box">
+    <div class="addon-drag"></div>
+    <span class="addon-eyebrow">Goes well with</span>
+    <h3 class="addon-title" id="addonTitle">Complete your order</h3>
+    <div class="addon-items" id="addonItems"></div>
+    <button class="addon-skip" onclick="closeAddon()">No thanks, proceed to checkout</button>
+  </div>
+</div>
+
+<!-- ══ EASTER EGG 1: CAT MODE TOAST ══ -->
+<div id="catToast" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:rgba(26,15,6,0.92);color:#fff;padding:20px 32px;border-radius:16px;text-align:center;font-size:28px;backdrop-filter:blur(8px);pointer-events:none;">
+  <div>🐱</div><div style="font-size:13px;font-weight:700;letter-spacing:1px;margin-top:6px;" id="catToastMsg">Cat Mode!</div>
+</div>
+
+<!-- ══ EASTER EGG 2: COFFEE CATCH MINI GAME ══ -->
+<div id="coffeeGame" style="display:none;position:fixed;inset:0;z-index:300;background:#1a0f06;flex-direction:column;align-items:center;justify-content:flex-start;overflow:hidden;">
+  <div style="width:100%;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#c8956c;font-weight:600;">Coffee Catch ☕</div>
+    <button onclick="endGame()" style="background:rgba(255,255,255,0.1);border:none;color:#fff;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;letter-spacing:1px;margin:0;cursor:pointer;">✕ Exit</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;width:100%;padding:0 20px 10px;position:relative;z-index:2;">
+    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Score <span id="gameScore" style="color:#c8956c;font-size:18px;font-family:'Cormorant Garamond',serif;">0</span></div>
+    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Best <span id="gameBest" style="color:rgba(255,255,255,0.5);font-size:16px;font-family:'Cormorant Garamond',serif;">0</span></div>
+    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);">Lives <span id="gameLives" style="font-size:16px;">❤️❤️❤️</span></div>
+  </div>
+  <canvas id="gameCanvas" style="display:block;touch-action:none;cursor:none;"></canvas>
+  <div id="gameOverScreen" style="display:none;position:absolute;inset:0;background:rgba(26,15,6,0.92);flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:3;">
+    <div style="font-size:56px;margin-bottom:12px;">☕</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:#fff;margin-bottom:6px;">Game Over</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:4px;">Score: <span id="finalScore" style="color:#c8956c;font-weight:700;font-size:20px;">0</span></div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:28px;">Best: <span id="finalBest">0</span></div>
+    <button onclick="restartGame()" style="background:linear-gradient(135deg,#6f4e37,#c8956c);border:none;color:#fff;border-radius:4px;padding:14px 36px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin:0 0 10px;">Play Again</button>
+    <button onclick="endGame()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);border-radius:4px;padding:10px 28px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin:0;">Exit</button>
+  </div>
+</div>
+
+<!-- ══ EASTER EGG 3: SHAKE = SECRET MENU ══ -->
+<div id="shakeModal" style="display:none;position:fixed;inset:0;z-index:250;background:rgba(26,15,6,0.7);align-items:center;justify-content:center;backdrop-filter:blur(6px);">
+  <div style="background:var(--op-surface);border-radius:4px;width:88%;max-width:340px;overflow:hidden;border-top:2px solid #c8956c;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:ring-in 0.4s ease;">
+    <div style="background:linear-gradient(135deg,#1a0f06,#3a2010);padding:24px;text-align:center;">
+      <div style="font-size:40px;margin-bottom:8px;">🤫</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#fff;font-weight:600;margin-bottom:4px;">Secret Menu</div>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);">Draw a ⭕ to unlock</div>
+    </div>
+    <div style="padding:20px;">
+      <div id="secretMenuItems"></div>
+      <button onclick="closeShakeModal()" style="width:100%;border-radius:3px;padding:12px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin:12px 0 0;background:var(--op-bg);color:var(--op-soft);border:1px solid var(--op-border);">Close</button>
+    </div>
+  </div>
+</div>
 
 <!-- RECEIPT MODAL -->
 <div id="receiptModal" class="modal-wrap">
   <div class="modal-bg" onclick="closeReceipt()"></div>
-  <div class="modal-box">
-    <h3>🧾 Kopi Kesidang</h3>
-    <p style="color:var(--text-soft);font-size:13px;margin:0 0 8px;">Receipt</p>
-    <hr class="rdiv">
-    <div id="receiptContent"></div>
-    <hr class="rdiv">
-    <div id="receiptTotal" class="rrow rtotal"></div>
-    <p style="font-size:12px;color:var(--text-soft);text-align:center;margin:8px 0 0;">Thank you ☕</p>
-    <button style="width:100%;margin-top:16px;border-radius:12px;padding:12px;" onclick="closeReceipt()">Close</button>
+  <div class="modal-box" style="padding:0;overflow:hidden;border-radius:4px;max-width:340px;">
+    <!-- Receipt header -->
+    <div style="background:var(--op-text);color:#fff;padding:24px 24px 20px;text-align:center;position:relative;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:1px;margin-bottom:2px;">Kopi Kesidang</div>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);">Official Receipt</div>
+    </div>
+    <!-- Zigzag tear -->
+    <div style="height:12px;background:linear-gradient(-45deg,var(--op-surface) 33%,transparent 33%) 0 0,linear-gradient(45deg,var(--op-surface) 33%,transparent 33%) 0 0;background-size:12px 12px;background-color:var(--op-text);"></div>
+    <!-- Receipt body -->
+    <div style="padding:20px 24px;font-family:'DM Sans',sans-serif;">
+      <div id="receiptContent"></div>
+      <div style="border-top:1.5px dashed var(--op-border);margin:14px 0;"></div>
+      <div id="receiptTotal" class="rrow rtotal" style="font-size:17px;"></div>
+      <div id="receiptPayMethod" style="font-size:11px;color:var(--op-soft);margin-top:4px;display:flex;justify-content:space-between;"></div>
+    </div>
+    <!-- Bottom zigzag -->
+    <div style="height:12px;background:linear-gradient(-45deg,transparent 33%,var(--op-bg) 33%) 0 0,linear-gradient(45deg,transparent 33%,var(--op-bg) 33%) 0 0;background-size:12px 12px;background-color:var(--op-surface);margin-bottom:0;"></div>
+    <!-- Footer -->
+    <div style="background:var(--op-bg);padding:16px 24px 20px;text-align:center;">
+      <div style="font-size:11px;color:var(--op-soft);margin-bottom:14px;letter-spacing:0.3px;line-height:1.6;">Thank you for dining with us ☕<br>We hope to see you again!</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="saveInvoice()" style="flex:1;border-radius:3px;padding:11px;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin:0;background:var(--op-bg);color:var(--op-soft);border:1px solid var(--op-border);">💾 Save</button>
+        <button onclick="closeReceipt()" style="flex:1;border-radius:3px;padding:11px;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin:0;background:var(--op-text);color:#fff;border:none;">Close</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -769,12 +1072,37 @@ select.inp{cursor:pointer}
 
 <!-- KITCHEN -->
 <div id="kitchenView">
+  <!-- Header -->
   <div class="kh">
-    <span>👨‍🍳 Kitchen View</span>
-    <button class="kclose" onclick="closeKitchen()">✕ Exit</button>
+    <span>👨‍🍳 Kitchen</span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div id="kSoundToggle" onclick="toggleKitchenSound()" style="cursor:pointer;font-size:18px;opacity:0.6;" title="Toggle sound alerts">🔔</div>
+      <button class="kclose" onclick="closeKitchen()">✕ Exit</button>
+    </div>
   </div>
+
+  <!-- Kitchen stats bar -->
+  <div style="display:flex;gap:0;background:#111;border-bottom:1px solid #222;">
+    <div class="k-stat"><div class="k-stat-num" id="kStatNew">0</div><div class="k-stat-lbl">New</div></div>
+    <div class="k-stat"><div class="k-stat-num" id="kStatPrep">0</div><div class="k-stat-lbl">Preparing</div></div>
+    <div class="k-stat"><div class="k-stat-num" id="kStatReady">0</div><div class="k-stat-lbl">Ready</div></div>
+    <div class="k-stat"><div class="k-stat-num" id="kStatDone">0</div><div class="k-stat-lbl">Done Today</div></div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div style="display:flex;gap:6px;padding:10px 16px;background:#111;overflow-x:auto;">
+    <button class="k-filter-tab active" onclick="setKitchenFilter('active',this)">🔥 Active</button>
+    <button class="k-filter-tab" onclick="setKitchenFilter('new',this)">🔴 New</button>
+    <button class="k-filter-tab" onclick="setKitchenFilter('preparing',this)">🟠 Preparing</button>
+    <button class="k-filter-tab" onclick="setKitchenFilter('ready',this)">🟢 Ready</button>
+    <button class="k-filter-tab" onclick="setKitchenFilter('done',this)">✓ Done</button>
+  </div>
+
   <div id="kOrders"></div>
-  <div id="kEmpty"><div style="font-size:60px;margin-bottom:16px;">✅</div><p>All clear! No active orders.</p></div>
+  <div id="kEmpty" style="display:none;">
+    <div style="font-size:60px;margin-bottom:16px;">✅</div>
+    <p style="color:#555;font-size:16px;">All clear! No active orders.</p>
+  </div>
 </div>
 
 <script>
@@ -853,14 +1181,22 @@ window.onload = () => {
 
 function enterExperience(){
   document.getElementById("landingPage").classList.add("hidden");
+  // Reset and re-show the start screen
+  const screen = document.getElementById("startScreen");
+  const btn = document.getElementById("startBtn");
+  const fill = document.getElementById("progressFill");
+  screen.style.display="flex";
+  btn.disabled=true;
+  btn.textContent="Loading...";
+  fill.style.width="0%";
   // Now start the loading animation
   let p=0;
   const t=setInterval(()=>{
     p+=20;
     if(p>=100){p=100;clearInterval(t);
-      document.getElementById("startBtn").disabled=false;
-      document.getElementById("startBtn").textContent="Start Experience ☕";}
-    document.getElementById("progressFill").style.width=p+"%";
+      btn.disabled=false;
+      btn.textContent="Start Experience ☕";}
+    fill.style.width=p+"%";
   },400);
 }
 
@@ -981,35 +1317,7 @@ function renderCart(){
 function changeQty(i,d){ cart[i].qty+=d; if(cart[i].qty<=0) cart.splice(i,1); renderCart(); refreshBadge(); }
 function removeItem(i){ cart.splice(i,1); renderCart(); refreshBadge(); }
 
-// ── CHECKOUT ──
-function checkout(){
-  if(cart.length===0){ document.getElementById("cartTotal").textContent="⚠️ Cart is empty!"; return; }
-  const name=document.getElementById("customerName").value.trim()||"Guest";
-  const table=document.getElementById("tableNo").value.trim()||"-";
-  const phone=document.getElementById("customerPhone").value.trim();
-  const orderId="ORD"+Math.floor(Math.random()*100000);
-  const ts=new Date().toLocaleString("en-MY");
-  const today=new Date().toISOString().slice(0,10);
-
-  const orders=getOrders();
-  orders.push({orderId,name,table,phone,cart:JSON.parse(JSON.stringify(cart)),timestamp:ts,today,status:"new"});
-  saveOrders(orders);
-
-  // WhatsApp auto-confirm
-  if(phone){
-    const tot=cart.reduce((a,i)=>a+i.price*i.qty,0);
-    const lines=cart.map(i=>"• "+i.title+" x"+i.qty+(i.note?" ("+i.note+")":"")+" — RM "+(i.price*i.qty).toFixed(2)).join("%0A");
-    const msg="🧾 *Kopi Kesidang*%0AHi "+name+"! Your order has been received.%0A%0A"+lines+"%0A%0A*Total: RM "+tot.toFixed(2)+"*%0ATable: "+table+"%0AOrder ID: "+orderId+"%0A%0AThank you ☕";
-    window.open("https://wa.me/"+phone.replace(/\D/g,"")+`?text=`+msg,"_blank");
-  }
-
-  cart=[];
-  document.getElementById("customerName").value="";
-  document.getElementById("tableNo").value="";
-  document.getElementById("customerPhone").value="";
-  refreshBadge();
-  closePanels();
-}
+// ── CHECKOUT defined below in feature patches ──
 
 // ── PANELS ──
 function toggleCart(){
@@ -1048,16 +1356,7 @@ function checkPin(){
   }
 }
 
-// ── ADMIN TABS ──
-function switchTab(tab,btn){
-  document.querySelectorAll(".admin-tab").forEach(t=>t.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("tabOrders").style.display=tab==="orders"?"block":"none";
-  document.getElementById("tabReport").style.display=tab==="report"?"block":"none";
-  document.getElementById("tabMenu").style.display  =tab==="menu"  ?"block":"none";
-  if(tab==="report") renderReport();
-  if(tab==="menu")   renderMenuEditor();
-}
+// ── ADMIN TABS ── (handled by full switchTab defined below with feature patches)
 function loadAdmin(){ renderAdminOrders(curFilter); }
 
 // ── ORDERS ──
@@ -1075,6 +1374,34 @@ function renderAdminOrders(filter){
   document.getElementById("statTotal").textContent=orders.length;
   document.getElementById("statPending").textContent=pending;
   document.getElementById("statRevenue").textContent="RM "+rev.toFixed(2);
+
+  // ── TOP SALES ──
+  const itemTotals={};
+  orders.forEach(o=>o.cart.forEach(i=>{
+    if(!itemTotals[i.title]) itemTotals[i.title]={qty:0,rev:0};
+    itemTotals[i.title].qty+=i.qty;
+    itemTotals[i.title].rev+=i.price*i.qty;
+  }));
+  const topItems=Object.entries(itemTotals).sort((a,b)=>b[1].qty-a[1].qty).slice(0,5);
+  const tsWrap=document.getElementById("topSalesWrap");
+  const tsList=document.getElementById("topSalesList");
+  if(topItems.length>0){
+    tsWrap.style.display="block";
+    const maxQty=topItems[0][1].qty||1;
+    tsList.innerHTML=topItems.map(([name,d],idx)=>{
+      const bar=Math.round((d.qty/maxQty)*100);
+      const medals=["🥇","🥈","🥉","4️⃣","5️⃣"];
+      return `<div style="background:var(--op-bg);border-radius:6px;padding:8px 12px;border:1px solid var(--op-border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+          <span style="font-size:13px;font-weight:600;color:var(--op-text);">${medals[idx]||""} ${name}</span>
+          <span style="font-size:11px;color:var(--op-gold);font-weight:800;">${d.qty} sold · RM ${d.rev.toFixed(2)}</span>
+        </div>
+        <div style="height:4px;background:var(--op-border);border-radius:2px;overflow:hidden;">
+          <div style="height:100%;width:${bar}%;background:linear-gradient(90deg,var(--op-gold),var(--op-gold-light));border-radius:2px;transition:width 0.5s;"></div>
+        </div>
+      </div>`;
+    }).join("");
+  } else { tsWrap.style.display="none"; }
 
   const list=filter==="all"?orders.slice().reverse():orders.filter(o=>(o.status||"new")===filter).slice().reverse();
   const el=document.getElementById("adminOrders");
@@ -1127,17 +1454,73 @@ function cancelClear(){ document.getElementById("clearConfirm").style.display="n
 function viewReceipt(id){
   const order=getOrders().find(o=>o.orderId===id); if(!order) return;
   let tot=0;
+  const methodLabel={cash:"Cash",debit:"Card Payment",qr:"QR Pay"}[order.payMethod||"cash"]||"Cash";
   document.getElementById("receiptContent").innerHTML=`
-    <div class="rrow"><span>Order ID</span><span>${order.orderId}</span></div>
-    <div class="rrow"><span>Name</span><span>${order.name}</span></div>
-    <div class="rrow"><span>Table</span><span>${order.table}</span></div>
-    ${order.timestamp?'<div class="rrow"><span>Time</span><span style="font-size:12px;">'+order.timestamp+'</span></div>':""}
-    <hr class="rdiv">
-    ${order.cart.map(i=>{ tot+=i.price*i.qty; return '<div class="rrow"><span>'+i.title+" x"+i.qty+(i.note?" ("+i.note+")" :"")+'</span><span>RM '+(i.price*i.qty).toFixed(2)+'</span></div>'; }).join("")}`;
-  document.getElementById("receiptTotal").innerHTML="<span>Total</span><span>RM "+tot.toFixed(2)+"</span>";
+    <div class="rrow" style="margin-bottom:2px;"><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--op-soft);">Order</span><span style="font-size:12px;color:var(--op-gold);font-weight:800;">${order.orderId}</span></div>
+    <div class="rrow"><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--op-soft);">Name</span><span style="font-size:13px;">${order.name}</span></div>
+    <div class="rrow"><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--op-soft);">Table</span><span style="font-size:13px;">${order.table}</span></div>
+    ${order.timestamp?`<div class="rrow"><span style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--op-soft);">Time</span><span style="font-size:11px;color:var(--op-soft);">${order.timestamp}</span></div>`:""}
+    <div style="border-top:1px dashed var(--op-border);margin:12px 0 10px;"></div>
+    ${order.cart.map(i=>{ tot+=i.price*i.qty; return `<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><div><div style="font-size:13px;font-weight:600;color:var(--op-text);">${i.title}</div>${i.note?`<div style="font-size:11px;color:var(--op-soft);font-style:italic;">📝 ${i.note}</div>`:""}<div style="font-size:11px;color:var(--op-soft);">x${i.qty} × RM ${i.price.toFixed(2)}</div></div><span style="font-size:13px;font-weight:700;color:var(--op-text);white-space:nowrap;">RM ${(i.price*i.qty).toFixed(2)}</span></div>`; }).join("")}`;
+  document.getElementById("receiptTotal").innerHTML=`<span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Total</span><span style="color:var(--op-gold);font-size:18px;font-family:'Cormorant Garamond',serif;">RM ${tot.toFixed(2)}</span>`;
+  document.getElementById("receiptPayMethod").innerHTML=`<span>Payment</span><span style="font-weight:700;color:var(--op-text);">${methodLabel}</span>`;
   document.getElementById("receiptModal").classList.add("active");
 }
 function closeReceipt(){ document.getElementById("receiptModal").classList.remove("active"); }
+
+function saveInvoice(){
+  const order=getOrders().find(o=>o.orderId===window._lastOrderId)||window._lastOrder;
+  if(!order){ alert("No order found."); return; }
+  let tot=0;
+  const methodLabel={cash:"Cash",debit:"Card Payment",qr:"QR Pay"}[order.payMethod||"cash"]||"Cash";
+  const rows=order.cart.map(i=>{ tot+=i.price*i.qty; return `<tr><td>${i.title}${i.note?" ("+i.note+")":""}</td><td style="text-align:center">x${i.qty}</td><td style="text-align:right">RM ${(i.price*i.qty).toFixed(2)}</td></tr>`; }).join("");
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Invoice ${order.orderId} — Kopi Kesidang</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',sans-serif;background:#f9f3eb;display:flex;justify-content:center;padding:40px 16px}
+  .receipt{background:#fff;width:100%;max-width:360px;border-radius:4px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.12)}
+  .rhead{background:#1a0f06;color:#fff;padding:28px 24px;text-align:center}
+  .rhead h1{font-size:22px;letter-spacing:1px;margin-bottom:4px}
+  .rhead p{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:0.45}
+  .tear{height:12px;background:linear-gradient(-45deg,#fff 33%,transparent 33%) 0 0,linear-gradient(45deg,#fff 33%,transparent 33%) 0 0;background-size:12px 12px;background-color:#1a0f06}
+  .rbody{padding:20px 24px}
+  .meta{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;color:#555}
+  .meta b{color:#1a0f06}
+  hr{border:none;border-top:1px dashed #e0d0b8;margin:14px 0}
+  table{width:100%;font-size:13px;border-collapse:collapse}
+  td{padding:5px 0;vertical-align:top}
+  .total-row{font-size:16px;font-weight:800;display:flex;justify-content:space-between;margin-top:4px}
+  .total-row .amt{color:#b8894a;font-size:20px}
+  .pay-row{font-size:11px;color:#888;display:flex;justify-content:space-between;margin-top:4px}
+  .tear-bot{height:12px;background:linear-gradient(-45deg,transparent 33%,#f9f3eb 33%) 0 0,linear-gradient(45deg,transparent 33%,#f9f3eb 33%) 0 0;background-size:12px 12px;background-color:#fff}
+  .rfoot{background:#f9f3eb;padding:16px 24px;text-align:center;font-size:11px;color:#999;line-height:1.6}
+  .ref{margin-top:8px;font-size:10px;color:#c8956c;letter-spacing:1px}
+</style>
+</head><body>
+<div class="receipt">
+  <div class="rhead"><h1>Kopi Kesidang</h1><p>Official Tax Invoice</p></div>
+  <div class="tear"></div>
+  <div class="rbody">
+    <div class="meta"><span>Order</span><b style="color:#b8894a">${order.orderId}</b></div>
+    <div class="meta"><span>Name</span><b>${order.name}</b></div>
+    <div class="meta"><span>Table</span><b>${order.table}</b></div>
+    <div class="meta"><span>Date</span><b style="font-size:11px">${order.timestamp||""}</b></div>
+    <hr>
+    <table>${rows}</table>
+    <hr>
+    <div class="total-row"><span>Total</span><span class="amt">RM ${tot.toFixed(2)}</span></div>
+    <div class="pay-row"><span>Payment Method</span><span><b>${methodLabel}</b></span></div>
+  </div>
+  <div class="tear-bot"></div>
+  <div class="rfoot">Thank you for dining with us ☕<br>We hope to see you again soon!<div class="ref">REF: KK-${order.orderId}</div></div>
+</div></body></html>`;
+  const blob=new Blob([html],{type:"text/html"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="Invoice_"+order.orderId+".html";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
 // ── DAILY SALES REPORT ──
 function renderReport(){
@@ -1341,39 +1724,195 @@ function resetMenu(){
 }
 
 // ── KITCHEN ──
-function openKitchen(){ document.getElementById("kitchenView").style.display="block"; renderKitchen(); kTimer=setInterval(renderKitchen,5000); }
-function closeKitchen(){ document.getElementById("kitchenView").style.display="none"; clearInterval(kTimer); }
+let kFilter='active', kSoundOn=true, _lastKNewCount=0;
+
+function openKitchen(){
+  const kv=document.getElementById("kitchenView");
+  kv.style.display="flex";
+  kv.style.flexDirection="column";
+  renderKitchen();
+  kTimer=setInterval(()=>{
+    renderKitchen();
+    checkKitchenNewAlert();
+  },4000);
+}
+function closeKitchen(){
+  document.getElementById("kitchenView").style.display="none";
+  clearInterval(kTimer); kTimer=null;
+}
+function setKitchenFilter(f,btn){
+  kFilter=f;
+  document.querySelectorAll(".k-filter-tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  renderKitchen();
+}
+function toggleKitchenSound(){
+  kSoundOn=!kSoundOn;
+  document.getElementById("kSoundToggle").style.opacity=kSoundOn?"0.9":"0.25";
+  document.getElementById("kSoundToggle").textContent=kSoundOn?"🔔":"🔕";
+}
+function checkKitchenNewAlert(){
+  const newCount=getOrders().filter(o=>(o.status||"new")==="new").length;
+  if(newCount>_lastKNewCount && kSoundOn){
+    // Play a soft beep via Web Audio
+    try{
+      const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      [0,150,300].forEach(d=>setTimeout(()=>{
+        const o=ctx.createOscillator(),g=ctx.createGain();
+        o.connect(g);g.connect(ctx.destination);
+        o.frequency.value=880;g.gain.setValueAtTime(0.15,ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.2);
+        o.start();o.stop(ctx.currentTime+0.2);
+      },d));
+    }catch(e){}
+  }
+  _lastKNewCount=newCount;
+}
 
 function renderKitchen(){
-  const active=getOrders().filter(o=>o.status!=="done");
-  const con=document.getElementById("kOrders"), emp=document.getElementById("kEmpty");
+  const all=getOrders();
+  // Update stats
+  const counts={new:0,preparing:0,ready:0,done:0};
+  all.forEach(o=>counts[o.status||"new"]=(counts[o.status||"new"]||0)+1);
+  document.getElementById("kStatNew").textContent=counts.new||0;
+  document.getElementById("kStatPrep").textContent=counts.preparing||0;
+  document.getElementById("kStatReady").textContent=counts.ready||0;
+  const todayDone=all.filter(o=>o.status==="done"&&o.today===new Date().toISOString().slice(0,10)).length;
+  document.getElementById("kStatDone").textContent=todayDone;
+
+  // Filter
+  let orders;
+  if(kFilter==="active") orders=all.filter(o=>o.status!=="done");
+  else orders=all.filter(o=>(o.status||"new")===kFilter);
+
+  const con=document.getElementById("kOrders");
+  const emp=document.getElementById("kEmpty");
   con.innerHTML="";
-  if(active.length===0){ emp.style.display="block"; return; }
+
+  if(orders.length===0){ emp.style.display="flex"; return; }
   emp.style.display="none";
-  const ord={new:0,preparing:1,ready:2};
-  active.sort((a,b)=>(ord[a.status]??0)-(ord[b.status]??0));
+
+  // Sort: new first, then preparing, then ready
+  const pri={new:0,preparing:1,ready:2,done:3};
+  orders.sort((a,b)=>(pri[a.status||"new"]??0)-(pri[b.status||"new"]??0));
+
   const pc={new:"kpn",preparing:"kpp",ready:"kpr"};
   const pl={new:"🔴 New",preparing:"🟠 Preparing",ready:"🟢 Ready!"};
   const cc={new:"kn",preparing:"kp",ready:"kr"};
-  const nb={new:`<button class="bp" onclick="kSetSt('{id}','preparing')">→ Preparing</button>`,
+  const nb={
+    new:`<button class="bp" onclick="kSetSt('{id}','preparing')">→ Preparing</button>`,
     preparing:`<button class="br" onclick="kSetSt('{id}','ready')">→ Ready</button>`,
-    ready:`<button class="bd" onclick="kSetSt('{id}','done')">✓ Done</button>`};
-  active.forEach(o=>{
+    ready:`<button class="bd" onclick="kSetSt('{id}','done')">✓ Done</button>`
+  };
+
+  orders.forEach(o=>{
     const st=o.status||"new";
-    const card=document.createElement("div"); card.className="kcard "+(cc[st]||"");
+    const card=document.createElement("div");
+    card.className="kcard "+(cc[st]||"");
+
+    // Elapsed timer
+    let timerHtml="";
+    if(o.timestamp){
+      const placed=new Date(o.timestamp);
+      const mins=Math.floor((Date.now()-placed)/60000);
+      if(!isNaN(mins)&&mins>=0){
+        const cls=mins<5?"t-ok":mins<12?"t-warn":"t-late";
+        timerHtml=`<span class="ktimer ${cls}">⏱ ${mins}m ago</span>`;
+      }
+    }
+
+    // Call button if phone exists
+    const callBtn=o.phone?`<button class="k-call-btn" onclick="kCallCustomer('${o.phone}','${o.name}')">📞 Call ${o.name}</button>`:"";
+
     card.innerHTML=`
       <div class="kchead">
         <div><div class="koid">${o.orderId}</div><div class="ktbl">Table ${o.table}</div></div>
-        <span class="kspill ${pc[st]}">${pl[st]}</span>
+        <span class="kspill ${pc[st]||""}">${pl[st]||st}</span>
       </div>
       <div class="kname">👤 ${o.name}</div>
-      ${o.timestamp?'<div class="kts">🕐 '+o.timestamp+'</div>':""}
-      <div class="kitems">${o.cart.map(i=>'<div class="kitem"><span><span class="kiname">'+i.title+'</span>'+(i.note?'<div class="knote">📝 '+i.note+'</div>':'')+`</span><span class="kiqty">x${i.qty}</span></div>`).join("")}</div>
-      <div class="kacts">${(nb[st]||"").replace("{id}",o.orderId)}</div>`;
+      <div class="kts">${o.timestamp?'🕐 '+o.timestamp:''}${timerHtml}</div>
+      <div class="kitems">${o.cart.map(i=>`
+        <div class="kitem">
+          <span><span class="kiname">${i.title}</span>${i.note?`<div class="knote">📝 ${i.note}</div>`:""}</span>
+          <span class="kiqty">x${i.qty}</span>
+        </div>`).join("")}
+      </div>
+      <div class="kacts">${(nb[st]||"").replace("{id}",o.orderId)}</div>
+      ${callBtn}`;
     con.appendChild(card);
   });
 }
-function kSetSt(id,status){ const orders=getOrders(); const i=orders.findIndex(o=>o.orderId===id); if(i!==-1){ orders[i].status=status; saveOrders(orders); renderKitchen(); } }
+
+function kSetSt(id,status){
+  const orders=getOrders();
+  const i=orders.findIndex(o=>o.orderId===id);
+  if(i!==-1){ orders[i].status=status; saveOrders(orders); renderKitchen(); updateTrackOrderBtn(); }
+}
+function kCallCustomer(phone,name){
+  if(confirm(`Call ${name} at ${phone}?`)) window.location.href="tel:"+phone.replace(/\D/g,"");
+}
+
+// ══════════════════════════════════════
+// TRACK ORDER BUTTON (replaces order ready bar)
+// ══════════════════════════════════════
+let _prevOrderStatus=null;
+
+function showTrackOrderBtn(){
+  const btn=document.getElementById("trackOrderBtn");
+  btn.style.display="block";
+  updateTrackOrderBtn();
+}
+function updateTrackOrderBtn(){
+  if(!window._lastOrderId) window._lastOrderId=localStorage.getItem("kk_last_order_id");
+  if(!window._lastOrderId) return;
+  const order=getOrders().find(o=>o.orderId===window._lastOrderId);
+  if(!order) return;
+  const btn=document.getElementById("trackOrderBtn");
+  const icon=document.getElementById("trackOrderIcon");
+  const lbl=document.getElementById("trackOrderLabel");
+  const statusMap={
+    new:     {icon:"☕", label:"Track My Order", cls:""},
+    preparing:{icon:"🔥", label:"Being Prepared...", cls:""},
+    ready:   {icon:"🛎", label:"Ready to Collect!", cls:"ready-state"},
+    done:    {icon:"✅", label:"Enjoy!", cls:""}
+  };
+  const s=statusMap[order.status||"new"]||statusMap.new;
+  if(_prevOrderStatus!=="ready"&&order.status==="ready"){
+    showReadyToast();
+    if(navigator.vibrate) navigator.vibrate([200,100,200]);
+  }
+  _prevOrderStatus=order.status;
+  icon.textContent=s.icon;
+  lbl.textContent=s.label;
+  btn.classList.remove("ready-state");
+  if(s.cls) btn.classList.add(s.cls);
+  btn.style.display=order.status==="done"?"none":"block";
+}
+function openTrackOrder(){
+  if(!window._lastOrderId) window._lastOrderId=localStorage.getItem("kk_last_order_id");
+  if(!window._lastOrderId) return;
+  const order=getOrders().find(o=>o.orderId===window._lastOrderId);
+  if(order){ window._lastOrder=order; showOrderStatus(order); }
+}
+function showReadyToast(){
+  let toast=document.getElementById("readyToast");
+  if(!toast){
+    toast=document.createElement("div");
+    toast.id="readyToast";
+    toast.style.cssText="position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-10px);background:linear-gradient(135deg,#1d6b62,#2a9d8f);color:#fff;font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:12px 24px;border-radius:30px;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.4s,transform 0.4s;box-shadow:0 8px 28px rgba(29,107,98,0.5);white-space:nowrap;";
+    document.body.appendChild(toast);
+  }
+  toast.textContent="🛎 Your order is ready!";
+  requestAnimationFrame(()=>{
+    toast.style.opacity="1";
+    toast.style.transform="translateX(-50%) translateY(0)";
+  });
+  clearTimeout(toast._timer);
+  toast._timer=setTimeout(()=>{
+    toast.style.opacity="0";
+    toast.style.transform="translateX(-50%) translateY(-10px)";
+  },4000);
+}
 
 // ══════════════════════════════════════
 // FEATURE 1: DAILY SPECIALS BANNER
@@ -1432,8 +1971,8 @@ function showOrderStatus(order){
 }
 function updateStatusUI(status){
   const icons={new:"☕",preparing:"🔥",ready:"🛎",done:"✅"};
-  const titles={new:"Order Received!",preparing:"Being Prepared...",ready:"Ready for Pickup!",done:"Enjoy your order!"};
-  const subs={new:"We've got your order.\nSit back and relax.",preparing:"Your order is being crafted\nwith love right now.",ready:"Your order is ready!\nPlease collect at the counter.",done:"Thank you for dining with us.\nSee you again soon! ☕"};
+  const titles={new:"Order Received!",preparing:"Being Prepared...",ready:"Ready for Pickup! 🛎",done:"Enjoy your order!"};
+  const subs={new:"We've got your order.\nSit back and relax.",preparing:"Your order is being crafted\nwith love right now.",ready:"Please collect your order\nat the counter now!",done:"Thank you for dining with us.\nSee you again soon! ☕"};
   document.getElementById("osIcon").textContent=icons[status]||"☕";
   document.getElementById("osTitle").textContent=titles[status]||"";
   document.getElementById("osSub").textContent=subs[status]||"";
@@ -1448,6 +1987,21 @@ function updateStatusUI(status){
     else if(i===si){dot.classList.add("active");}
     if(lbl) lbl.className="os-step-lbl"+(i===si?" active":"");
   });
+  // Show / hide the ready banner inside the status screen
+  let banner=document.getElementById("osReadyBanner");
+  if(status==="ready"){
+    if(!banner){
+      banner=document.createElement("div");
+      banner.id="osReadyBanner";
+      banner.style.cssText="background:linear-gradient(135deg,#1d6b62,#2a9d8f);color:#fff;border-radius:8px;padding:14px 20px;text-align:center;font-size:14px;font-weight:800;letter-spacing:1px;margin-bottom:20px;box-shadow:0 4px 20px rgba(29,107,98,0.35);animation:os-pulse 1.5s ease-in-out infinite;";
+      banner.textContent="🛎 Your order is at the counter!";
+      const card=document.getElementById("osCard");
+      card.parentNode.insertBefore(banner,card);
+    }
+    banner.style.display="block";
+  } else if(banner){
+    banner.style.display="none";
+  }
 }
 function closeOrderStatus(){
   document.getElementById("orderStatus").classList.remove("active");
@@ -1593,8 +2147,7 @@ function setupViewerFallback(){
   });
 }
 
-// ── PATCH switchTab to handle new tabs ──
-const _origSwitchTab=switchTab;
+// ── PATCH switchTab to handle all 5 tabs ──
 function switchTab(tab,btn){
   document.querySelectorAll(".admin-tab").forEach(t=>t.classList.remove("active"));
   btn.classList.add("active");
@@ -1610,12 +2163,17 @@ function switchTab(tab,btn){
   if(tab==="qr")     renderQRGrid();
   if(tab==="special"){
     const s=JSON.parse(localStorage.getItem("kk_special")||"null");
-    if(s){ document.getElementById("specialName").value=s.name||""; document.getElementById("specialPrice").value=s.price||""; }
+    if(s){
+      document.getElementById("specialName").value=s.name||"";
+      document.getElementById("specialPrice").value=s.price||"";
+      document.getElementById("spvName").textContent=s.name||"";
+      document.getElementById("spvPrice").textContent=s.price||"";
+      document.getElementById("specialPreview").style.display="block";
+    }
   }
 }
 
-// ── PATCH checkout to show order status ──
-const _origCheckout=checkout;
+// ── PATCH checkout to show order status + loyalty ──
 function checkout(){
   if(cart.length===0){ document.getElementById("cartTotal").textContent="⚠️ Cart is empty!"; return; }
   const name=document.getElementById("customerName").value.trim()||"Guest";
@@ -1634,7 +2192,6 @@ function checkout(){
     const msg="🧾 *Kopi Kesidang*%0AHi "+name+"! Your order has been received.%0A%0A"+lines+"%0A%0A*Total: RM "+tot.toFixed(2)+"*%0ATable: "+table+"%0AOrder ID: "+orderId+"%0A%0AThank you ☕";
     window.open("https://wa.me/"+phone.replace(/\D/g,"")+`?text=`+msg,"_blank");
   }
-  // Add a loyalty stamp automatically
   const ld=getLoyalty(); ld.stamps++; ld.total++; saveLoyalty(ld);
   cart=[];
   document.getElementById("customerName").value="";
@@ -1645,16 +2202,594 @@ function checkout(){
   showOrderStatus(orderData);
 }
 
-// ── PATCH boot to init features ──
-const _origOnload=window.onload;
-window.onload=()=>{
-  if(_origOnload) _origOnload();
+// ── INIT ──
+window.addEventListener("load",()=>{
   loadSpecial();
   setupViewerFallback();
-  // Pre-fill table from URL param (QR code)
   const urlTable=new URLSearchParams(window.location.search).get("table");
   if(urlTable) document.getElementById("tableNo").value=urlTable;
+  setupLogoLongPress();       // staff access (logo long press)
+  setupTitleLongPress();      // coffee catch game (title long press)
+  setupCircleDrawDetector();  // secret menu (draw circle on screen)
+  // Restore track order button if customer has a recent order
+  const savedId=localStorage.getItem("kk_last_order_id");
+  if(savedId){
+    window._lastOrderId=savedId;
+    const order=getOrders().find(o=>o.orderId===savedId);
+    if(order && order.status!=="done") showTrackOrderBtn();
+  }
+});
+
+// ══ LONG-PRESS LOGO → STAFF ACCESS ══
+function setupLogoLongPress(){
+  const logo=document.getElementById("headerLogo");
+  if(!logo) return;
+  let pressTimer=null, pressing=false;
+  function startPress(){
+    pressing=true;
+    const toast=document.getElementById("staffToast");
+    toast.textContent="Hold for staff access...";
+    toast.style.opacity="1";
+    pressTimer=setTimeout(()=>{
+      if(!pressing) return;
+      toast.style.opacity="0";
+      openStaffPopup();
+    },2000);
+  }
+  function endPress(){
+    pressing=false;
+    clearTimeout(pressTimer); pressTimer=null;
+    document.getElementById("staffToast").style.opacity="0";
+  }
+  logo.addEventListener("mousedown",startPress);
+  logo.addEventListener("touchstart",startPress,{passive:true});
+  logo.addEventListener("mouseup",endPress);
+  logo.addEventListener("mouseleave",endPress);
+  logo.addEventListener("touchend",endPress);
+}
+function openStaffPopup(){ document.getElementById("staffPopup").style.display="flex"; }
+function closeStaffPopup(){ document.getElementById("staffPopup").style.display="none"; }
+
+// ══ EASTER EGG 2: COFFEE CATCH — long-press title h2 ══
+function setupTitleLongPress(){
+  const title=document.getElementById("headerTitle");
+  if(!title) return;
+  let t=null, pressing=false;
+  function start(e){
+    pressing=true;
+    const toast=document.getElementById("staffToast");
+    toast.textContent="☕ ...";
+    toast.style.opacity="1";
+    t=setTimeout(()=>{
+      if(!pressing) return;
+      toast.style.opacity="0";
+      openGame();
+    },2000);
+  }
+  function end(){
+    pressing=false;
+    clearTimeout(t); t=null;
+    document.getElementById("staffToast").style.opacity="0";
+  }
+  title.addEventListener("mousedown",start);
+  title.addEventListener("touchstart",start,{passive:true});
+  title.addEventListener("mouseup",end);
+  title.addEventListener("mouseleave",end);
+  title.addEventListener("touchend",end);
+}
+
+// ══════════════════════════════════════
+// EASTER EGG 1: CAT MODE (5 logo taps)
+// ══════════════════════════════════════
+let _logotaps=0, _logotimer=null, _catMode=false;
+function handleLogoTap(){
+  // Count rapid taps
+  clearTimeout(_logotimer);
+  _logotaps++;
+  _logotimer=setTimeout(()=>{
+    if(_logotaps>=5) toggleCatMode();
+    else goHome();
+    _logotaps=0;
+  },600);
+}
+function toggleCatMode(){
+  _catMode=!_catMode;
+  document.body.classList.toggle("cat-mode",_catMode);
+  const toast=document.getElementById("catToast");
+  document.getElementById("catToastMsg").textContent=_catMode?"Nya~ Cat Mode ON! 🐾":"Back to normal ☕";
+  toast.style.display="block";
+  toast.style.opacity="1";
+  setTimeout(()=>{
+    toast.style.transition="opacity 0.5s";
+    toast.style.opacity="0";
+    setTimeout(()=>{ toast.style.display="none"; toast.style.transition=""; },500);
+  },1800);
+  if(_catMode) sprinklePaws();
+}
+function sprinklePaws(){
+  for(let i=0;i<12;i++){
+    setTimeout(()=>{
+      const p=document.createElement("div");
+      p.textContent="🐾";
+      p.style.cssText=`position:fixed;font-size:${16+Math.random()*20}px;left:${Math.random()*90}%;top:${Math.random()*80}%;z-index:9999;pointer-events:none;animation:fall 1.2s ease forwards;opacity:0.8;`;
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),1300);
+    },i*80);
+  }
+}
+
+// ══════════════════════════════════════
+// EASTER EGG 2: COFFEE CATCH MINI GAME
+// ══════════════════════════════════════
+let gAnim=null, gRunning=false, gScore=0, gLives=3, gBest=0;
+let gCups=[], gBombs=[], gTick=0, gSpeed=2, gPlayerX=0;
+let gCanvas=null, gCtx=null, gW=0, gH=0;
+
+function openGame(){
+  const el=document.getElementById("coffeeGame");
+  el.style.display="flex";
+  document.getElementById("gameOverScreen").style.display="none";
+  gBest=parseInt(localStorage.getItem("kk_game_best")||"0");
+  document.getElementById("gameBest").textContent=gBest;
+  restartGame();
+}
+function endGame(){
+  gRunning=false; cancelAnimationFrame(gAnim);
+  document.getElementById("coffeeGame").style.display="none";
+}
+function restartGame(){
+  document.getElementById("gameOverScreen").style.display="none";
+  gCanvas=document.getElementById("gameCanvas");
+  gW=window.innerWidth; gH=window.innerHeight-120;
+  gCanvas.width=gW; gCanvas.height=gH;
+  gCtx=gCanvas.getContext("2d");
+  gScore=0; gLives=3; gSpeed=2.2; gTick=0;
+  gCups=[]; gBombs=[];
+  gPlayerX=gW/2;
+  document.getElementById("gameScore").textContent="0";
+  document.getElementById("gameLives").textContent="❤️❤️❤️";
+
+  // Touch/mouse move player
+  gCanvas.onmousemove=e=>{ const r=gCanvas.getBoundingClientRect(); gPlayerX=e.clientX-r.left; };
+  gCanvas.ontouchmove=e=>{ e.preventDefault(); const r=gCanvas.getBoundingClientRect(); gPlayerX=e.touches[0].clientX-r.left; };
+
+  gRunning=true;
+  gameLoop();
+}
+function gameLoop(){
+  if(!gRunning) return;
+  gCtx.clearRect(0,0,gW,gH);
+  // background
+  gCtx.fillStyle="#1a0f06";
+  gCtx.fillRect(0,0,gW,gH);
+  // stars/steam dots
+  gCtx.fillStyle="rgba(200,149,108,0.07)";
+  for(let i=0;i<30;i++){ const x=(i*137)%gW, y=(gTick*0.3+i*53)%gH; gCtx.beginPath();gCtx.arc(x,y,1.5,0,Math.PI*2);gCtx.fill(); }
+
+  gTick++;
+  // spawn cups
+  if(gTick%Math.max(30,80-gScore*2)===0) gCups.push({x:Math.random()*(gW-40)+20,y:-30,speed:gSpeed+Math.random()*1.5});
+  // spawn bombs (hot drops = dangerous ones)
+  if(gTick%Math.max(60,160-gScore*3)===0&&gScore>2) gBombs.push({x:Math.random()*(gW-40)+20,y:-30,speed:gSpeed*0.8+Math.random()});
+
+  // draw & move cups
+  gCups=gCups.filter(c=>{
+    c.y+=c.speed;
+    // cup emoji
+    gCtx.font="28px serif"; gCtx.textAlign="center";
+    gCtx.fillText("☕",c.x,c.y);
+    if(c.y>gH){
+      gLives--; updateLives();
+      if(gLives<=0){ gameOver(); return false; }
+      return false;
+    }
+    // catch
+    if(Math.abs(c.x-gPlayerX)<36&&Math.abs(c.y-(gH-40))<30){
+      gScore++; gSpeed=2.2+gScore*0.05;
+      document.getElementById("gameScore").textContent=gScore;
+      showCatch(c.x,c.y,"+1","#c8956c");
+      return false;
+    }
+    return true;
+  });
+
+  // draw & move bombs
+  gBombs=gBombs.filter(b=>{
+    b.y+=b.speed;
+    gCtx.font="26px serif"; gCtx.textAlign="center";
+    gCtx.fillText("🔥",b.x,b.y);
+    if(b.y>gH) return false;
+    if(Math.abs(b.x-gPlayerX)<36&&Math.abs(b.y-(gH-40))<30){
+      gLives--; updateLives();
+      showCatch(b.x,b.y,"OUCH!","#e63946");
+      if(gLives<=0){ gameOver(); return false; }
+      return false;
+    }
+    return true;
+  });
+
+  // draw player cup/catcher
+  const pw=70, ph=22, px=gPlayerX-pw/2, py=gH-50;
+  gCtx.fillStyle="#6f4e37";
+  gCtx.beginPath(); gCtx.roundRect(px,py,pw,ph,6); gCtx.fill();
+  gCtx.fillStyle="#c8956c";
+  gCtx.font="14px 'DM Sans',sans-serif"; gCtx.textAlign="center";
+  gCtx.fillText("[ CATCH ]",gPlayerX,py+15);
+
+  gAnim=requestAnimationFrame(gameLoop);
+}
+function updateLives(){
+  const h=["❤️❤️❤️","❤️❤️🖤","❤️🖤🖤","🖤🖤🖤"];
+  document.getElementById("gameLives").textContent=h[Math.max(0,3-gLives)];
+}
+let _catchMsgs=[];
+function showCatch(x,y,msg,color){
+  _catchMsgs.push({x,y:y,msg,color,life:40});
+  // quick flash on canvas (draw in next frame via loop — just store)
+}
+function gameOver(){
+  gRunning=false; cancelAnimationFrame(gAnim);
+  if(gScore>gBest){ gBest=gScore; localStorage.setItem("kk_game_best",gBest); }
+  document.getElementById("finalScore").textContent=gScore;
+  document.getElementById("finalBest").textContent=gBest;
+  document.getElementById("gameOverScreen").style.display="flex";
+}
+
+// ══════════════════════════════════════
+// EASTER EGG 3: DRAW A CIRCLE → SECRET MENU
+// ══════════════════════════════════════
+// Player draws a circle anywhere on the menu page — detected via touch/mouse trail
+const SECRET_ITEMS=[
+  {emoji:"🌙",name:"Midnight Espresso",price:"RM 8",desc:"Triple shot, served after hours only."},
+  {emoji:"🌶",name:"Chilli Latte",price:"RM 13",desc:"A daring fusion — not for the faint of heart."},
+  {emoji:"🍯",name:"Honey Bear Special",price:"RM 15",desc:"Barista's secret recipe. Ask nicely."},
+];
+
+// Canvas overlay for drawing detection
+let _drawCanvas=null, _drawCtx=null, _drawPts=[], _drawActive=false, _drawTimer=null;
+
+function setupCircleDrawDetector(){
+  // Create invisible canvas overlay on top of ordering page
+  _drawCanvas=document.createElement("canvas");
+  _drawCanvas.id="drawCanvas";
+  _drawCanvas.style.cssText="position:fixed;inset:0;z-index:19;pointer-events:none;opacity:0;transition:opacity 0.3s;";
+  document.body.appendChild(_drawCanvas);
+  _drawCtx=_drawCanvas.getContext("2d");
+
+  // Listen on the item-detail-card area for a circular drag
+  document.addEventListener("touchstart",onDrawStart,{passive:true});
+  document.addEventListener("touchmove",onDrawMove,{passive:true});
+  document.addEventListener("touchend",onDrawEnd);
+  document.addEventListener("mousedown",onDrawStart);
+  document.addEventListener("mousemove",onDrawMove);
+  document.addEventListener("mouseup",onDrawEnd);
+}
+
+function onDrawStart(e){
+  // Only trigger if target is the viewer or item card (not buttons/inputs)
+  const t=e.target;
+  if(t.tagName==="BUTTON"||t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.tagName==="SELECT") return;
+  const el=document.getElementById("coffeeGame");
+  if(el&&el.style.display!=="none") return; // don't intercept game
+  _drawActive=true;
+  _drawPts=[];
+  resizeDrawCanvas();
+  const pos=getEventPos(e);
+  _drawPts.push(pos);
+  // Show faint trail
+  _drawCanvas.style.opacity="1";
+  _drawCtx.clearRect(0,0,_drawCanvas.width,_drawCanvas.height);
+  _drawCtx.strokeStyle="rgba(184,137,74,0.25)";
+  _drawCtx.lineWidth=3;
+  _drawCtx.lineCap="round";
+  _drawCtx.beginPath();
+  _drawCtx.moveTo(pos.x,pos.y);
+  clearTimeout(_drawTimer);
+}
+function onDrawMove(e){
+  if(!_drawActive||_drawPts.length===0) return;
+  const pos=getEventPos(e);
+  _drawPts.push(pos);
+  _drawCtx.lineTo(pos.x,pos.y);
+  _drawCtx.stroke();
+  _drawCtx.beginPath();
+  _drawCtx.moveTo(pos.x,pos.y);
+}
+function onDrawEnd(e){
+  if(!_drawActive) return;
+  _drawActive=false;
+  // Fade trail
+  _drawTimer=setTimeout(()=>{ _drawCanvas.style.opacity="0"; _drawCtx.clearRect(0,0,_drawCanvas.width,_drawCanvas.height); },600);
+  if(_drawPts.length<20) return;
+  if(isCircleGesture(_drawPts)) triggerSecretMenu();
+}
+function getEventPos(e){
+  if(e.touches&&e.touches[0]) return {x:e.touches[0].clientX,y:e.touches[0].clientY};
+  if(e.changedTouches&&e.changedTouches[0]) return {x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};
+  return {x:e.clientX,y:e.clientY};
+}
+function resizeDrawCanvas(){
+  _drawCanvas.width=window.innerWidth;
+  _drawCanvas.height=window.innerHeight;
+}
+function isCircleGesture(pts){
+  // Find centroid
+  const cx=pts.reduce((s,p)=>s+p.x,0)/pts.length;
+  const cy=pts.reduce((s,p)=>s+p.y,0)/pts.length;
+  // Average radius
+  const radii=pts.map(p=>Math.hypot(p.x-cx,p.y-cy));
+  const avgR=radii.reduce((s,r)=>s+r,0)/radii.length;
+  if(avgR<40) return false; // too small
+  // Radius consistency: std dev should be low relative to avg
+  const variance=radii.reduce((s,r)=>s+(r-avgR)**2,0)/radii.length;
+  const stdDev=Math.sqrt(variance);
+  if(stdDev/avgR>0.45) return false; // not round enough
+  // Arc coverage: check we swept through enough angles
+  const angles=pts.map(p=>Math.atan2(p.y-cy,p.x-cx));
+  let minA=Math.min(...angles), maxA=Math.max(...angles);
+  let span=maxA-minA;
+  if(span<0) span+=Math.PI*2;
+  return span>Math.PI*1.4; // at least ~250 degrees
+}
+function triggerSecretMenu(){
+  // Flash the trail gold briefly
+  _drawCtx.clearRect(0,0,_drawCanvas.width,_drawCanvas.height);
+  _drawCanvas.style.opacity="1";
+  _drawCtx.strokeStyle="rgba(184,137,74,0.6)";
+  _drawCtx.lineWidth=3;
+  const cx=_drawPts.reduce((s,p)=>s+p.x,0)/_drawPts.length;
+  const cy=_drawPts.reduce((s,p)=>s+p.y,0)/_drawPts.length;
+  const r=_drawPts.map(p=>Math.hypot(p.x-cx,p.y-cy)).reduce((s,v)=>s+v,0)/_drawPts.length;
+  _drawCtx.beginPath(); _drawCtx.arc(cx,cy,r,0,Math.PI*2); _drawCtx.stroke();
+  setTimeout(()=>{ _drawCanvas.style.opacity="0"; openShakeModal(); },400);
+}
+
+function openShakeModal(){
+  const el=document.getElementById("shakeModal");
+  if(el.style.display==="flex") return;
+  const list=document.getElementById("secretMenuItems");
+  list.innerHTML=SECRET_ITEMS.map(i=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--op-border);">
+      <span style="font-size:28px;">${i.emoji}</span>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:var(--op-text);">${i.name}</div>
+        <div style="font-size:11px;color:var(--op-soft);">${i.desc}</div>
+      </div>
+      <span style="font-size:13px;font-weight:800;color:var(--op-gold);white-space:nowrap;">${i.price}</span>
+    </div>`).join("")+
+    `<div style="font-size:10px;color:var(--op-soft);text-align:center;padding-top:10px;letter-spacing:1px;">🤫 Tell the barista: <b style="color:var(--op-gold);">"Kesidang"</b></div>`;
+  el.style.display="flex";
+}
+function closeShakeModal(){ document.getElementById("shakeModal").style.display="none"; }
+
+// ══════════════════════════════════════
+// ADD-ON SUGGESTIONS
+// ══════════════════════════════════════
+// Pairing map: key → array of suggested item keys across any category
+const PAIRINGS = {
+  coffeeBear:  ["croissant","cookies"],
+  coffeeCup:   ["croissant","garlicBread"],
+  matchaCat:   ["cookies","pastries"],
+  cookies:     ["coffeeBear","matchaCat"],
+  croissant:   ["coffeeBear","coffeeCup"],
+  donuts:      ["coffeeCup","matchaCat"],
+  garlicBread: ["coffeeCup","coffeeBear"],
+  pastries:    ["matchaCat","coffeeCup"],
 };
+
+function startCheckoutFlow(){
+  if(cart.length===0){ document.getElementById("cartTotal").textContent="⚠️ Cart is empty!"; return; }
+  const name=document.getElementById("customerName").value.trim();
+  const table=document.getElementById("tableNo").value.trim();
+  if(!name){ document.getElementById("customerName").focus(); return; }
+
+  // Find suggestions based on items in cart
+  const m=getMenu();
+  const allKeys=Object.values(m).flatMap(cat=>Object.keys(cat));
+  const cartKeys=cart.map(i=>i.key);
+  const suggested=new Set();
+  cartKeys.forEach(k=>{
+    (PAIRINGS[k]||[]).forEach(s=>{ if(!cartKeys.includes(s)&&allKeys.includes(s)) suggested.add(s); });
+  });
+
+  if(suggested.size>0){
+    showAddonSheet([...suggested].slice(0,2));
+  } else {
+    openPaymentModal();
+  }
+}
+
+function showAddonSheet(keys){
+  const m=getMenu();
+  const el=document.getElementById("addonItems");
+  const firstCartTitle=cart[0]?.title||"your drink";
+  document.getElementById("addonTitle").textContent=`Pair with your ${firstCartTitle}`;
+  el.innerHTML="";
+  const emojis={coffeeBear:"🐻",coffeeCup:"☕",matchaCat:"🐱",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🍞",pastries:"🧁"};
+  keys.forEach(key=>{
+    let item=null, foundCat=null;
+    Object.entries(m).forEach(([cat,items])=>{ if(items[key]){item=items[key];foundCat=cat;} });
+    if(!item) return;
+    const div=document.createElement("div");
+    div.className="addon-item";
+    div.innerHTML=`
+      <div class="addon-item-emoji">${emojis[key]||"✨"}</div>
+      <div class="addon-item-info">
+        <h4>${item.title}${item.best?' <span class="best-tag">Best</span>':''}</h4>
+        <p>${item.desc.slice(0,60)}…</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+        <span class="addon-item-price">RM ${item.price.toFixed(2)}</span>
+        <button class="addon-item-add" onclick="addAddonToCart('${foundCat}','${key}',this)">+ Add</button>
+      </div>`;
+    el.appendChild(div);
+  });
+  document.getElementById("addonSheet").classList.add("active");
+}
+
+function addAddonToCart(cat,key,btn){
+  const m=getMenu(); const d=m[cat]&&m[cat][key]; if(!d) return;
+  const ex=cart.find(i=>i.key===key);
+  if(ex) ex.qty++;
+  else cart.push({key,title:d.title,price:d.price,note:"",qty:1});
+  btn.textContent="Added ✓"; btn.disabled=true; btn.style.background="var(--op-gold)";
+  refreshBadge();
+}
+
+function closeAddon(){
+  document.getElementById("addonSheet").classList.remove("active");
+  openPaymentModal();
+}
+
+// ══════════════════════════════════════
+// PAYMENT FLOW
+// ══════════════════════════════════════
+let selectedPayMethod="cash", qrTimerInterval=null;
+
+function openPaymentModal(){
+  document.getElementById("addonSheet").classList.remove("active");
+  const total=cart.reduce((a,i)=>a+i.price*i.qty,0);
+  document.getElementById("payAmount").textContent="RM "+total.toFixed(2);
+  document.getElementById("payQrAmount").textContent="RM "+total.toFixed(2);
+  selectedPayMethod="cash";
+  // Reset method selection
+  document.querySelectorAll(".pay-method").forEach((el,i)=>el.classList.toggle("selected",i===0));
+  document.getElementById("payQrScreen").classList.remove("active");
+  document.getElementById("payConfirmBtn").style.display="block";
+  buildFakeQR();
+  document.getElementById("paymentModal").classList.add("active");
+}
+
+function selectPayMethod(el,method){
+  document.querySelectorAll(".pay-method").forEach(m=>m.classList.remove("selected"));
+  el.classList.add("selected");
+  selectedPayMethod=method;
+  // Show/hide QR screen
+  const isQr=method==="qr";
+  document.getElementById("payQrScreen").classList.toggle("active",isQr);
+  document.getElementById("payConfirmBtn").style.display=isQr?"none":"block";
+  if(isQr) startQrTimer();
+  else stopQrTimer();
+}
+
+function buildFakeQR(){
+  const grid=document.getElementById("payQrGrid");
+  grid.innerHTML="";
+  const pattern=[
+    1,1,1,0,1,1,1,
+    1,0,1,0,1,0,1,
+    1,1,1,1,0,1,1,
+    0,1,0,0,1,0,0,
+    1,1,1,0,1,1,1,
+    1,0,0,1,0,0,1,
+    1,1,1,1,1,1,0
+  ];
+  pattern.forEach(v=>{ const s=document.createElement("span"); s.className=v?"":"w"; grid.appendChild(s); });
+}
+
+function startQrTimer(){
+  stopQrTimer();
+  let t=60;
+  document.getElementById("payTimer").textContent=t;
+  qrTimerInterval=setInterval(()=>{
+    t--;
+    document.getElementById("payTimer").textContent=t;
+    if(t<=0){ stopQrTimer(); document.getElementById("payTimer").textContent="Expired"; }
+  },1000);
+}
+function stopQrTimer(){ if(qrTimerInterval){ clearInterval(qrTimerInterval); qrTimerInterval=null; } }
+
+function proceedPayment(){
+  // Cash or Card — show brief processing then success
+  document.getElementById("paymentModal").classList.remove("active");
+  stopQrTimer();
+  if(selectedPayMethod==="debit"){
+    // Show a card tap animation briefly
+    showProcessing("Processing card...", 1800);
+  } else {
+    simulatePayment();
+  }
+}
+
+function simulatePayment(){
+  document.getElementById("paymentModal").classList.remove("active");
+  stopQrTimer();
+  setTimeout(()=>showPaySuccess(), selectedPayMethod==="debit"?1800:400);
+}
+
+function showProcessing(msg, delay){
+  // Reuse success screen briefly as a loader
+  setTimeout(simulatePayment, delay);
+}
+
+function showPaySuccess(){
+  const methodLabels={cash:"Paid by Cash",debit:"Card Payment",qr:"QR Payment"};
+  const ref="KK-"+Math.floor(Math.random()*900000+100000);
+  document.getElementById("successMethod").textContent=methodLabels[selectedPayMethod]||"Payment";
+  document.getElementById("successRef").textContent="REF: "+ref;
+  spawnConfetti();
+  document.getElementById("paySuccess").classList.add("active");
+  // Finalise the order in background
+  finaliseOrder();
+}
+
+function spawnConfetti(){
+  const wrap=document.getElementById("confettiWrap");
+  wrap.innerHTML="";
+  const colors=["#b8894a","#d4a96a","#6f4e37","#c8956c","#e8c87a","#1a0f06"];
+  for(let i=0;i<40;i++){
+    const c=document.createElement("div"); c.className="conf";
+    const x=Math.random()*100, delay=Math.random()*0.8, dur=1.2+Math.random()*1.2;
+    c.style.cssText=`left:${x}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${dur}s;animation-delay:${delay}s;border-radius:${Math.random()>0.5?"50%":"2px"};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px`;
+    wrap.appendChild(c);
+  }
+}
+
+function afterPaymentSuccess(){
+  document.getElementById("paySuccess").classList.remove("active");
+  document.getElementById("confettiWrap").innerHTML="";
+  if(window._lastOrder) showOrderStatus(window._lastOrder);
+  // Auto-show receipt after short delay
+  if(window._lastOrderId) setTimeout(()=>viewReceipt(window._lastOrderId), 600);
+}
+
+function finaliseOrder(){
+  const name=document.getElementById("customerName").value.trim()||"Guest";
+  const table=document.getElementById("tableNo").value.trim()||"-";
+  const phone=document.getElementById("customerPhone").value.trim();
+  const orderId="ORD"+Math.floor(Math.random()*100000);
+  const ts=new Date().toLocaleString("en-MY");
+  const today=new Date().toISOString().slice(0,10);
+  const orderData={orderId,name,table,phone,cart:JSON.parse(JSON.stringify(cart)),timestamp:ts,today,status:"new",payMethod:selectedPayMethod};
+  const orders=getOrders(); orders.push(orderData); saveOrders(orders);
+  window._lastOrder=orderData;
+  if(phone){
+    const tot=cart.reduce((a,i)=>a+i.price*i.qty,0);
+    const lines=cart.map(i=>"• "+i.title+" x"+i.qty+(i.note?" ("+i.note+")":"")+" — RM "+(i.price*i.qty).toFixed(2)).join("%0A");
+    const methodLabel={cash:"Cash",debit:"Card",qr:"QR Pay"}[selectedPayMethod]||"";
+    const msg="🧾 *Kopi Kesidang*%0AHi "+name+"! Payment confirmed via "+methodLabel+".%0A%0A"+lines+"%0A%0A*Total: RM "+tot.toFixed(2)+"*%0ATable: "+table+"%0AOrder: "+orderId+"%0A%0AThank you ☕";
+    window.open("https://wa.me/"+phone.replace(/\D/g,"")+`?text=`+msg,"_blank");
+  }
+  const ld=getLoyalty(); ld.stamps++; ld.total++; saveLoyalty(ld);
+  cart=[];
+  document.getElementById("customerName").value="";
+  document.getElementById("tableNo").value="";
+  document.getElementById("customerPhone").value="";
+  refreshBadge();
+  closePanels();
+  // Store order id so success screen can open receipt
+  window._lastOrderId=orderId;
+  localStorage.setItem("kk_last_order_id", orderId);
+  // Show track order button and start polling for status updates
+  showTrackOrderBtn();
+  // Poll every 5s to keep track button label fresh
+  if(window._trackPollTimer) clearInterval(window._trackPollTimer);
+  window._trackPollTimer=setInterval(()=>{
+    updateTrackOrderBtn();
+    const o=getOrders().find(x=>x.orderId===orderId);
+    if(o&&o.status==="done") clearInterval(window._trackPollTimer);
+  },5000);
+}
 </script>
 </body>
 </html>
