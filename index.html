@@ -714,9 +714,16 @@ body.dark-mode .lp-tcard{background:linear-gradient(145deg,#1a1714,#141210);}
 .item-detail-card{animation:fade-up 0.28s ease both;}
 
 /* ── VIEWER SKELETON ── */
-.viewer-skeleton{position:absolute;inset:0;background:linear-gradient(90deg,rgba(200,149,108,0.06) 25%,rgba(200,149,108,0.12) 50%,rgba(200,149,108,0.06) 75%);background-size:200% 100%;animation:skeleton-sweep 1.6s ease-in-out infinite;z-index:2;}
-@keyframes skeleton-sweep{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.viewer-wrap model-viewer.loaded ~ .viewer-skeleton{display:none;}
+/* ── 3D MODEL LOADING OVERLAY ── */
+#viewerLoader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#f5ede0 0%,#fdf6ee 100%);z-index:2;transition:opacity 0.4s ease;pointer-events:none;}
+body.dark-mode #viewerLoader{background:linear-gradient(180deg,#201508,#18110a);}
+#viewerLoader.hidden{opacity:0;}
+.vl-spinner{width:42px;height:42px;border-radius:50%;border:3px solid rgba(184,137,74,0.15);border-top-color:var(--op-gold);animation:vl-spin 0.9s linear infinite;margin-bottom:14px;}
+@keyframes vl-spin{to{transform:rotate(360deg);}}
+.vl-msg{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--op-soft);text-align:center;min-height:16px;transition:opacity 0.25s ease;}
+.vl-msg.fade{opacity:0;}
+.vl-cup{font-size:24px;animation:vl-bob 1.6s ease-in-out infinite;margin-bottom:6px;}
+@keyframes vl-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 
 /* ── ADD BUTTON HAPTIC RING ── */
 @keyframes add-ring{0%{box-shadow:0 0 0 0 rgba(184,137,74,0.5)}100%{box-shadow:0 0 0 18px rgba(184,137,74,0)}}
@@ -1069,6 +1076,11 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
 <button id="loyaltyFab" onclick="openLoyalty()" title="Loyalty Card">☕</button>
 
 <div class="viewer-wrap">
+  <div id="viewerLoader">
+    <div class="vl-cup" id="vlCup">☕</div>
+    <div class="vl-spinner"></div>
+    <div class="vl-msg" id="vlMsg">Brewing the perfect cup...</div>
+  </div>
   <model-viewer id="viewer" src="mocha.glb" camera-controls auto-rotate shadow-intensity="0"></model-viewer>
   <div id="stickyPriceBar">
     <span class="sp-title" id="spTitle"></span>
@@ -1550,6 +1562,7 @@ const D_MENU = {
     cappuccino:      { title:"Cappuccino",        price:11, src:"cappucino.glb",                   desc:"The classic Italian trio — equal parts espresso, steamed milk and silky microfoam. Light, airy and rich all at once. Perfect any time of day. ☕" },
     americano:       { title:"Americano",         price:9,  src:"americano.glb",                   desc:"A long, clean shot of espresso diluted with hot water to bring out its full depth of flavour. Bold, smooth and beautifully simple. 🖤" },
     coffeeCup:       { title:"Coffee Cup",        price:10, src:"coffeeCup.glb",                   desc:"Our classic house blend brewed fresh to order. Balanced and full-bodied with a warm, comforting finish. ☕" },
+    matchaCat:       { title:"Matcha Cat",        price:12, src:"matchaCat.glb",                   desc:"Premium ceremonial-grade matcha whisked into creamy steamed milk, finished with a delicate cat-shaped latte art. Earthy, smooth and adorable. 🍵🐱" },
   },
   pastry:{
     cookies:    { title:"Cookies",      price:6,  src:"polyCookies.glb",            desc:"Freshly baked with a golden crisp edge and soft chewy centre. Loaded with chocolate chips and a hint of vanilla. 🍪" },
@@ -1565,7 +1578,7 @@ function getCats()  { try { const s=localStorage.getItem("kk_cats");  return s?J
 function saveCats(c){ localStorage.setItem("kk_cats",JSON.stringify(c)); }
 
 // Bump this version any time D_MENU/D_CATS change so old caches are reset
-const MENU_VERSION = "2026-04-mocha-v2";
+const MENU_VERSION = "2026-04-matcha-v3";
 
 function getMenu() {
   try {
@@ -1711,6 +1724,9 @@ function showItem(key){
   const fb=document.getElementById("viewerFallback");
   v.style.display="block";
   if(fb) fb.style.display="none";
+  // Pick fallback emoji for this drink to show in the loader
+  const itemEmojis={mocha:"🍫",caramelMacchiato:"🍮",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",matchaCat:"🍵",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🧄",pastries:"🧁"};
+  showViewerLoader(itemEmojis[key]||"☕");
   v.src=d.src;
   document.getElementById("itemTitle").textContent=d.title;
   document.getElementById("itemPrice").textContent=d.soldOut?"SOLD OUT":"RM "+d.price.toFixed(2);
@@ -2850,27 +2866,77 @@ function downloadQR(){
 // ══════════════════════════════════════
 // FEATURE 5: VIEWER FALLBACK
 // ══════════════════════════════════════
+// ── LOADING MESSAGES ──
+const LOADING_MESSAGES = [
+  "Brewing the perfect cup...",
+  "Steaming the milk...",
+  "Warming the croissants...",
+  "Polishing the espresso shot...",
+  "Frothing with love...",
+  "Adding the finishing touch...",
+  "Crafting your drink...",
+  "Almost ready..."
+];
+let _vlTimer=null;
+function startLoadingMessages(){
+  const msgEl=document.getElementById("vlMsg");
+  if(!msgEl) return;
+  let i=Math.floor(Math.random()*LOADING_MESSAGES.length);
+  msgEl.textContent=LOADING_MESSAGES[i];
+  clearInterval(_vlTimer);
+  _vlTimer=setInterval(()=>{
+    msgEl.classList.add("fade");
+    setTimeout(()=>{
+      i=(i+1)%LOADING_MESSAGES.length;
+      msgEl.textContent=LOADING_MESSAGES[i];
+      msgEl.classList.remove("fade");
+    },250);
+  },1800);
+}
+function stopLoadingMessages(){
+  clearInterval(_vlTimer); _vlTimer=null;
+}
+function showViewerLoader(emoji){
+  const loader=document.getElementById("viewerLoader");
+  const cup=document.getElementById("vlCup");
+  if(!loader) return;
+  if(cup&&emoji) cup.textContent=emoji;
+  loader.classList.remove("hidden");
+  loader.style.display="flex";
+  startLoadingMessages();
+}
+function hideViewerLoader(){
+  const loader=document.getElementById("viewerLoader");
+  if(!loader) return;
+  loader.classList.add("hidden");
+  setTimeout(()=>{ if(loader.classList.contains("hidden")) loader.style.display="none"; },400);
+  stopLoadingMessages();
+}
+
 function setupViewerFallback(){
   const viewer=document.getElementById("viewer");
   const fallback=document.getElementById("viewerFallback");
-  const icons={mocha:"🍫",caramelMaciato:"🍮",caramelMacchiato:"🍮",cappucino:"☕",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🧄",pastries:"🧁"};
+  const icons={mocha:"🍫",caramelMaciato:"🍮",caramelMacchiato:"🍮",cappucino:"☕",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",matchaCat:"🍵",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🧄",pastries:"🧁"};
   function pickIcon(){
     const src=(viewer.getAttribute("src")||"").toLowerCase();
     const found=Object.entries(icons).find(([k])=>src.includes(k.toLowerCase()));
     return found?found[1]:"☕";
   }
   viewer.addEventListener("error",()=>{
-    // Only show fallback if viewer actually failed for the CURRENT src
     viewer.style.display="none";
     fallback.style.display="flex";
     const vfi=document.querySelector(".vf-icon");
     if(vfi) vfi.textContent=pickIcon();
     document.getElementById("vfName").textContent=document.getElementById("itemTitle").textContent||"";
+    hideViewerLoader();
   });
   viewer.addEventListener("load",()=>{
     viewer.style.display="block";
     fallback.style.display="none";
+    hideViewerLoader();
   });
+  // Show loader on initial page load too
+  showViewerLoader("☕");
 }
 
 // ── PATCH switchTab to handle all 5 tabs ──
@@ -3347,7 +3413,7 @@ function showAddonSheet(keys){
   const firstCartTitle=cart[0]?.title||"your drink";
   document.getElementById("addonTitle").textContent=`Pair with your ${firstCartTitle}`;
   el.innerHTML="";
-  const emojis={mocha:"🍫",caramelMacchiato:"🍮",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🍞",pastries:"🧁"};
+  const emojis={mocha:"🍫",caramelMacchiato:"🍮",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",matchaCat:"🍵",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🍞",pastries:"🧁"};
   keys.forEach(key=>{
     let item=null, foundCat=null;
     Object.entries(m).forEach(([cat,items])=>{ if(items[key]){item=items[key];foundCat=cat;} });
