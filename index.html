@@ -417,8 +417,8 @@ body.cat-mode .lp-cta{background:linear-gradient(135deg,#d4821a,#f0a040);}
 body.cat-mode #cartBtn{background:#5c2d00;}
 body.cat-mode button:not(.close-btn):not(.qty-btn):not(.item-remove):not(.banner-close):not(.addon-skip):not(.loyalty-btn-secondary):not(.pay-method):not(.os-btn)::before{content:"🐾 ";}
 body.cat-mode .item-detail-card::before{background:linear-gradient(90deg,#d4821a,#f0a040);}
-body.cat-mode #categoryGlass::after{content:"(=^ω^=)";display:block;font-size:11px;color:var(--op-gold);padding:0 0 4px 2px;opacity:0.7;}
-/* cat mode wiggle on items */
+body.cat-mode #categoryGlass::after{content:"☕✨";display:block;font-size:11px;color:var(--op-gold);padding:0 0 4px 2px;opacity:0.7;}
+/* mocha-mode wiggle on items */
 body.cat-mode .cat-btn{animation:cat-wiggle 3s ease-in-out infinite;}
 @keyframes cat-wiggle{0%,90%,100%{transform:rotate(0)}93%{transform:rotate(-3deg)}96%{transform:rotate(3deg)}}
 /* cat cursor */
@@ -635,16 +635,6 @@ button.soldout{opacity:0.42;cursor:not-allowed;pointer-events:none;}
 .lp-gallery-item .gi-label{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.8);opacity:0;transform:translateY(4px);transition:all 0.3s;}
 .lp-gallery-item:hover .gi-label{opacity:1;transform:translateY(0);}
 
-/* ── TEAM / BARISTA ── */
-#lp-team{background:#131110;padding:72px 28px 80px;}
-.lp-team-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px;}
-.lp-team-card{background:linear-gradient(145deg,#1c1917,#161412);border-radius:14px;padding:20px 16px;border:1px solid rgba(200,149,108,0.1);text-align:center;transition:border-color 0.3s,transform 0.3s;}
-.lp-team-card:hover{border-color:rgba(200,149,108,0.3);transform:translateY(-3px);}
-.lp-team-avatar{width:56px;height:56px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,#3b2f2f,#1e1a1a);display:flex;align-items:center;justify-content:center;font-size:26px;border:1.5px solid rgba(200,149,108,0.15);}
-.lp-team-name{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:3px;}
-.lp-team-role{font-size:10px;color:#c8956c;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:8px;}
-.lp-team-bio{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;}
-
 /* ── SOCIAL BUTTONS ── */
 .lp-social-row{display:flex;gap:10px;margin-top:20px;justify-content:center;flex-wrap:wrap;}
 .lp-social-btn{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:24px;border:1px solid rgba(200,149,108,0.2);background:rgba(200,149,108,0.05);color:rgba(255,255,255,0.6);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all 0.2s;}
@@ -715,7 +705,6 @@ body.dark-mode #landingPage{background:#12100e;}
 body.dark-mode .lp-section p{color:rgba(255,255,255,0.5);}
 body.dark-mode .lp-info-card{background:rgba(255,255,255,0.03);}
 body.dark-mode .lp-tcard{background:linear-gradient(145deg,#1a1714,#141210);}
-body.dark-mode .lp-team-card{background:linear-gradient(145deg,#1a1714,#141210);}
 
 /* ── HERO CONTENT ABOVE STEAM ── */
 .lp-hero > *:not(.lp-steam){position:relative;z-index:1;}
@@ -806,7 +795,7 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
       <div class="lp-logo-ring"></div>
       <div class="lp-logo-ring2"></div>
       <img class="lp-logo" src="kopiKesidangan.jpg" alt="Kopi Kesidang">
-      <span class="lp-badge">Est. 2024</span>
+      <span class="lp-badge">Est. 2023</span>
     </div>
     <div id="lp-open-badge"><span class="badge-dot"></span><span id="lp-open-text">Checking hours...</span></div>
     <p class="lp-eyebrow">Temerloh, Pahang</p>
@@ -828,7 +817,6 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
   <nav class="lp-nav">
     <a onclick="document.getElementById('lp-about').scrollIntoView({behavior:'smooth'})">About</a>
     <a onclick="document.getElementById('lp-menu').scrollIntoView({behavior:'smooth'})">Menu</a>
-    <a onclick="document.getElementById('lp-team').scrollIntoView({behavior:'smooth'})">Team</a>
     <a onclick="document.getElementById('lp-info').scrollIntoView({behavior:'smooth'})">Visit</a>
     <a onclick="enterExperience()" style="color:#c8956c;">Order Now</a>
   </nav>
@@ -842,7 +830,7 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
 
   <!-- AWARDS / FEATURES -->
   <div class="lp-awards lp-reveal">
-    <div class="lp-award"><span class="lp-award-icon">🏆</span><div class="lp-award-text"><div class="lp-award-title">Best Café 2024</div><div class="lp-award-sub">Pahang Food Awards</div></div></div>
+    <div class="lp-award"><span class="lp-award-icon">🏆</span><div class="lp-award-text"><div class="lp-award-title">Best Café 2023</div><div class="lp-award-sub">Pahang Food Awards</div></div></div>
     <div class="lp-award"><span class="lp-award-icon">🌟</span><div class="lp-award-text"><div class="lp-award-title">4.9 on Google</div><div class="lp-award-sub">200+ reviews</div></div></div>
     <div class="lp-award"><span class="lp-award-icon">📸</span><div class="lp-award-text"><div class="lp-award-title">Viral on TikTok</div><div class="lp-award-sub">1M+ views</div></div></div>
     <div class="lp-award"><span class="lp-award-icon">☕</span><div class="lp-award-text"><div class="lp-award-title">Specialty Roast</div><div class="lp-award-sub">Single-origin beans</div></div></div>
@@ -855,9 +843,9 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
       <h2 class="lp-reveal lp-reveal-delay-1">Crafted with passion,<br>served with love</h2>
       <div class="lp-section-rule"></div>
       <p>Kopi Kesidang was born from a simple idea — that great coffee deserves a great experience. Named after the delicate <em>Kesidang</em> flower, we bring together the finest beans, locally inspired flavours, and a cosy atmosphere that feels like home.</p>
-      <p>Every item on our menu is prepared fresh, from our signature bear-shaped lattes to our flaky hand-rolled croissants.</p>
+      <p>Every item on our menu is prepared fresh, from our signature Mocha to our flaky hand-rolled croissants.</p>
       <div class="lp-quote lp-reveal">
-        <p>"Kopi Kesidang isn't just coffee — it's the reason mornings feel worth waking up for."</p>
+        <p>"The Mocha here is something else — rich, smooth, and worth every sip."</p>
         <cite>— A regular, Temerloh</cite>
       </div>
       <div class="lp-values">
@@ -891,10 +879,10 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
           </div>
         </div>
         <div class="lp-menu-card">
-          <div class="micon">🐻</div>
+          <div class="micon">☕</div>
           <div class="lp-menu-card-text">
             <h4>Fan Favourites <span class="lp-menu-tag">Must Try</span></h4>
-            <p>Our Coffee Bear latte &amp; Matcha Cat are an Insta-worthy must-try</p>
+            <p>Our Mocha &amp; Caramel Macchiato are the crowd pleasers everyone keeps coming back for</p>
           </div>
         </div>
       </div>
@@ -921,10 +909,10 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
   <section id="lp-gallery">
     <div class="lp-gallery-strip">
       <div class="lp-gallery-item"><div class="gi-emoji">☕</div><div class="gi-overlay"></div><div class="gi-label">Coffee</div></div>
-      <div class="lp-gallery-item"><div class="gi-emoji">🐻</div><div class="gi-overlay"></div><div class="gi-label">Bear Latte</div></div>
+      <div class="lp-gallery-item"><div class="gi-emoji">🍫</div><div class="gi-overlay"></div><div class="gi-label">Mocha</div></div>
       <div class="lp-gallery-item"><div class="gi-emoji">🥐</div><div class="gi-overlay"></div><div class="gi-label">Pastry</div></div>
       <div class="lp-gallery-item"><div class="gi-emoji">🌿</div><div class="gi-overlay"></div><div class="gi-label">Matcha</div></div>
-      <div class="lp-gallery-item"><div class="gi-emoji">🍵</div><div class="gi-overlay"></div><div class="gi-label">Tea</div></div>
+      <div class="lp-gallery-item"><div class="gi-emoji">🥛</div><div class="gi-overlay"></div><div class="gi-label">Cappuccino</div></div>
     </div>
   </section>
 
@@ -938,13 +926,13 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
     <div class="lp-testi-track" id="testiTrack">
       <div class="lp-tcard lp-reveal">
         <div class="lp-tcard-stars">★★★★★</div>
-        <p class="lp-tcard-text">"The bear latte is absolutely stunning — too pretty to drink, but I always do anyway. Best coffee in KL!"</p>
+        <p class="lp-tcard-text">"The Mocha is absolutely stunning — rich, velvety and bold. Best coffee in Pahang, hands down!"</p>
         <div class="lp-tcard-name">Amirah R.</div>
-        <div class="lp-tcard-role">Regular since 2024</div>
+        <div class="lp-tcard-role">Regular since 2023</div>
       </div>
       <div class="lp-tcard lp-reveal lp-reveal-delay-1">
         <div class="lp-tcard-stars">★★★★★</div>
-        <p class="lp-tcard-text">"Love the cosy vibe and the matcha cat latte. Staff are so friendly and the pastries are always fresh."</p>
+        <p class="lp-tcard-text">"Love the cosy vibe and the Caramel Macchiato. Staff are so friendly and the pastries are always fresh."</p>
         <div class="lp-tcard-name">Daniel T.</div>
         <div class="lp-tcard-role">Coffee Enthusiast</div>
       </div>
@@ -969,41 +957,6 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
     </div>
   </section>
 
-  <!-- TEAM -->
-  <section id="lp-team">
-    <div class="lp-section" style="padding-top:0;">
-      <p class="lp-section-label lp-reveal">The People</p>
-      <h2 class="lp-reveal lp-reveal-delay-1">Meet the team<br>behind the cup</h2>
-      <div class="lp-section-rule"></div>
-      <div class="lp-team-grid">
-        <div class="lp-team-card lp-reveal lp-reveal-delay-1">
-          <div class="lp-team-avatar">👨‍🍳</div>
-          <div class="lp-team-name">Arif Hakim</div>
-          <div class="lp-team-role">Head Barista</div>
-          <div class="lp-team-bio">7 years of specialty coffee craft. Trained in Tokyo & Melbourne.</div>
-        </div>
-        <div class="lp-team-card lp-reveal lp-reveal-delay-2">
-          <div class="lp-team-avatar">👩‍🍳</div>
-          <div class="lp-team-name">Nurul Ain</div>
-          <div class="lp-team-role">Pastry Chef</div>
-          <div class="lp-team-bio">Creates our signature croissants fresh every morning since day one.</div>
-        </div>
-        <div class="lp-team-card lp-reveal lp-reveal-delay-3">
-          <div class="lp-team-avatar">👩‍💼</div>
-          <div class="lp-team-name">Liyana Sari</div>
-          <div class="lp-team-role">Founder & CEO</div>
-          <div class="lp-team-bio">Dreamed of a café where every cup tells a story. Now it's real.</div>
-        </div>
-        <div class="lp-team-card lp-reveal lp-reveal-delay-4">
-          <div class="lp-team-avatar">🧑‍🎨</div>
-          <div class="lp-team-name">Zaki Imran</div>
-          <div class="lp-team-role">Creative Lead</div>
-          <div class="lp-team-bio">Designs the latte art, interiors, and the vibe you feel walking in.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- SOCIAL ROW -->
   <section style="background:#0a0908;padding:40px 28px;text-align:center;border-top:1px solid rgba(200,149,108,0.06);">
     <p class="lp-section-label lp-reveal" style="margin-bottom:6px;">Stay Connected</p>
@@ -1024,15 +977,14 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
 
   <div class="lp-footer">
     <div class="lp-footer-logo">Kopi Kesidang</div>
-    <div class="lp-footer-tagline">Artisan Coffee &amp; Pastry · Est. 2024</div>
+    <div class="lp-footer-tagline">Artisan Coffee &amp; Pastry · Est. 2023</div>
     <div class="lp-footer-links">
       <a onclick="document.getElementById('lp-about').scrollIntoView({behavior:'smooth'})">About</a>
       <a onclick="document.getElementById('lp-menu').scrollIntoView({behavior:'smooth'})">Menu</a>
-      <a onclick="document.getElementById('lp-team').scrollIntoView({behavior:'smooth'})">Team</a>
       <a onclick="document.getElementById('lp-info').scrollIntoView({behavior:'smooth'})">Visit</a>
       <a onclick="enterExperience()">Order Now</a>
     </div>
-    <p class="lp-footer-copy">Made with <span>♥</span> in Temerloh, Pahang &nbsp;·&nbsp; © 2025 Kopi Kesidang</p>
+    <p class="lp-footer-copy">Made with <span>♥</span> in Temerloh, Pahang &nbsp;·&nbsp; © 2023 Kopi Kesidang</p>
   </div>
 
 </div>
@@ -1117,7 +1069,7 @@ body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0
 <button id="loyaltyFab" onclick="openLoyalty()" title="Loyalty Card">☕</button>
 
 <div class="viewer-wrap">
-  <model-viewer id="viewer" src="matchaCat.glb" camera-controls auto-rotate shadow-intensity="0"></model-viewer>
+  <model-viewer id="viewer" src="mocha.glb" camera-controls auto-rotate shadow-intensity="0"></model-viewer>
   <div id="stickyPriceBar">
     <span class="sp-title" id="spTitle"></span>
     <span class="sp-price" id="spPrice"></span>
@@ -1593,9 +1545,11 @@ const D_CATS = {
 };
 const D_MENU = {
   drinks:{
-    coffeeBear: { title:"Coffee Bear",  price:14, src:"coffeeBear.glb",  best:true, desc:"A rich double-shot espresso topped with velvety steamed milk, crafted in the shape of an adorable bear. Bold, smooth, and too cute to drink. 🐻" },
-    coffeeCup:  { title:"Coffee Cup",   price:10, src:"coffeeCup.glb",              desc:"Our classic house blend brewed fresh to order. Balanced and full-bodied with a warm, comforting finish. ☕" },
-    matchaCat:  { title:"Matcha Cat",   price:12, src:"matchaCat.glb",              desc:"Premium ceremonial-grade matcha whisked into creamy steamed milk with a delicate cat latte art. 🍵🐱" }
+    mocha:           { title:"Mocha",             price:14, src:"mocha.glb",           best:true, desc:"Our star drink. A luxurious blend of rich espresso, velvety steamed milk and dark chocolate, finished with a dusting of cocoa powder. Bold, smooth and deeply satisfying. 🍫" },
+    caramelMacchiato:{ title:"Caramel Macchiato", price:13, src:"caramel maciato.glb",            desc:"Layers of vanilla-infused steamed milk, a bold double espresso shot, and a generous drizzle of golden caramel. Sweet, strong and beautifully balanced. 🍮" },
+    cappuccino:      { title:"Cappuccino",        price:11, src:"cappucino.glb",                   desc:"The classic Italian trio — equal parts espresso, steamed milk and silky microfoam. Light, airy and rich all at once. Perfect any time of day. ☕" },
+    americano:       { title:"Americano",         price:9,  src:"americano.glb",                   desc:"A long, clean shot of espresso diluted with hot water to bring out its full depth of flavour. Bold, smooth and beautifully simple. 🖤" },
+    coffeeCup:       { title:"Coffee Cup",        price:10, src:"coffeeCup.glb",                   desc:"Our classic house blend brewed fresh to order. Balanced and full-bodied with a warm, comforting finish. ☕" },
   },
   pastry:{
     cookies:    { title:"Cookies",      price:6,  src:"polyCookies.glb",            desc:"Freshly baked with a golden crisp edge and soft chewy centre. Loaded with chocolate chips and a hint of vanilla. 🍪" },
@@ -1610,8 +1564,18 @@ const D_MENU = {
 function getCats()  { try { const s=localStorage.getItem("kk_cats");  return s?JSON.parse(s):JSON.parse(JSON.stringify(D_CATS)); }  catch(e){ return JSON.parse(JSON.stringify(D_CATS)); } }
 function saveCats(c){ localStorage.setItem("kk_cats",JSON.stringify(c)); }
 
+// Bump this version any time D_MENU/D_CATS change so old caches are reset
+const MENU_VERSION = "2026-04-mocha";
+
 function getMenu() {
   try {
+    // Force-refresh stale cached menus (e.g. after default menu update)
+    const storedVersion = localStorage.getItem("kk_menu_v");
+    if (storedVersion !== MENU_VERSION) {
+      localStorage.removeItem("kk_menu");
+      localStorage.removeItem("kk_cats");
+      localStorage.setItem("kk_menu_v", MENU_VERSION);
+    }
     const s = localStorage.getItem("kk_menu");
     if (!s) return JSON.parse(JSON.stringify(D_MENU));
     const raw = JSON.parse(s);
@@ -1629,7 +1593,8 @@ function getMenu() {
           src:   String(it.src   || ""),
           desc:  String(it.desc  || "")
         };
-        if (it.best) out[cat][key].best = true;
+        if (it.best)    out[cat][key].best    = true;
+        if (it.soldOut) out[cat][key].soldOut = true;
       }
     }
     return out;
@@ -2883,7 +2848,7 @@ function downloadQR(){
 function setupViewerFallback(){
   const viewer=document.getElementById("viewer");
   const fallback=document.getElementById("viewerFallback");
-  const icons={coffeeBear:"🐻",coffeeCup:"☕",matchaCat:"🐱",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🧄",pastries:"🧁"};
+  const icons={mocha:"🍫",caramelMacchiato:"🍮",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🧄",pastries:"🧁"};
   viewer.addEventListener("error",()=>{
     viewer.style.display="none";
     fallback.style.display="flex";
@@ -3194,7 +3159,7 @@ function gameOver(){
 const SECRET_ITEMS=[
   {emoji:"🌙",name:"Midnight Espresso",price:"RM 8",desc:"Triple shot, served after hours only."},
   {emoji:"🌶",name:"Chilli Latte",price:"RM 13",desc:"A daring fusion — not for the faint of heart."},
-  {emoji:"🍯",name:"Honey Bear Special",price:"RM 15",desc:"Barista's secret recipe. Ask nicely."},
+  {emoji:"🍯",name:"Honey Mocha Special",price:"RM 15",desc:"Our Mocha elevated with raw Pahang honey. Barista's secret — ask nicely."},
 ];
 
 // Canvas overlay for drawing detection
@@ -3331,14 +3296,16 @@ function closeShakeModal(){ document.getElementById("shakeModal").style.display=
 // ══════════════════════════════════════
 // Pairing map: key → array of suggested item keys across any category
 const PAIRINGS = {
-  coffeeBear:  ["croissant","cookies"],
-  coffeeCup:   ["croissant","garlicBread"],
-  matchaCat:   ["cookies","pastries"],
-  cookies:     ["coffeeBear","matchaCat"],
-  croissant:   ["coffeeBear","coffeeCup"],
-  donuts:      ["coffeeCup","matchaCat"],
-  garlicBread: ["coffeeCup","coffeeBear"],
-  pastries:    ["matchaCat","coffeeCup"],
+  mocha:           ["croissant","cookies"],
+  caramelMacchiato:["pastries","croissant"],
+  cappuccino:      ["croissant","cookies"],
+  americano:       ["cookies","croissant"],
+  coffeeCup:       ["croissant","garlicBread"],
+  cookies:         ["mocha","cappuccino"],
+  croissant:       ["mocha","caramelMacchiato"],
+  donuts:          ["mocha","americano"],
+  garlicBread:     ["americano","coffeeCup"],
+  pastries:        ["caramelMacchiato","mocha"],
 };
 
 function startCheckoutFlow(){
@@ -3369,7 +3336,7 @@ function showAddonSheet(keys){
   const firstCartTitle=cart[0]?.title||"your drink";
   document.getElementById("addonTitle").textContent=`Pair with your ${firstCartTitle}`;
   el.innerHTML="";
-  const emojis={coffeeBear:"🐻",coffeeCup:"☕",matchaCat:"🐱",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🍞",pastries:"🧁"};
+  const emojis={mocha:"🍫",caramelMacchiato:"🍮",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🍞",pastries:"🧁"};
   keys.forEach(key=>{
     let item=null, foundCat=null;
     Object.entries(m).forEach(([cat,items])=>{ if(items[key]){item=items[key];foundCat=cat;} });
@@ -3663,7 +3630,7 @@ function initScrollReveal(){
 
 // ── NAV ACTIVE STATE ──
 function initLpNavHighlight(){
-  const sections = ["lp-about","lp-menu","lp-team","lp-info","lp-testimonials"].map(id=>document.getElementById(id)).filter(Boolean);
+  const sections = ["lp-about","lp-menu","lp-info","lp-testimonials"].map(id=>document.getElementById(id)).filter(Boolean);
   const navLinks = document.querySelectorAll(".lp-nav a");
   const lp = document.getElementById("landingPage");
   if(!lp) return;
