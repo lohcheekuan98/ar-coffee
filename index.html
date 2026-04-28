@@ -1546,7 +1546,7 @@ const D_CATS = {
 const D_MENU = {
   drinks:{
     mocha:           { title:"Mocha",             price:14, src:"mocha.glb",           best:true, desc:"Our star drink. A luxurious blend of rich espresso, velvety steamed milk and dark chocolate, finished with a dusting of cocoa powder. Bold, smooth and deeply satisfying. 🍫" },
-    caramelMacchiato:{ title:"Caramel Macchiato", price:13, src:"caramel maciato.glb",            desc:"Layers of vanilla-infused steamed milk, a bold double espresso shot, and a generous drizzle of golden caramel. Sweet, strong and beautifully balanced. 🍮" },
+    caramelMacchiato:{ title:"Caramel Macchiato", price:13, src:"caramelMaciato.glb",            desc:"Layers of vanilla-infused steamed milk, a bold double espresso shot, and a generous drizzle of golden caramel. Sweet, strong and beautifully balanced. 🍮" },
     cappuccino:      { title:"Cappuccino",        price:11, src:"cappucino.glb",                   desc:"The classic Italian trio — equal parts espresso, steamed milk and silky microfoam. Light, airy and rich all at once. Perfect any time of day. ☕" },
     americano:       { title:"Americano",         price:9,  src:"americano.glb",                   desc:"A long, clean shot of espresso diluted with hot water to bring out its full depth of flavour. Bold, smooth and beautifully simple. 🖤" },
     coffeeCup:       { title:"Coffee Cup",        price:10, src:"coffeeCup.glb",                   desc:"Our classic house blend brewed fresh to order. Balanced and full-bodied with a warm, comforting finish. ☕" },
@@ -1565,7 +1565,7 @@ function getCats()  { try { const s=localStorage.getItem("kk_cats");  return s?J
 function saveCats(c){ localStorage.setItem("kk_cats",JSON.stringify(c)); }
 
 // Bump this version any time D_MENU/D_CATS change so old caches are reset
-const MENU_VERSION = "2026-04-mocha";
+const MENU_VERSION = "2026-04-mocha-v2";
 
 function getMenu() {
   try {
@@ -1706,7 +1706,12 @@ function showItem(key){
   const qv=document.getElementById("itemQtyValue");
   if(qv) qv.textContent="1";
   updateStickyBar(d);
-  document.getElementById("viewer").src=d.src;
+  // Reset viewer / fallback state so a previous error doesn't carry over
+  const v=document.getElementById("viewer");
+  const fb=document.getElementById("viewerFallback");
+  v.style.display="block";
+  if(fb) fb.style.display="none";
+  v.src=d.src;
   document.getElementById("itemTitle").textContent=d.title;
   document.getElementById("itemPrice").textContent=d.soldOut?"SOLD OUT":"RM "+d.price.toFixed(2);
   document.getElementById("itemDesc").textContent=d.desc;
@@ -2848,13 +2853,19 @@ function downloadQR(){
 function setupViewerFallback(){
   const viewer=document.getElementById("viewer");
   const fallback=document.getElementById("viewerFallback");
-  const icons={mocha:"🍫",caramelMacchiato:"🍮",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🧄",pastries:"🧁"};
+  const icons={mocha:"🍫",caramelMaciato:"🍮",caramelMacchiato:"🍮",cappucino:"☕",cappuccino:"☕",americano:"🖤",coffeeCup:"☕",cookies:"🍪",croissant:"🥐",donuts:"🍩",garlicBread:"🧄",pastries:"🧁"};
+  function pickIcon(){
+    const src=(viewer.getAttribute("src")||"").toLowerCase();
+    const found=Object.entries(icons).find(([k])=>src.includes(k.toLowerCase()));
+    return found?found[1]:"☕";
+  }
   viewer.addEventListener("error",()=>{
+    // Only show fallback if viewer actually failed for the CURRENT src
     viewer.style.display="none";
     fallback.style.display="flex";
-    const icon=Object.entries(icons).find(([k])=>viewer.src.includes(k));
-    document.getElementById("vfIcon")&&(document.querySelector(".vf-icon").textContent=icon?icon[1]:"☕");
-    document.getElementById("vfName").textContent=document.getElementById("itemTitle").textContent;
+    const vfi=document.querySelector(".vf-icon");
+    if(vfi) vfi.textContent=pickIcon();
+    document.getElementById("vfName").textContent=document.getElementById("itemTitle").textContent||"";
   });
   viewer.addEventListener("load",()=>{
     viewer.style.display="block";
