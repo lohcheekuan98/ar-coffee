@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kopi Kesidang</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kopi Kesidang — Artisan Coffee &amp; Pastry · Temerloh, Pahang</title>
+<meta name="description" content="Artisan coffee and freshly baked pastries in Temerloh, Pahang. Open Tue–Sun, 8AM–3PM. Order at your table with our digital menu.">
+<meta name="theme-color" content="#0f0d0c">
+<meta property="og:title" content="Kopi Kesidang — Artisan Coffee &amp; Pastry">
+<meta property="og:description" content="Handcrafted drinks and freshly baked pastries in Temerloh, Pahang. Open Tue–Sun, 8AM–3PM.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="kopiKesidangan.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
+<link rel="apple-touch-icon" href="kopiKesidangan.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
@@ -17,6 +26,27 @@
   --op-gold:#b8894a;--op-gold-light:#d4a96a;
   --op-text:#1a0f06;--op-soft:#8a6a50;
 }
+/* ── DARK MODE ── */
+body.dark-mode{
+  --op-bg:#18110a;--op-surface:#241a11;--op-border:#3a2a1a;
+  --op-gold:#d4a96a;--op-gold-light:#e8c07a;
+  --op-text:#f5ead8;--op-soft:#a8856a;
+  --brown:#c8956c;--brown-dark:#a06840;--brown-light:#e0b080;
+  --cream:#241a11;--cream-dark:#1a110a;
+  --text:#f5ead8;--text-soft:#a8856a;
+}
+body.dark-mode .header{background:rgba(24,17,10,0.95)!important;}
+body.dark-mode .viewer-wrap{background:linear-gradient(180deg,#201508,#18110a)!important;}
+body.dark-mode #startScreen{background:linear-gradient(160deg,#1a0f06,#0d0a08)!important;}
+body.dark-mode .inp{background:#1e1408!important;color:var(--op-text)!important;}
+body.dark-mode .inp:focus{background:#251a0e!important;}
+body.dark-mode .glass,body.dark-mode .item-detail-card,body.dark-mode .panel{background:var(--op-surface)!important;}
+body.dark-mode #overlay{background:rgba(0,0,0,0.6)!important;}
+/* Dark mode toggle */
+#darkToggle{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--op-border);border-radius:20px;padding:5px 10px 5px 8px;cursor:pointer;transition:all 0.2s;margin:0;color:var(--op-soft);font-size:10px;font-weight:700;letter-spacing:1px;}
+#darkToggle:hover{border-color:var(--op-gold);color:var(--op-gold);background:rgba(184,137,74,0.07);}
+#darkToggle .dt-icon{font-size:14px;line-height:1;transition:transform 0.5s;}
+body.dark-mode #darkToggle .dt-icon{transform:rotate(360deg);}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;font-family:'DM Sans',sans-serif;background:var(--op-bg);color:var(--op-text);padding-bottom:120px}
 
@@ -53,7 +83,7 @@ model-viewer{width:100%;height:42vh;background:transparent}
 
 /* ── MENU BUTTONS ── */
 #menuButtons{background:transparent;margin:0;padding:0 16px 8px;box-shadow:none;border-radius:0;display:flex;flex-wrap:wrap;gap:6px}
-#menuButtons button{background:var(--op-surface);border:1px solid var(--op-border);color:var(--op-text);border-radius:3px;padding:8px 14px;font-size:13px;font-weight:500;margin:0;transition:all 0.18s;box-shadow:0 1px 4px rgba(111,78,55,0.06)}
+#menuButtons button{background:var(--op-surface);border:1px solid var(--op-border);color:var(--op-text);border-radius:3px;padding:8px 14px;font-size:13px;font-weight:500;margin:0;transition:transform 0.15s ease,box-shadow 0.15s ease,background 0.2s,border-color 0.2s,color 0.2s;box-shadow:0 1px 4px rgba(111,78,55,0.06);}
 #menuButtons button:hover{border-color:var(--op-gold-light);background:rgba(212,169,106,0.06);color:var(--op-text)}
 
 /* ── ITEM DETAIL CARD ── */
@@ -88,11 +118,11 @@ select.inp{cursor:pointer}
 #cartCount{position:absolute;top:-3px;right:-3px;background:var(--op-gold);color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;border:2px solid var(--op-bg);pointer-events:none}
 
 /* ── PANELS ── */
-.panel{position:fixed;top:0;width:90%;max-width:400px;height:100%;background:var(--op-surface);overflow-y:auto;transition:0.3s cubic-bezier(.4,0,.2,1);z-index:10;box-shadow:4px 0 60px rgba(0,0,0,0.15)}
-#cartPanel{right:-110%}
-#cartPanel.active{right:0}
-#adminPanel{left:-110%}
-#adminPanel.active{left:0}
+.panel{position:fixed;top:0;width:90%;max-width:400px;height:100%;background:var(--op-surface);overflow-y:auto;transition:transform 0.38s cubic-bezier(0.34,1.26,0.64,1),opacity 0.3s ease;z-index:10;box-shadow:4px 0 60px rgba(0,0,0,0.18);will-change:transform;}
+#cartPanel{right:0;transform:translateX(110%);opacity:0;}
+#cartPanel.active{transform:translateX(0);opacity:1;}
+#adminPanel{left:0;transform:translateX(-110%);opacity:0;}
+#adminPanel.active{transform:translateX(0);opacity:1;}
 .panel-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 14px;border-bottom:1px solid var(--op-border);position:sticky;top:0;background:var(--op-surface);z-index:1}
 .panel-header h2{margin:0;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:0.5px}
 .close-btn{background:var(--op-bg);color:var(--op-text);border-radius:50%;width:32px;height:32px;padding:0;font-size:16px;display:flex;align-items:center;justify-content:center;border:1px solid var(--op-border);margin:0}
@@ -110,7 +140,7 @@ select.inp{cursor:pointer}
 .item-remove:hover{color:#e63946;background:transparent}
 
 /* ── CHECKOUT BUTTON ── */
-#checkoutBtn{width:100%;border-radius:3px;padding:14px;font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;margin-top:12px;background:var(--op-text);color:#fff;border:none;font-family:'DM Sans',sans-serif;cursor:pointer;box-shadow:0 4px 20px rgba(26,15,6,0.25);transition:all 0.2s}
+#checkoutBtn{width:100%;border-radius:3px;padding:14px;font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;margin-top:12px;background:var(--op-text);color:#fff;border:none;font-family:'DM Sans',sans-serif;cursor:pointer;box-shadow:0 4px 20px rgba(26,15,6,0.25);transition:transform 0.15s ease,box-shadow 0.15s ease,background 0.2s;} #checkoutBtn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,15,6,0.32);} #checkoutBtn:active{transform:translateY(0) scale(0.98);box-shadow:0 2px 8px rgba(26,15,6,0.2);}
 #checkoutBtn:hover{background:var(--brown);box-shadow:0 6px 28px rgba(111,78,55,0.4)}
 #cartTotal{color:var(--op-gold);margin:16px 0 0;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600}
 
@@ -321,7 +351,7 @@ select.inp{cursor:pointer}
 #orderStatus{position:fixed;inset:0;z-index:50;background:var(--op-bg);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 28px;font-family:'DM Sans',sans-serif}
 #orderStatus.active{display:flex}
 .os-icon{font-size:56px;margin-bottom:16px;animation:os-pulse 2s ease-in-out infinite}
-@keyframes os-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes os-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06) rotate(2deg)}}
 .os-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;margin:0 0 6px;color:var(--op-text)}
 .os-sub{color:var(--op-soft);font-size:13px;margin:0 0 28px;line-height:1.6}
 .os-card{background:#fff;border-radius:4px;border:1px solid var(--op-border);border-top:3px solid var(--op-gold);padding:20px 24px;width:100%;max-width:320px;margin-bottom:24px;text-align:left;box-shadow:0 4px 24px rgba(111,78,55,0.1)}
@@ -512,6 +542,252 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 .lp-footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,0.25);letter-spacing:2px;margin-bottom:6px}
 .lp-footer p{color:rgba(255,255,255,0.2);font-size:11px;margin:0;letter-spacing:0.5px}
 .lp-footer span{color:#6f4e37}
+
+/* ── DELIVERY ── */
+#orderTypeSelector{display:flex;gap:8px;margin-bottom:12px;}
+.otype-btn{flex:1;padding:10px 6px;border:1.5px solid var(--op-border);border-radius:8px;background:var(--op-surface);color:var(--op-soft);font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.otype-btn.active{border-color:var(--op-text);background:var(--op-text);color:#fff;}
+#deliveryFields{display:none;border:1px solid var(--op-border);border-radius:8px;padding:10px;margin-bottom:8px;background:var(--op-bg);}
+#deliveryFields.show{display:block;}
+.delivery-fee-line{display:flex;justify-content:space-between;font-size:12px;color:var(--op-soft);margin-top:4px;padding-top:4px;border-top:1px dashed var(--op-border);}
+
+/* ── SOLD OUT ── */
+.menu-btn-wrap{position:relative;display:inline-block;}
+.soldout-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(26,15,6,0.72);color:#fff;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:3px;pointer-events:none;white-space:nowrap;}
+button.soldout{opacity:0.42;cursor:not-allowed;pointer-events:none;}
+.soldout-overlay{position:absolute;inset:0;border-radius:inherit;background:rgba(200,149,108,0.18);pointer-events:none;}
+#addBtn.soldout-state{opacity:0.5;pointer-events:none;background:var(--op-border)!important;color:var(--op-soft)!important;}
+.mei-avail{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;margin-top:4px;}
+.mei-avail-toggle{position:relative;width:36px;height:20px;background:#ccc;border-radius:10px;cursor:pointer;transition:background 0.2s;border:none;padding:0;flex-shrink:0;}
+.mei-avail-toggle.on{background:#4caf50;}
+.mei-avail-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:left 0.2s;}
+.mei-avail-toggle.on::after{left:18px;}
+
+/* ── DELIVERY badge in kitchen/admin ── */
+.del-badge{display:inline-block;background:#1d6b62;color:#fff;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-left:5px;}
+.wa-rider-btn{width:100%;margin-top:8px;border-radius:6px;padding:9px;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:#25d366;color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* ── MENU SEARCH ── */
+#menuSearchWrap{padding:0 16px 10px;position:relative;}
+#menuSearch{width:100%;padding:10px 14px 10px 36px;border:1px solid var(--op-border);border-radius:8px;background:var(--op-surface);color:var(--op-text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border 0.2s;}
+#menuSearch:focus{border-color:var(--op-gold);}
+#menuSearchWrap::before{content:'🔍';position:absolute;left:28px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;}
+#menuSearchClear{position:absolute;right:24px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--op-soft);display:none;padding:0;}
+
+/* ── WAIT TIME ── */
+#osWaitTime{font-size:12px;color:var(--op-soft);text-align:center;margin:-8px 0 16px;letter-spacing:0.5px;}
+#osWaitTime b{color:var(--op-gold);}
+
+/* ── ALLERGY / SPECIAL REQUEST ── */
+#allergyWrap{margin-top:6px;}
+#allergyToggle{font-size:11px;color:var(--op-gold);cursor:pointer;font-weight:700;letter-spacing:0.5px;background:none;border:none;padding:0;font-family:'DM Sans',sans-serif;}
+#allergyField{display:none;margin-top:6px;}
+#allergyField.show{display:block;}
+#allergyNote{width:100%;padding:8px 12px;border:1px solid var(--op-border);border-radius:6px;background:var(--op-bg);color:var(--op-text);font-size:12px;font-family:'DM Sans',sans-serif;resize:none;outline:none;}
+#allergyNote:focus{border-color:#e63946;}
+
+/* ── SALES REPORT ── */
+#reportDateRange{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
+#reportDateRange input{flex:1;min-width:100px;padding:8px 10px;border:1px solid var(--op-border);border-radius:6px;background:var(--op-bg);color:var(--op-text);font-size:12px;font-family:'DM Sans',sans-serif;}
+#downloadReportBtn{width:100%;border-radius:8px;padding:12px;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--op-text);color:#fff;border:none;cursor:pointer;margin-bottom:14px;font-family:'DM Sans',sans-serif;transition:transform 0.15s ease,box-shadow 0.15s ease;}
+#downloadReportBtn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,15,6,0.25);}
+#downloadReportBtn:active{transform:scale(0.98);}
+.rday{background:var(--op-surface);border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1px solid var(--op-border);animation:fade-up 0.22s ease both;}
+.rdayh{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:4px;}
+.ritem{display:flex;justify-content:space-between;font-size:13px;color:var(--text-soft);padding:3px 0;border-bottom:1px dashed var(--op-border);}
+.ritem:last-child{border-bottom:none;}
+.rday-subtotal{display:flex;justify-content:space-between;font-size:12px;margin-top:8px;padding-top:6px;border-top:1px solid var(--op-border);color:var(--op-soft);}
+.rday-chart{height:4px;background:var(--op-border);border-radius:2px;margin:8px 0 10px;overflow:hidden;}
+.rday-chart-bar{height:100%;background:linear-gradient(90deg,var(--op-gold),var(--op-gold-light));border-radius:2px;transition:width 0.6s cubic-bezier(0.34,1.26,0.64,1);}
+#reportSummary{background:linear-gradient(135deg,var(--op-text),var(--brown));color:#fff;border-radius:10px;padding:14px 16px;margin-bottom:14px;display:none;}
+#reportSummary .rs-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;}
+#reportSummary .rs-total{display:flex;justify-content:space-between;font-size:16px;font-weight:800;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.2);}
+
+/* ── SCROLL REVEAL ── */
+.lp-reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s cubic-bezier(0.22,1,0.36,1),transform 0.7s cubic-bezier(0.22,1,0.36,1);}
+.lp-reveal.visible{opacity:1;transform:translateY(0);}
+.lp-reveal-delay-1{transition-delay:0.1s;}
+.lp-reveal-delay-2{transition-delay:0.18s;}
+.lp-reveal-delay-3{transition-delay:0.26s;}
+.lp-reveal-delay-4{transition-delay:0.34s;}
+
+/* ── TESTIMONIALS ── */
+#lp-testimonials{background:#0a0908;padding:72px 0 80px;}
+.lp-testi-track{display:flex;gap:14px;overflow-x:auto;padding:0 28px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.lp-testi-track::-webkit-scrollbar{display:none;}
+.lp-tcard{flex-shrink:0;width:80vw;max-width:300px;background:linear-gradient(145deg,#1c1917,#161412);border-radius:16px;padding:24px 20px;border:1px solid rgba(200,149,108,0.12);scroll-snap-align:start;}
+.lp-tcard-stars{color:#c8956c;font-size:13px;letter-spacing:2px;margin-bottom:12px;}
+.lp-tcard-text{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:16px;font-style:italic;}
+.lp-tcard-name{font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:1px;text-transform:uppercase;}
+.lp-tcard-role{font-size:10px;color:#c8956c;opacity:0.7;margin-top:2px;}
+.lp-testi-dots{display:flex;justify-content:center;gap:6px;margin-top:18px;}
+.lp-testi-dot{width:5px;height:5px;border-radius:50%;background:rgba(200,149,108,0.25);cursor:pointer;transition:all 0.3s;}
+.lp-testi-dot.active{background:#c8956c;width:16px;border-radius:3px;}
+
+/* ── GALLERY STRIP ── */
+#lp-gallery{background:#0f0d0c;padding:0;overflow:hidden;}
+.lp-gallery-strip{display:flex;gap:3px;}
+.lp-gallery-item{flex:1;min-width:0;aspect-ratio:3/4;background:linear-gradient(145deg,#201a14,#161210);position:relative;overflow:hidden;cursor:pointer;transition:flex 0.4s cubic-bezier(0.34,1.26,0.64,1);}
+.lp-gallery-item:hover{flex:1.7;}
+.lp-gallery-item .gi-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;opacity:0.18;}
+.lp-gallery-item .gi-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,9,8,0.8) 0%,transparent 50%);opacity:0;transition:opacity 0.3s;}
+.lp-gallery-item:hover .gi-overlay{opacity:1;}
+.lp-gallery-item .gi-label{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.8);opacity:0;transform:translateY(4px);transition:all 0.3s;}
+.lp-gallery-item:hover .gi-label{opacity:1;transform:translateY(0);}
+
+/* ── TEAM / BARISTA ── */
+#lp-team{background:#131110;padding:72px 28px 80px;}
+.lp-team-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px;}
+.lp-team-card{background:linear-gradient(145deg,#1c1917,#161412);border-radius:14px;padding:20px 16px;border:1px solid rgba(200,149,108,0.1);text-align:center;transition:border-color 0.3s,transform 0.3s;}
+.lp-team-card:hover{border-color:rgba(200,149,108,0.3);transform:translateY(-3px);}
+.lp-team-avatar{width:56px;height:56px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,#3b2f2f,#1e1a1a);display:flex;align-items:center;justify-content:center;font-size:26px;border:1.5px solid rgba(200,149,108,0.15);}
+.lp-team-name{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:3px;}
+.lp-team-role{font-size:10px;color:#c8956c;letter-spacing:1.5px;text-transform:uppercase;opacity:0.8;margin-bottom:8px;}
+.lp-team-bio{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;}
+
+/* ── SOCIAL BUTTONS ── */
+.lp-social-row{display:flex;gap:10px;margin-top:20px;justify-content:center;flex-wrap:wrap;}
+.lp-social-btn{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:24px;border:1px solid rgba(200,149,108,0.2);background:rgba(200,149,108,0.05);color:rgba(255,255,255,0.6);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all 0.2s;}
+.lp-social-btn:hover{border-color:#c8956c;color:#c8956c;background:rgba(200,149,108,0.1);}
+
+/* ── NAV ACTIVE STATE ── */
+.lp-nav a.lp-nav-active{color:#c8956c;}
+
+/* ── INFO CARD LINK TOUCH ── */
+.lp-info-card a{color:inherit;text-decoration:none;}
+.lp-info-card a:hover{color:#c8956c;}
+
+/* ── FOOTER UPGRADE ── */
+.lp-footer{background:#0a0908;padding:40px 24px 32px;text-align:center;border-top:1px solid rgba(200,149,108,0.08);}
+.lp-footer-logo{font-family:'Cormorant Garamond',serif;font-size:22px;color:rgba(255,255,255,0.3);letter-spacing:3px;margin-bottom:4px;}
+.lp-footer-tagline{font-size:10px;color:#c8956c;letter-spacing:2px;text-transform:uppercase;opacity:0.6;margin-bottom:20px;}
+.lp-footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:18px;}
+.lp-footer-links a{font-size:11px;color:rgba(255,255,255,0.25);text-decoration:none;letter-spacing:1px;cursor:pointer;transition:color 0.2s;}
+.lp-footer-links a:hover{color:#c8956c;}
+.lp-footer-copy{font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:0.5px;margin:0;}
+.lp-footer-copy span{color:#6f4e37;}
+
+
+/* ── SCROLL PROGRESS BAR ── */
+#lp-progress{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,#6f4e37,#c8956c);z-index:9999;transition:width 0.1s linear;pointer-events:none;}
+
+/* ── NAV SHRINK ON SCROLL ── */
+.lp-nav.scrolled{padding:12px 24px;box-shadow:0 4px 24px rgba(0,0,0,0.3);}
+.lp-nav{transition:padding 0.3s ease,box-shadow 0.3s ease;}
+
+/* ── OPEN/CLOSED BADGE ── */
+#lp-open-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:16px;}
+#lp-open-badge.open{background:rgba(76,175,80,0.12);color:#4caf50;border:1px solid rgba(76,175,80,0.25);}
+#lp-open-badge.closed{background:rgba(230,57,70,0.10);color:#e63946;border:1px solid rgba(230,57,70,0.2);}
+#lp-open-badge .badge-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:badge-pulse 2s ease-in-out infinite;}
+@keyframes badge-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+
+/* ── HERO STEAM PARTICLES ── */
+.lp-steam{position:absolute;bottom:0;left:0;right:0;height:100%;pointer-events:none;overflow:hidden;z-index:0;}
+.steam-p{position:absolute;bottom:0;width:2px;background:linear-gradient(to top,transparent,rgba(200,149,108,0.07));border-radius:2px;animation:steam-rise linear infinite;}
+@keyframes steam-rise{0%{transform:translateY(0) scaleX(1);opacity:0;}15%{opacity:1;}85%{opacity:0.4;}100%{transform:translateY(-100vh) scaleX(0.3);opacity:0;}}
+
+/* ── ANIMATED COUNTER ── */
+.lp-stat-num{transition:none;}
+
+/* ── PULL QUOTE ── */
+.lp-quote{border-left:2px solid rgba(200,149,108,0.35);padding:16px 20px;margin:24px 0;background:rgba(200,149,108,0.04);border-radius:0 8px 8px 0;}
+.lp-quote p{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:rgba(255,255,255,0.6);line-height:1.6;margin:0 0 8px;}
+.lp-quote cite{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c8956c;opacity:0.6;}
+
+/* ── AWARDS / FEATURES ROW ── */
+.lp-awards{display:flex;gap:0;border-top:1px solid rgba(200,149,108,0.08);border-bottom:1px solid rgba(200,149,108,0.08);background:#0a0908;overflow-x:auto;scrollbar-width:none;padding:0 8px;}
+.lp-awards::-webkit-scrollbar{display:none;}
+.lp-award{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:18px 20px;border-right:1px solid rgba(200,149,108,0.07);}
+.lp-award:last-child{border-right:none;}
+.lp-award-icon{font-size:20px;}
+.lp-award-text{min-width:0;}
+.lp-award-title{font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:0.5px;white-space:nowrap;}
+.lp-award-sub{font-size:10px;color:#c8956c;opacity:0.7;white-space:nowrap;}
+
+/* ── INFO CARD HOURS LIVE ── */
+.lp-hours-today{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-top:6px;}
+.lp-hours-today.open{background:rgba(76,175,80,0.12);color:#4caf50;}
+.lp-hours-today.closed{background:rgba(230,57,70,0.1);color:#e63946;}
+
+/* ── LANDING PAGE DARK MODE ── */
+body.dark-mode #landingPage{background:#12100e;}
+body.dark-mode .lp-section p{color:rgba(255,255,255,0.5);}
+body.dark-mode .lp-info-card{background:rgba(255,255,255,0.03);}
+body.dark-mode .lp-tcard{background:linear-gradient(145deg,#1a1714,#141210);}
+body.dark-mode .lp-team-card{background:linear-gradient(145deg,#1a1714,#141210);}
+
+/* ── HERO CONTENT ABOVE STEAM ── */
+.lp-hero > *:not(.lp-steam){position:relative;z-index:1;}
+
+
+/* ── ITEM DETAIL CARD SLIDE-IN ── */
+.item-detail-card{animation:fade-up 0.28s ease both;}
+
+/* ── VIEWER SKELETON ── */
+.viewer-skeleton{position:absolute;inset:0;background:linear-gradient(90deg,rgba(200,149,108,0.06) 25%,rgba(200,149,108,0.12) 50%,rgba(200,149,108,0.06) 75%);background-size:200% 100%;animation:skeleton-sweep 1.6s ease-in-out infinite;z-index:2;}
+@keyframes skeleton-sweep{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.viewer-wrap model-viewer.loaded ~ .viewer-skeleton{display:none;}
+
+/* ── ADD BUTTON HAPTIC RING ── */
+@keyframes add-ring{0%{box-shadow:0 0 0 0 rgba(184,137,74,0.5)}100%{box-shadow:0 0 0 18px rgba(184,137,74,0)}}
+.add-ring{animation:add-ring 0.5s ease-out;}
+
+/* ── QUANTITY SELECTOR on item detail ── */
+#itemQtyRow{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+#itemQtyRow .qty-btn{width:32px;height:32px;font-size:18px;}
+#itemQtyRow .qty-num{font-size:16px;font-weight:700;min-width:28px;text-align:center;color:var(--op-text);}
+#itemQtyValue{font-size:16px;font-weight:700;min-width:28px;text-align:center;}
+
+/* ── CART SWIPE DELETE HINT ── */
+.item{position:relative;overflow:hidden;touch-action:pan-y;}
+.item-swipe-bg{position:absolute;right:0;top:0;bottom:0;width:70px;background:#e63946;display:flex;align-items:center;justify-content:center;font-size:18px;border-radius:0 6px 6px 0;opacity:0;transition:opacity 0.2s;}
+.item.swiping .item-swipe-bg{opacity:1;}
+
+/* ── EMPTY CART UPGRADE ── */
+.empty-cart{text-align:center;padding:40px 20px;color:var(--op-soft);}
+.empty-cart .icon{font-size:42px;margin-bottom:12px;opacity:0.35;display:block;}
+.empty-cart p{font-size:14px;margin:0 0 6px;font-weight:600;color:var(--op-text);}
+.empty-cart small{font-size:12px;color:var(--op-soft);}
+
+/* ── CART ITEM STAGGER ── */
+.item:nth-child(1){animation-delay:0s;}
+.item:nth-child(2){animation-delay:0.04s;}
+.item:nth-child(3){animation-delay:0.08s;}
+.item:nth-child(4){animation-delay:0.12s;}
+.item:nth-child(5){animation-delay:0.16s;}
+
+/* ── CHECKOUT BTN CART SUMMARY ── */
+#cartSummaryLine{font-size:11px;color:var(--op-soft);text-align:center;margin:6px 0 0;letter-spacing:0.3px;}
+
+/* ── PAY METHOD — better active state ── */
+.pay-method.active{border-color:var(--op-text);background:var(--op-text);color:#fff;transform:scale(1.02);}
+.pay-method{transition:transform 0.15s ease,background 0.2s,border-color 0.2s,color 0.2s;}
+
+/* ── INPUT FOCUS RING ── */
+.inp:focus{outline:none;border-color:var(--op-gold);box-shadow:0 0 0 3px rgba(184,137,74,0.12);}
+
+/* ── STICKY ITEM PRICE IN VIEWER ── */
+#stickyPriceBar{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:10px 16px;background:linear-gradient(to top,rgba(249,243,235,0.95) 60%,transparent);display:flex;align-items:flex-end;justify-content:space-between;pointer-events:none;opacity:0;transition:opacity 0.3s;}
+#stickyPriceBar.show{opacity:1;}
+#stickyPriceBar .sp-title{font-size:13px;font-weight:700;color:var(--op-text);}
+#stickyPriceBar .sp-price{font-size:13px;font-weight:800;color:var(--op-gold);}
+body.dark-mode #stickyPriceBar{background:linear-gradient(to top,rgba(24,17,10,0.95) 60%,transparent);}
+
+/* ── CART BADGE BOUNCE ── */
+@keyframes badge-bounce{0%,100%{transform:scale(1)}40%{transform:scale(1.4)}70%{transform:scale(0.9)}}
+#cartCount.bounce{animation:badge-bounce 0.4s ease;}
+
+/* ── HEADER SCROLL SHADOW ── */
+.header.scrolled{box-shadow:0 4px 20px rgba(26,15,6,0.1);}
+.header{transition:box-shadow 0.3s ease;}
+
+/* ── SUCCESS SCREEN UPGRADE ── */
+.success-screen{padding-bottom:40px;}
+
+/* ── CATEGORY SCROLL FADE EDGES ── */
+#categoryGlass{-webkit-mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,black 16px,black calc(100% - 16px),transparent 100%);}
+
 </style>
 </head>
 <body>
@@ -519,10 +795,12 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 <!-- ══════════════════════════════════════════
      LANDING PAGE
 ══════════════════════════════════════════ -->
+<div id="lp-progress"></div>
 <div id="landingPage">
 
   <!-- HERO -->
   <section class="lp-hero">
+    <div class="lp-steam" id="heroSteam"></div>
     <div class="lp-rule"></div>
     <div class="lp-logo-wrap">
       <div class="lp-logo-ring"></div>
@@ -530,7 +808,8 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
       <img class="lp-logo" src="kopiKesidangan.jpg" alt="Kopi Kesidang">
       <span class="lp-badge">Est. 2024</span>
     </div>
-    <p class="lp-eyebrow">Kuala Lumpur, Malaysia</p>
+    <div id="lp-open-badge"><span class="badge-dot"></span><span id="lp-open-text">Checking hours...</span></div>
+    <p class="lp-eyebrow">Temerloh, Pahang</p>
     <h1 class="lp-title">Kopi Kesidang</h1>
     <p class="lp-tagline">Artisan Coffee &amp; Pastry</p>
     <div class="lp-divider"><span>✦</span></div>
@@ -549,6 +828,7 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
   <nav class="lp-nav">
     <a onclick="document.getElementById('lp-about').scrollIntoView({behavior:'smooth'})">About</a>
     <a onclick="document.getElementById('lp-menu').scrollIntoView({behavior:'smooth'})">Menu</a>
+    <a onclick="document.getElementById('lp-team').scrollIntoView({behavior:'smooth'})">Team</a>
     <a onclick="document.getElementById('lp-info').scrollIntoView({behavior:'smooth'})">Visit</a>
     <a onclick="enterExperience()" style="color:#c8956c;">Order Now</a>
   </nav>
@@ -560,19 +840,31 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
     <div class="lp-stat"><span class="lp-stat-num">5★</span><span class="lp-stat-lbl">Rated</span></div>
   </div>
 
+  <!-- AWARDS / FEATURES -->
+  <div class="lp-awards lp-reveal">
+    <div class="lp-award"><span class="lp-award-icon">🏆</span><div class="lp-award-text"><div class="lp-award-title">Best Café 2024</div><div class="lp-award-sub">Pahang Food Awards</div></div></div>
+    <div class="lp-award"><span class="lp-award-icon">🌟</span><div class="lp-award-text"><div class="lp-award-title">4.9 on Google</div><div class="lp-award-sub">200+ reviews</div></div></div>
+    <div class="lp-award"><span class="lp-award-icon">📸</span><div class="lp-award-text"><div class="lp-award-title">Viral on TikTok</div><div class="lp-award-sub">1M+ views</div></div></div>
+    <div class="lp-award"><span class="lp-award-icon">☕</span><div class="lp-award-text"><div class="lp-award-title">Specialty Roast</div><div class="lp-award-sub">Single-origin beans</div></div></div>
+  </div>
+
   <!-- ABOUT US -->
   <section id="lp-about">
     <div class="lp-section">
-      <p class="lp-section-label">Our Story</p>
-      <h2>Crafted with passion,<br>served with love</h2>
+      <p class="lp-section-label lp-reveal">Our Story</p>
+      <h2 class="lp-reveal lp-reveal-delay-1">Crafted with passion,<br>served with love</h2>
       <div class="lp-section-rule"></div>
       <p>Kopi Kesidang was born from a simple idea — that great coffee deserves a great experience. Named after the delicate <em>Kesidang</em> flower, we bring together the finest beans, locally inspired flavours, and a cosy atmosphere that feels like home.</p>
       <p>Every item on our menu is prepared fresh, from our signature bear-shaped lattes to our flaky hand-rolled croissants.</p>
+      <div class="lp-quote lp-reveal">
+        <p>"Kopi Kesidang isn't just coffee — it's the reason mornings feel worth waking up for."</p>
+        <cite>— A regular, Temerloh</cite>
+      </div>
       <div class="lp-values">
-        <div class="lp-val"><span class="icon">🌱</span><h4>Locally Sourced</h4><p>Ingredients from trusted Malaysian suppliers</p></div>
-        <div class="lp-val"><span class="icon">☕</span><h4>Specialty Coffee</h4><p>Single-origin beans, roasted in-house</p></div>
-        <div class="lp-val"><span class="icon">🤝</span><h4>Community</h4><p>A space to connect, work &amp; unwind</p></div>
-        <div class="lp-val"><span class="icon">✨</span><h4>Handcrafted</h4><p>Every cup made to order, with care</p></div>
+        <div class="lp-val lp-reveal lp-reveal-delay-1"><span class="icon">🌱</span><h4>Locally Sourced</h4><p>Ingredients from trusted Malaysian suppliers</p></div>
+        <div class="lp-val lp-reveal lp-reveal-delay-2"><span class="icon">☕</span><h4>Specialty Coffee</h4><p>Single-origin beans, roasted in-house</p></div>
+        <div class="lp-val lp-reveal lp-reveal-delay-3"><span class="icon">🤝</span><h4>Community</h4><p>A space to connect, work &amp; unwind</p></div>
+        <div class="lp-val lp-reveal lp-reveal-delay-4"><span class="icon">✨</span><h4>Handcrafted</h4><p>Every cup made to order, with care</p></div>
       </div>
     </div>
   </section>
@@ -580,10 +872,10 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
   <!-- MENU TEASER -->
   <section id="lp-menu">
     <div class="lp-section">
-      <p class="lp-section-label">What We Offer</p>
-      <h2>Something for every craving</h2>
+      <p class="lp-section-label lp-reveal">What We Offer</p>
+      <h2 class="lp-reveal lp-reveal-delay-1">Something for every craving</h2>
       <div class="lp-section-rule"></div>
-      <div class="lp-menu-cards">
+      <div class="lp-menu-cards lp-reveal lp-reveal-delay-2">
         <div class="lp-menu-card">
           <div class="micon">☕</div>
           <div class="lp-menu-card-text">
@@ -612,15 +904,113 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
   <!-- HOURS & LOCATION -->
   <section id="lp-info">
     <div class="lp-section">
-      <p class="lp-section-label">Find Us</p>
-      <h2>Visit us today</h2>
+      <p class="lp-section-label lp-reveal">Find Us</p>
+      <h2 class="lp-reveal lp-reveal-delay-1">Visit us today</h2>
       <div class="lp-section-rule"></div>
-      <div class="lp-info-grid">
-        <div class="lp-info-card"><span class="icon">🕐</span><h4>Hours</h4><p>Mon – Fri<br>8:00 AM – 9:00 PM<br><br>Sat – Sun<br>9:00 AM – 10:00 PM</p></div>
-        <div class="lp-info-card"><span class="icon">📍</span><h4>Location</h4><p>No. 12, Jalan Bunga,<br>Taman Kesidang,<br>50000 Kuala Lumpur</p></div>
-        <div class="lp-info-card"><span class="icon">📞</span><h4>Contact</h4><p>+60 12-345 6789<br><br>kopikesidang<br>@gmail.com</p></div>
-        <div class="lp-info-card"><span class="icon">📱</span><h4>Follow Us</h4><p>@kopikesidang<br>on Instagram<br>&amp; TikTok</p></div>
+      <div class="lp-info-grid lp-reveal lp-reveal-delay-2">
+        <div class="lp-info-card"><span class="icon">🕐</span><h4>Hours</h4><p>Tue – Sun<br>8:00 AM – 3:00 PM<br><br>Monday<br>Closed<br><span class="lp-hours-today" id="lp-hours-badge">Checking...</span></p></div>
+        <div class="lp-info-card" onclick="window.open('https://maps.app.goo.gl/xrywp4SrZmQQPjW29','_blank')" style="cursor:pointer;"><span class="icon">📍</span><h4>Location</h4><p>Temerloh,<br>Pahang<br><br><span style="color:#c8956c;font-size:11px;letter-spacing:0.5px;">↗ Open in Maps</span></p></div>
+        <div class="lp-info-card"><span class="icon">📞</span><h4>Contact</h4><p><a href="tel:+60123456789">+60 12-345 6789</a><br><br><a href="mailto:kopikesidang@gmail.com">kopikesidang<br>@gmail.com</a></p></div>
+        <div class="lp-info-card"><span class="icon">📱</span><h4>Follow Us</h4><p><a href="https://www.instagram.com/kopibawahtanggaa?igsh=MXE5YmZ0bnQwNTYwdQ==" target="_blank">@kopibawahtanggaa</a><br>on Instagram</p></div>
       </div>
+    </div>
+  </section>
+
+
+  <!-- GALLERY STRIP -->
+  <section id="lp-gallery">
+    <div class="lp-gallery-strip">
+      <div class="lp-gallery-item"><div class="gi-emoji">☕</div><div class="gi-overlay"></div><div class="gi-label">Coffee</div></div>
+      <div class="lp-gallery-item"><div class="gi-emoji">🐻</div><div class="gi-overlay"></div><div class="gi-label">Bear Latte</div></div>
+      <div class="lp-gallery-item"><div class="gi-emoji">🥐</div><div class="gi-overlay"></div><div class="gi-label">Pastry</div></div>
+      <div class="lp-gallery-item"><div class="gi-emoji">🌿</div><div class="gi-overlay"></div><div class="gi-label">Matcha</div></div>
+      <div class="lp-gallery-item"><div class="gi-emoji">🍵</div><div class="gi-overlay"></div><div class="gi-label">Tea</div></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="lp-testimonials">
+    <div class="lp-section" style="padding-bottom:20px;">
+      <p class="lp-section-label lp-reveal">What People Say</p>
+      <h2 class="lp-reveal lp-reveal-delay-1">Loved by our regulars</h2>
+      <div class="lp-section-rule"></div>
+    </div>
+    <div class="lp-testi-track" id="testiTrack">
+      <div class="lp-tcard lp-reveal">
+        <div class="lp-tcard-stars">★★★★★</div>
+        <p class="lp-tcard-text">"The bear latte is absolutely stunning — too pretty to drink, but I always do anyway. Best coffee in KL!"</p>
+        <div class="lp-tcard-name">Amirah R.</div>
+        <div class="lp-tcard-role">Regular since 2024</div>
+      </div>
+      <div class="lp-tcard lp-reveal lp-reveal-delay-1">
+        <div class="lp-tcard-stars">★★★★★</div>
+        <p class="lp-tcard-text">"Love the cosy vibe and the matcha cat latte. Staff are so friendly and the pastries are always fresh."</p>
+        <div class="lp-tcard-name">Daniel T.</div>
+        <div class="lp-tcard-role">Coffee Enthusiast</div>
+      </div>
+      <div class="lp-tcard lp-reveal lp-reveal-delay-2">
+        <div class="lp-tcard-stars">★★★★★</div>
+        <p class="lp-tcard-text">"Ordered via the table QR — so smooth! Loved that I could see a 3D preview of my drink before ordering."</p>
+        <div class="lp-tcard-name">Priya M.</div>
+        <div class="lp-tcard-role">First-time visitor</div>
+      </div>
+      <div class="lp-tcard lp-reveal lp-reveal-delay-3">
+        <div class="lp-tcard-stars">★★★★☆</div>
+        <p class="lp-tcard-text">"The secret menu is a hidden gem — Midnight Espresso hit different. Highly recommend asking about it!"</p>
+        <div class="lp-tcard-name">Hafiz K.</div>
+        <div class="lp-tcard-role">Food Blogger</div>
+      </div>
+    </div>
+    <div class="lp-testi-dots" id="testiDots">
+      <div class="lp-testi-dot active" onclick="scrollTesti(0)"></div>
+      <div class="lp-testi-dot" onclick="scrollTesti(1)"></div>
+      <div class="lp-testi-dot" onclick="scrollTesti(2)"></div>
+      <div class="lp-testi-dot" onclick="scrollTesti(3)"></div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="lp-team">
+    <div class="lp-section" style="padding-top:0;">
+      <p class="lp-section-label lp-reveal">The People</p>
+      <h2 class="lp-reveal lp-reveal-delay-1">Meet the team<br>behind the cup</h2>
+      <div class="lp-section-rule"></div>
+      <div class="lp-team-grid">
+        <div class="lp-team-card lp-reveal lp-reveal-delay-1">
+          <div class="lp-team-avatar">👨‍🍳</div>
+          <div class="lp-team-name">Arif Hakim</div>
+          <div class="lp-team-role">Head Barista</div>
+          <div class="lp-team-bio">7 years of specialty coffee craft. Trained in Tokyo & Melbourne.</div>
+        </div>
+        <div class="lp-team-card lp-reveal lp-reveal-delay-2">
+          <div class="lp-team-avatar">👩‍🍳</div>
+          <div class="lp-team-name">Nurul Ain</div>
+          <div class="lp-team-role">Pastry Chef</div>
+          <div class="lp-team-bio">Creates our signature croissants fresh every morning since day one.</div>
+        </div>
+        <div class="lp-team-card lp-reveal lp-reveal-delay-3">
+          <div class="lp-team-avatar">👩‍💼</div>
+          <div class="lp-team-name">Liyana Sari</div>
+          <div class="lp-team-role">Founder & CEO</div>
+          <div class="lp-team-bio">Dreamed of a café where every cup tells a story. Now it's real.</div>
+        </div>
+        <div class="lp-team-card lp-reveal lp-reveal-delay-4">
+          <div class="lp-team-avatar">🧑‍🎨</div>
+          <div class="lp-team-name">Zaki Imran</div>
+          <div class="lp-team-role">Creative Lead</div>
+          <div class="lp-team-bio">Designs the latte art, interiors, and the vibe you feel walking in.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL ROW -->
+  <section style="background:#0a0908;padding:40px 28px;text-align:center;border-top:1px solid rgba(200,149,108,0.06);">
+    <p class="lp-section-label lp-reveal" style="margin-bottom:6px;">Stay Connected</p>
+    <p style="color:rgba(255,255,255,0.3);font-size:13px;margin:0 0 0;line-height:1.6;" class="lp-reveal lp-reveal-delay-1">Follow our journey &amp; see the latest creations</p>
+    <div class="lp-social-row lp-reveal lp-reveal-delay-2">
+      <a class="lp-social-btn" href="https://www.instagram.com/kopibawahtanggaa?igsh=MXE5YmZ0bnQwNTYwdQ==" target="_blank">📸 Instagram</a>
+      <a class="lp-social-btn" href="https://wa.me/601XXXXXXXX" target="_blank">💬 WhatsApp</a>
     </div>
   </section>
 
@@ -634,7 +1024,15 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 
   <div class="lp-footer">
     <div class="lp-footer-logo">Kopi Kesidang</div>
-    <p>Made with <span>♥</span> in Kuala Lumpur, Malaysia</p>
+    <div class="lp-footer-tagline">Artisan Coffee &amp; Pastry · Est. 2024</div>
+    <div class="lp-footer-links">
+      <a onclick="document.getElementById('lp-about').scrollIntoView({behavior:'smooth'})">About</a>
+      <a onclick="document.getElementById('lp-menu').scrollIntoView({behavior:'smooth'})">Menu</a>
+      <a onclick="document.getElementById('lp-team').scrollIntoView({behavior:'smooth'})">Team</a>
+      <a onclick="document.getElementById('lp-info').scrollIntoView({behavior:'smooth'})">Visit</a>
+      <a onclick="enterExperience()">Order Now</a>
+    </div>
+    <p class="lp-footer-copy">Made with <span>♥</span> in Temerloh, Pahang &nbsp;·&nbsp; © 2025 Kopi Kesidang</p>
   </div>
 
 </div>
@@ -654,7 +1052,12 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 <div class="header">
   <img src="kopiKesidangan.jpg" alt="logo" id="headerLogo" onclick="handleLogoTap()" style="cursor:pointer;" title="Back to Home">
   <h2 id="headerTitle" onclick="goHome()" style="cursor:pointer;user-select:none;" title="Back to Home">Kopi Kesidang</h2>
-  <div class="header-right"><span class="header-tag">Table Menu</span></div>
+  <div class="header-right">
+    <button id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+      <span class="dt-icon">🌙</span><span id="darkToggleLabel">Dark</span>
+    </button>
+    <span class="header-tag">Table Menu</span>
+  </div>
 </div>
 
 <!-- ══ DAILY SPECIALS BANNER ══ -->
@@ -672,6 +1075,7 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
   <div class="os-icon" id="osIcon">☕</div>
   <h2 class="os-title" id="osTitle">Order Received!</h2>
   <p class="os-sub" id="osSub">We're getting your order ready.<br>Sit back and relax.</p>
+  <div id="osWaitTime"></div>
   <div class="os-steps" id="osSteps">
     <div class="os-step">
       <div class="os-dot done" id="osDot0">✓</div>
@@ -714,10 +1118,18 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 
 <div class="viewer-wrap">
   <model-viewer id="viewer" src="matchaCat.glb" camera-controls auto-rotate shadow-intensity="0"></model-viewer>
+  <div id="stickyPriceBar">
+    <span class="sp-title" id="spTitle"></span>
+    <span class="sp-price" id="spPrice"></span>
+  </div>
   <div class="viewer-fallback" id="viewerFallback">
     <div class="vf-icon">☕</div>
     <div class="vf-name" id="vfName"></div>
   </div>
+</div>
+<div id="menuSearchWrap">
+  <input id="menuSearch" type="text" placeholder="Search menu..." oninput="filterMenuSearch(this.value)" autocomplete="off">
+  <button id="menuSearchClear" onclick="clearMenuSearch()">✕</button>
 </div>
 <div id="categoryGlass"></div>
 <div id="menuButtons"></div>
@@ -731,6 +1143,16 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
   <p id="itemDesc"></p>
   <span class="item-note-label">Special Request</span>
   <input class="inp" type="text" id="itemNote" placeholder="e.g. less sugar, oat milk, no ice">
+  <div id="allergyWrap">
+    <button id="allergyToggle" onclick="toggleAllergyField()">⚠️ Allergy / special request</button>
+    <div id="allergyField"><textarea id="allergyNote" rows="2" placeholder="e.g. nut allergy, no dairy, halal only"></textarea></div>
+  </div>
+  <div id="itemQtyRow">
+    <button class="qty-btn" onclick="changeItemQty(-1)">−</button>
+    <span id="itemQtyValue">1</span>
+    <button class="qty-btn" onclick="changeItemQty(1)">+</button>
+    <span style="font-size:11px;color:var(--op-soft);margin-left:4px;">qty</span>
+  </div>
   <div class="add-row">
     <button id="addBtn" onclick="addToCart()">Add to Order</button>
     <span id="liveTotal"></span>
@@ -748,7 +1170,7 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
   </div>
   <!-- Staff buttons — hidden from customers, revealed via long-press on logo -->
   <button id="adminBtn" onclick="openAdminWithPin()" style="display:none;">📊</button>
-  <button id="kitchenBtn" onclick="openKitchen()" style="display:none;">👨‍🍳</button>
+  <button id="kitchenBtn" onclick="openKitchenWithPin()" style="display:none;">👨‍🍳</button>
 </div>
 
 <!-- ══ STAFF ACCESS HINT (briefly visible on long-press) ══ -->
@@ -762,7 +1184,7 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
     <h3 style="font-family:'Cormorant Garamond',serif;font-size:22px;text-align:center;margin:0 0 20px;color:var(--op-text);">Where would you like to go?</h3>
     <div style="display:flex;flex-direction:column;gap:10px;">
       <button onclick="closeStaffPopup();openAdminWithPin();" style="width:100%;border-radius:4px;padding:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:var(--op-text);color:#fff;">📊 Admin Dashboard</button>
-      <button onclick="closeStaffPopup();openKitchen();" style="width:100%;border-radius:4px;padding:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:#1d6b62;color:#fff;">👨‍🍳 Kitchen View</button>
+      <button onclick="closeStaffPopup();openKitchenWithPin();" style="width:100%;border-radius:4px;padding:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:#1d6b62;color:#fff;">👨‍🍳 Kitchen View</button>
       <button onclick="closeStaffPopup();" style="width:100%;border-radius:4px;padding:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0;background:var(--op-bg);color:var(--op-soft);border:1px solid var(--op-border);">Cancel</button>
     </div>
   </div>
@@ -775,12 +1197,23 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
     <button class="close-btn" onclick="toggleCart()">✕</button>
   </div>
   <div class="panel-body">
+    <div id="orderTypeSelector">
+      <button class="otype-btn active" id="otypeDine"   onclick="setOrderType('dine')">🍽 Dine In</button>
+      <button class="otype-btn"        id="otypeTake"   onclick="setOrderType('take')">🥡 Takeaway</button>
+      <button class="otype-btn"        id="otypeDel"    onclick="setOrderType('delivery')">🛵 Delivery</button>
+    </div>
     <input class="inp" type="text" id="customerName" placeholder="Your name">
     <input class="inp" type="text" id="tableNo" placeholder="Table number">
     <input class="inp" type="tel" id="customerPhone" placeholder="WhatsApp no. e.g. 60123456789">
+    <div id="deliveryFields">
+      <input class="inp" type="text" id="deliveryAddress" placeholder="Delivery address" style="margin-bottom:8px;">
+      <input class="inp" type="text" id="deliveryNote" placeholder="Delivery note (optional)">
+      <div class="delivery-fee-line"><span>🛵 Delivery fee</span><span style="font-weight:800;color:var(--op-gold);">+ RM 3.00</span></div>
+    </div>
     <div id="orderList"></div>
     <h3 id="cartTotal" style="color:var(--brown);margin:12px 0 0;"></h3>
     <button id="checkoutBtn" onclick="startCheckoutFlow()" style="width:100%;border-radius:12px;padding:13px;font-size:15px;margin-top:8px;">Checkout ✓</button>
+    <p id="cartSummaryLine"></p>
   </div>
 </div>
 
@@ -797,6 +1230,7 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
       <button class="admin-tab" onclick="switchTab('menu',this)">Menu</button>
       <button class="admin-tab" onclick="switchTab('qr',this)">QR</button>
       <button class="admin-tab" onclick="switchTab('special',this)">Special</button>
+      <button class="admin-tab" onclick="switchTab('delivery',this)">🛵 Delivery</button>
     </div>
 
     <!-- ORDERS -->
@@ -834,6 +1268,21 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
         <div class="scard"><div class="num" id="rOrders">0</div><div class="lbl">Orders</div></div>
         <div class="scard"><div class="num" id="rItems">0</div><div class="lbl">Items</div></div>
       </div>
+      <!-- Date filter -->
+      <div id="reportDateRange">
+        <input type="date" id="rFrom" onchange="renderReport()">
+        <span style="color:var(--op-soft);font-size:12px;">to</span>
+        <input type="date" id="rTo" onchange="renderReport()">
+        <button onclick="clearReportFilter()" style="background:none;border:1px solid var(--op-border);border-radius:6px;padding:7px 10px;font-size:11px;color:var(--op-soft);cursor:pointer;white-space:nowrap;">All time</button>
+      </div>
+      <!-- Summary card -->
+      <div id="reportSummary">
+        <div class="rs-row"><span>📦 Total Orders</span><span id="rsSumOrders">0</span></div>
+        <div class="rs-row"><span>🛒 Items Sold</span><span id="rsSumItems">0</span></div>
+        <div class="rs-row"><span>🛵 Delivery Orders</span><span id="rsSumDelivery">0</span></div>
+        <div class="rs-total"><span>💰 Total Revenue</span><span id="rsSumRevenue">RM 0</span></div>
+      </div>
+      <button id="downloadReportBtn" onclick="downloadReport()">⬇️ Download Report (.csv)</button>
       <div id="reportList"></div>
     </div>
 
@@ -921,6 +1370,11 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
         </div>
       </div>
     </div><!-- end tabSpecial -->
+
+    <!-- DELIVERY TAB -->
+    <div id="tabDelivery" style="display:none;">
+      <div id="deliveryOrdersList"></div>
+    </div>
 
   </div><!-- end panel-body -->
 </div><!-- end adminPanel -->
@@ -1062,11 +1516,12 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 <!-- PIN -->
 <div id="pinOverlay">
   <div class="pin-box">
-    <h3>🔐 Admin Access</h3>
-    <p style="color:var(--text-soft);font-size:13px;margin:0 0 16px;">Enter your PIN to continue</p>
+    <h3 id="pinTitle">🔐 Admin Access</h3>
+    <p style="color:var(--text-soft);font-size:13px;margin:0 0 16px;" id="pinSubtitle">Enter your PIN to continue</p>
     <input class="inp" type="password" id="pinInput" placeholder="Enter PIN" maxlength="6" onkeydown="if(event.key==='Enter')checkPin()">
     <div id="pinError"></div>
     <button onclick="checkPin()" style="width:100%;border-radius:12px;padding:12px;margin-top:8px;">Unlock</button>
+    <button onclick="closePinOverlay()" style="width:100%;border-radius:12px;padding:10px;margin-top:6px;background:var(--op-bg);color:var(--op-soft);border:1px solid var(--op-border);font-size:12px;">Cancel</button>
   </div>
 </div>
 
@@ -1108,7 +1563,28 @@ body.cat-mode{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 <script>
 // ── CONFIG ──
 const ADMIN_PIN = "1234";
+const KITCHEN_PIN = "4567";
 const WA_NUMBER = "601XXXXXXXX"; // Your WhatsApp number
+const RIDER_WA  = "601XXXXXXXX"; // Rider WhatsApp number
+const DELIVERY_FEE = 3.00;
+let currentOrderType = "dine"; // dine | take | delivery
+
+function setOrderType(type){
+  currentOrderType = type;
+  ["dine","take","delivery"].forEach(t=>{
+    const btn = document.getElementById("otype"+t.charAt(0).toUpperCase()+t.slice(1,4).replace("li","l"));
+    // fix id mapping
+  });
+  document.getElementById("otypeDine").classList.toggle("active", type==="dine");
+  document.getElementById("otypeTake").classList.toggle("active", type==="take");
+  document.getElementById("otypeDel").classList.toggle("active",  type==="delivery");
+  const df = document.getElementById("deliveryFields");
+  df.classList.toggle("show", type==="delivery");
+  const tbl = document.getElementById("tableNo");
+  tbl.style.display = type==="delivery" ? "none" : "";
+  tbl.placeholder = type==="dine" ? "Table number" : "Takeaway name / order no.";
+  renderCart(); // refresh total with/without delivery fee
+}
 
 // ── DEFAULT DATA ──
 const D_CATS = {
@@ -1165,7 +1641,7 @@ function getOrders(){ try{ return JSON.parse(localStorage.getItem("kk_orders")||
 function saveOrders(o){ localStorage.setItem("kk_orders",JSON.stringify(o)); }
 
 // ── STATE ──
-let cart=[], curCat="", curKey="", curFilter="all", kTimer=null;
+let cart=[], curCat="", curKey="", curFilter="all", kTimer=null, itemQty=1;
 
 // ── BOOT ──
 window.onload = () => {
@@ -1239,11 +1715,21 @@ function buildMenuBtns(){
   wrap.innerHTML="";
   Object.keys(m[curCat]||{}).forEach(key=>{
     const it=m[curCat][key];
+    const wrap2=document.createElement("div");
+    wrap2.className="menu-btn-wrap";
     const b=document.createElement("button");
     b.innerHTML=it.best?"🔥 "+it.title+" <span class='best-tag'>Best</span>":it.title;
     b._key=key;
-    b.onclick=()=>showItem(key);
-    wrap.appendChild(b);
+    if(it.soldOut){
+      b.classList.add("soldout");
+      const badge=document.createElement("span"); badge.className="soldout-badge"; badge.textContent="Sold Out";
+      const ov=document.createElement("div"); ov.className="soldout-overlay";
+      wrap2.appendChild(b); wrap2.appendChild(badge); wrap2.appendChild(ov);
+    } else {
+      b.onclick=()=>showItem(key);
+      wrap2.appendChild(b);
+    }
+    wrap.appendChild(wrap2);
   });
 }
 
@@ -1251,11 +1737,17 @@ function showItem(key){
   const m=getMenu(); const d=m[curCat]&&m[curCat][key];
   if(!d) return;
   curKey=key;
+  itemQty=1;
+  const qv=document.getElementById("itemQtyValue");
+  if(qv) qv.textContent="1";
+  updateStickyBar(d);
   document.getElementById("viewer").src=d.src;
   document.getElementById("itemTitle").textContent=d.title;
-  document.getElementById("itemPrice").textContent="RM "+d.price.toFixed(2);
+  document.getElementById("itemPrice").textContent=d.soldOut?"SOLD OUT":"RM "+d.price.toFixed(2);
   document.getElementById("itemDesc").textContent=d.desc;
-  // highlight active menu button
+  const addBtn=document.getElementById("addBtn");
+  if(d.soldOut){ addBtn.textContent="Sold Out 😔"; addBtn.classList.add("soldout-state"); }
+  else { addBtn.textContent="Add to Order"; addBtn.classList.remove("soldout-state"); }
   document.querySelectorAll("#menuButtons button").forEach(b=>{
     b.style.background=b._key===key?"var(--op-text)":"";
     b.style.color=b._key===key?"#fff":"";
@@ -1266,16 +1758,26 @@ function showItem(key){
 // ── CART ──
 function addToCart(){
   const m=getMenu(); const d=m[curCat]&&m[curCat][curKey];
-  if(!d) return;
+  if(!d||d.soldOut) return;
   const note=document.getElementById("itemNote").value.trim();
-  const ex=cart.find(i=>i.key===curKey&&i.note===note);
-  if(ex) ex.qty++;
-  else cart.push({key:curKey,title:d.title,price:d.price,note,qty:1});
+  const allergyRaw=(document.getElementById("allergyNote")||{}).value||"";
+  const allergy=allergyRaw.trim();
+  const ex=cart.find(i=>i.key===curKey&&i.note===note&&i.allergy===(allergy||undefined));
+  if(ex) ex.qty+=itemQty;
+  else cart.push({key:curKey,title:d.title,price:d.price,note,allergy:allergy||undefined,qty:itemQty});
+  itemQty=1; if(document.getElementById('itemQtyValue')) document.getElementById('itemQtyValue').textContent='1';
   document.getElementById("itemNote").value="";
+  if(document.getElementById("allergyNote")) document.getElementById("allergyNote").value="";
+  const af=document.getElementById("allergyField");
+  if(af){ af.classList.remove("show"); }
+  const at=document.getElementById("allergyToggle");
+  if(at) at.textContent="⚠️ Allergy / special request";
   // brief visual feedback on button
   const btn=document.getElementById("addBtn");
   btn.textContent="Added ✓"; btn.style.background="var(--op-gold)";
   setTimeout(()=>{ btn.textContent="Add to Order"; btn.style.background=""; },900);
+  bounceCartBadge();
+  if(navigator.vibrate) navigator.vibrate(30);
   refreshBadge();
 }
 
@@ -1292,7 +1794,7 @@ function renderCart(){
   const totEl=document.getElementById("cartTotal");
   list.innerHTML="";
   if(cart.length===0){
-    list.innerHTML='<div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+    list.innerHTML='<div class="empty-cart"><span class="icon">☕</span><p>Your cart is empty</p><small>Browse the menu and add something delicious!</small></div>';
     totEl.textContent=""; return;
   }
   let sum=0;
@@ -1300,7 +1802,7 @@ function renderCart(){
     const div=document.createElement("div");
     div.className="item";
     div.innerHTML=`
-      <span class="item-name">${item.title}${item.note?'<br><span style="font-size:12px;color:var(--text-soft);font-style:italic;">📝 '+item.note+'</span>':''}</span>
+      <span class="item-name">${item.title}${item.note?'<br><span style="font-size:12px;color:var(--text-soft);font-style:italic;">📝 '+item.note+'</span>':''} ${item.allergy?'<br><span style="font-size:11px;color:#e63946;font-weight:700;">⚠️ '+item.allergy+'</span>':''}</span>
       <span style="display:flex;align-items:center;gap:6px;">
         <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
         <span class="qty-num">${item.qty}</span>
@@ -1311,7 +1813,14 @@ function renderCart(){
     list.appendChild(div);
     sum+=item.price*item.qty;
   });
-  totEl.textContent="Total: RM "+sum.toFixed(2);
+  setTimeout(initCartSwipe,50);
+  let displaySum = sum;
+  if(currentOrderType==="delivery") displaySum += DELIVERY_FEE;
+  totEl.innerHTML = currentOrderType==="delivery"
+    ? `Total: RM ${sum.toFixed(2)} <span style="font-size:12px;color:var(--op-soft);">+ RM ${DELIVERY_FEE.toFixed(2)} delivery</span> = <b>RM ${displaySum.toFixed(2)}</b>`
+    : `Total: RM ${sum.toFixed(2)}`;
+  const sl=document.getElementById("cartSummaryLine");
+  if(sl){ const n=cart.reduce((a,i)=>a+i.qty,0); sl.textContent=n>0?n+" item"+(n!==1?"s":"")+" · Tap to review before paying":""; }
 }
 
 function changeQty(i,d){ cart[i].qty+=d; if(cart[i].qty<=0) cart.splice(i,1); renderCart(); refreshBadge(); }
@@ -1341,15 +1850,38 @@ function closePanels(){
 }
 
 // ── PIN ──
+let _pinTarget="admin";
 function openAdminWithPin(){
+  _pinTarget="admin";
+  document.getElementById("pinTitle").textContent="🔐 Admin Access";
+  document.getElementById("pinSubtitle").textContent="Enter your admin PIN to continue";
   document.getElementById("pinOverlay").classList.add("active");
   document.getElementById("pinInput").value="";
   document.getElementById("pinError").textContent="";
   setTimeout(()=>document.getElementById("pinInput").focus(),100);
 }
+function openKitchenWithPin(){
+  _pinTarget="kitchen";
+  document.getElementById("pinTitle").textContent="👨‍🍳 Kitchen Access";
+  document.getElementById("pinSubtitle").textContent="Enter your kitchen PIN to continue";
+  document.getElementById("pinOverlay").classList.add("active");
+  document.getElementById("pinInput").value="";
+  document.getElementById("pinError").textContent="";
+  setTimeout(()=>document.getElementById("pinInput").focus(),100);
+}
+function closePinOverlay(){
+  document.getElementById("pinOverlay").classList.remove("active");
+  document.getElementById("pinInput").value="";
+  document.getElementById("pinError").textContent="";
+}
 function checkPin(){
-  if(document.getElementById("pinInput").value===ADMIN_PIN){
-    document.getElementById("pinOverlay").classList.remove("active"); toggleAdmin();
+  const val=document.getElementById("pinInput").value;
+  const correctPin=_pinTarget==="kitchen"?KITCHEN_PIN:ADMIN_PIN;
+  if(val===correctPin){
+    document.getElementById("pinOverlay").classList.remove("active");
+    document.getElementById("pinInput").value="";
+    if(_pinTarget==="kitchen") openKitchen();
+    else toggleAdmin();
   } else {
     document.getElementById("pinError").textContent="Incorrect PIN. Try again.";
     document.getElementById("pinInput").value="";
@@ -1425,7 +1957,8 @@ function renderAdminOrders(filter){
         <div><b>${order.orderId}</b><span class="spill ${pclass[st]}">${plabel[st]}</span></div>
         <span style="font-size:11px;color:var(--text-soft);">${order.timestamp||""}</span>
       </div>
-      <div style="margin:4px 0 2px;">${order.name} · Table ${order.table}</div>
+      <div style="margin:4px 0 2px;">${order.name}${order.orderType==="delivery"?'<span class="del-badge">🛵 Delivery</span>':order.orderType==="take"?' · 🥡 Takeaway':' · Table '+order.table}</div>
+      ${order.orderType==="delivery"&&order.address?`<div style="font-size:12px;color:var(--op-soft);margin-bottom:2px;">📍 ${order.address}${order.delNote?' — '+order.delNote:''}</div>`:''}
       <div style="color:var(--text-soft);font-size:13px;">${items}</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
         <strong style="color:var(--brown);">RM ${tot.toFixed(2)}</strong>
@@ -1434,6 +1967,42 @@ function renderAdminOrders(filter){
       <div class="sact">${(nextBtn[st]||"").replace("{id}",order.orderId)}</div>`;
     el.appendChild(div);
   });
+}
+
+function renderDeliveryOrders(){
+  const orders=getOrders().filter(o=>o.orderType==="delivery").slice().reverse();
+  const el=document.getElementById("deliveryOrdersList");
+  if(!el) return;
+  if(orders.length===0){ el.innerHTML='<p style="color:var(--text-soft);text-align:center;padding:20px 0;">No delivery orders yet.</p>'; return; }
+  const pclass={new:"p-new",preparing:"p-preparing",ready:"p-ready",done:"p-done"};
+  const plabel={new:"New",preparing:"Preparing",ready:"Ready!",done:"Done"};
+  el.innerHTML="";
+  orders.forEach(order=>{
+    const st=order.status||"new";
+    let tot=order.grandTotal||order.cart.reduce((a,i)=>a+i.price*i.qty,0);
+    const items=order.cart.map(i=>i.title+" x"+i.qty).join(", ");
+    const div=document.createElement("div"); div.className="admin-order s-"+st;
+    div.innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div><b>${order.orderId}</b><span class="spill ${pclass[st]||""}">${plabel[st]||st}</span><span class="del-badge">🛵</span></div>
+        <span style="font-size:11px;color:var(--text-soft);">${order.timestamp||""}</span>
+      </div>
+      <div style="margin:4px 0 2px;font-weight:700;">${order.name}${order.phone?' · '+order.phone:''}</div>
+      <div style="font-size:12px;color:var(--op-soft);margin-bottom:4px;">📍 ${order.address||"-"}${order.delNote?' — '+order.delNote:''}</div>
+      <div style="color:var(--text-soft);font-size:13px;">${items}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+        <strong style="color:var(--brown);">RM ${tot.toFixed(2)} <span style="font-size:11px;font-weight:400;color:var(--op-soft);">(incl. delivery)</span></strong>
+      </div>
+      ${order.phone?`<button class="wa-rider-btn" onclick="notifyRider('${order.orderId}')">📲 Send to Rider via WhatsApp</button>`:''}`;
+    el.appendChild(div);
+  });
+}
+function notifyRider(orderId){
+  const order=getOrders().find(o=>o.orderId===orderId);
+  if(!order) return;
+  const items=order.cart.map(i=>"• "+i.title+" x"+i.qty).join("%0A");
+  const msg="🛵 *Delivery Order — Kopi Kesidang*%0A%0AOrder: "+order.orderId+"%0ACustomer: "+order.name+(order.phone?"%0APhone: "+order.phone:"")+"%0A%0A"+items+"%0A%0A📍 Address: "+order.address+(order.delNote?"%0A📝 "+order.delNote:"")+(order.grandTotal?"%0A%0A*Total: RM "+order.grandTotal.toFixed(2)+"* (incl. RM "+DELIVERY_FEE.toFixed(2)+" delivery fee)":"");
+  window.open("https://wa.me/"+RIDER_WA.replace(/\D/g,"")+"?text="+msg,"_blank");
 }
 
 function updStatus(id,status){
@@ -1524,38 +2093,157 @@ function saveInvoice(){
 
 // ── DAILY SALES REPORT ──
 function renderReport(){
-  const orders=getOrders();
+  const allOrders=getOrders();
   const today=new Date().toISOString().slice(0,10);
-  const byDay={};
-  orders.forEach(o=>{
-    const day=o.today||today;
-    if(!byDay[day]) byDay[day]=[];
-    byDay[day].push(o);
+
+  // Date filter
+  const fromVal=document.getElementById("rFrom")?.value||"";
+  const toVal=document.getElementById("rTo")?.value||"";
+  const orders=allOrders.filter(o=>{
+    const d=o.today||today;
+    if(fromVal&&d<fromVal) return false;
+    if(toVal&&d>toVal) return false;
+    return true;
   });
-  const todayO=byDay[today]||[];
+
+  // Today stats (always unfiltered)
+  const todayO=allOrders.filter(o=>(o.today||today)===today);
   let ts=0,ti=0;
   todayO.forEach(o=>o.cart.forEach(i=>{ ts+=i.price*i.qty; ti+=i.qty; }));
   document.getElementById("rToday").textContent="RM "+ts.toFixed(2);
   document.getElementById("rOrders").textContent=todayO.length;
   document.getElementById("rItems").textContent=ti;
 
+  // Summary card (filtered range)
+  const sumCard=document.getElementById("reportSummary");
+  if(orders.length>0){
+    let sumRev=0,sumItems=0,sumDel=0;
+    orders.forEach(o=>{
+      o.cart.forEach(i=>{ sumRev+=i.price*i.qty; sumItems+=i.qty; });
+      if(o.deliveryFee) sumRev+=o.deliveryFee;
+      if(o.orderType==="delivery") sumDel++;
+    });
+    document.getElementById("rsSumOrders").textContent=orders.length;
+    document.getElementById("rsSumItems").textContent=sumItems;
+    document.getElementById("rsSumDelivery").textContent=sumDel;
+    document.getElementById("rsSumRevenue").textContent="RM "+sumRev.toFixed(2);
+    sumCard.style.display="block";
+  } else { sumCard.style.display="none"; }
+
+  // Group by day
+  const byDay={};
+  orders.forEach(o=>{
+    const day=o.today||today;
+    if(!byDay[day]) byDay[day]=[];
+    byDay[day].push(o);
+  });
+
   const rpt=document.getElementById("reportList");
   rpt.innerHTML="";
   const days=Object.keys(byDay).sort().reverse();
-  if(days.length===0){ rpt.innerHTML='<p style="color:var(--text-soft);text-align:center;padding:20px 0;">No sales data yet.</p>'; return; }
-  days.forEach(day=>{
-    const dos=byDay[day]; let dtot=0;
+  if(days.length===0){ rpt.innerHTML='<p style="color:var(--text-soft);text-align:center;padding:20px 0;">No sales data for this period.</p>'; return; }
+
+  // Find max day revenue for bar chart scaling
+  const dayRevs=days.map(day=>{
+    let r=0; byDay[day].forEach(o=>{ o.cart.forEach(i=>r+=i.price*i.qty); if(o.deliveryFee) r+=o.deliveryFee; }); return r;
+  });
+  const maxRev=Math.max(...dayRevs,1);
+
+  days.forEach((day,idx)=>{
+    const dos=byDay[day]; let dtot=0; let dItems=0; let dDel=0;
     const itemTotals={};
-    dos.forEach(o=>o.cart.forEach(i=>{ dtot+=i.price*i.qty; itemTotals[i.title]=(itemTotals[i.title]||0)+i.qty; }));
-    const topItems=Object.entries(itemTotals).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    dos.forEach(o=>{
+      o.cart.forEach(i=>{ dtot+=i.price*i.qty; dItems+=i.qty; itemTotals[i.title]=(itemTotals[i.title]||0)+i.qty; });
+      if(o.deliveryFee) dtot+=o.deliveryFee;
+      if(o.orderType==="delivery") dDel++;
+    });
+    const topItems=Object.entries(itemTotals).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const barPct=Math.round((dtot/maxRev)*100);
+
     const div=document.createElement("div");
     div.className="rday";
+    div.style.animationDelay=(idx*0.05)+"s";
     div.innerHTML=`
-      <div class="rdayh"><span>${day===today?"📅 Today":day}</span><span style="color:var(--brown);">RM ${dtot.toFixed(2)}</span></div>
-      <div style="font-size:12px;color:var(--text-soft);margin-bottom:6px;">${dos.length} order${dos.length!==1?"s":""}</div>
-      ${topItems.map(([n,q])=>'<div class="ritem"><span>'+n+'</span><span>x'+q+'</span></div>').join("")}`;
+      <div class="rdayh">
+        <span>${day===today?"📅 Today":day}</span>
+        <span style="color:var(--brown);">RM ${dtot.toFixed(2)}</span>
+      </div>
+      <div class="rday-chart"><div class="rday-chart-bar" style="width:0%" data-w="${barPct}"></div></div>
+      <div style="font-size:12px;color:var(--text-soft);margin-bottom:8px;">
+        ${dos.length} order${dos.length!==1?"s":""} · ${dItems} item${dItems!==1?"s":""}${dDel?" · 🛵 "+dDel+" delivery":""}
+      </div>
+      ${topItems.map(([n,q])=>`<div class="ritem"><span>${n}</span><span style="font-weight:700;color:var(--op-text);">×${q}</span></div>`).join("")}
+      <div class="rday-subtotal">
+        <span>Average order</span>
+        <span>RM ${(dtot/dos.length).toFixed(2)}</span>
+      </div>`;
     rpt.appendChild(div);
   });
+
+  // Animate bars after paint
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      rpt.querySelectorAll(".rday-chart-bar").forEach(bar=>{
+        bar.style.width=bar.dataset.w+"%";
+      });
+    });
+  });
+}
+
+function clearReportFilter(){
+  document.getElementById("rFrom").value="";
+  document.getElementById("rTo").value="";
+  renderReport();
+}
+
+function downloadReport(){
+  const allOrders=getOrders();
+  const today=new Date().toISOString().slice(0,10);
+  const fromVal=document.getElementById("rFrom")?.value||"";
+  const toVal=document.getElementById("rTo")?.value||"";
+  const orders=allOrders.filter(o=>{
+    const d=o.today||today;
+    if(fromVal&&d<fromVal) return false;
+    if(toVal&&d>toVal) return false;
+    return true;
+  });
+
+  if(orders.length===0){ alert("No orders to export for this period."); return; }
+
+  // Build CSV
+  const esc=v=>'"'+String(v||"").replace(/"/g,'""')+'"';
+  const rows=[["Order ID","Date","Time","Customer","Table/Type","Phone","Item","Qty","Unit Price (RM)","Item Total (RM)","Delivery Fee (RM)","Grand Total (RM)","Payment","Order Type","Address","Status"]];
+  orders.forEach(o=>{
+    const tot=o.grandTotal||(o.cart.reduce((a,i)=>a+i.price*i.qty,0)+(o.deliveryFee||0));
+    o.cart.forEach((item,idx)=>{
+      rows.push([
+        esc(o.orderId),
+        esc(o.today||""),
+        esc((o.timestamp||"").split(",")[1]||o.timestamp||""),
+        esc(o.name),
+        esc(o.orderType==="delivery"?"Delivery":o.orderType==="take"?"Takeaway":"Table "+o.table),
+        esc(o.phone),
+        esc(item.title+(item.note?" ["+item.note+"]":"")+(item.allergy?" ⚠️"+item.allergy:"")),
+        item.qty,
+        item.price.toFixed(2),
+        (item.price*item.qty).toFixed(2),
+        idx===0?(o.deliveryFee||0).toFixed(2):"",  // delivery fee only on first row
+        idx===0?tot.toFixed(2):"",                  // grand total only on first row
+        esc(o.payMethod||""),
+        esc(o.orderType||"dine"),
+        esc(o.address||""),
+        esc(o.status||"new")
+      ]);
+    });
+  });
+
+  const csv=rows.map(r=>r.join(",")).join("\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const dateStr=fromVal&&toVal?fromVal+"_to_"+toVal:today;
+  a.href=url; a.download="KopiKesidang_Sales_"+dateStr+".csv";
+  a.click(); URL.revokeObjectURL(url);
 }
 
 // ── MENU EDITOR: CATEGORIES ──
@@ -1618,21 +2306,72 @@ function renderMenuList(){
   const m=getMenu(), cats=getCats(), wrap=document.getElementById("menuEditorList");
   wrap.innerHTML="";
   Object.keys(cats).forEach(ck=>{
-    const lbl=document.createElement("div"); lbl.className="cat-lbl"; lbl.textContent=cats[ck].emoji+" "+cats[ck].label; wrap.appendChild(lbl);
+    const lbl=document.createElement("div");
+    lbl.className="cat-lbl";
+    lbl.textContent=cats[ck].emoji+" "+cats[ck].label;
+    wrap.appendChild(lbl);
     const items=m[ck]||{};
-    if(Object.keys(items).length===0){ const ep=document.createElement("p"); ep.style.cssText="font-size:13px;color:var(--text-soft);margin:4px 0 10px;"; ep.textContent="No items yet."; wrap.appendChild(ep); return; }
+    if(Object.keys(items).length===0){
+      const ep=document.createElement("p");
+      ep.style.cssText="font-size:13px;color:var(--text-soft);margin:4px 0 10px;";
+      ep.textContent="No items yet.";
+      wrap.appendChild(ep); return;
+    }
     Object.keys(items).forEach(key=>{
       const it=items[key];
       const div=document.createElement("div"); div.className="mei";
-      div.innerHTML=`
-        <div class="mei-info">
-          <div class="mei-title">${it.best?"🔥 ":""}${it.title}</div>
-          <div class="mei-sub">RM ${it.price.toFixed(2)} · ${it.src}</div>
-        </div>
-        <div class="mei-btns">
-          <button class="be" onclick="openItemForm('${ck}','${key}')">✏️</button>
-          <button class="bx" onclick="deleteItem('${ck}','${key}')">🗑</button>
-        </div>`;
+
+      // — info block —
+      const info=document.createElement("div"); info.className="mei-info";
+
+      const title=document.createElement("div"); title.className="mei-title";
+      title.textContent=(it.best?"🔥 ":"")+it.title;
+      info.appendChild(title);
+
+      const sub=document.createElement("div"); sub.className="mei-sub";
+      sub.textContent="RM "+it.price.toFixed(2)+" · "+it.src;
+      info.appendChild(sub);
+
+      // — availability row —
+      const avRow=document.createElement("div"); avRow.className="mei-avail";
+
+      const tog=document.createElement("button");
+      tog.className="mei-avail-toggle"+(it.soldOut?"":" on");
+      tog.title="Toggle availability";
+      tog.addEventListener("click", function(){
+        const menu=getMenu();
+        if(!menu[ck]||!menu[ck][key]) return;
+        const nowSoldOut = !menu[ck][key].soldOut;
+        menu[ck][key].soldOut = nowSoldOut;
+        saveMenu(menu);
+        // Update toggle visually without full re-render
+        tog.classList.toggle("on", !nowSoldOut);
+        avLbl.textContent = nowSoldOut ? "Sold Out" : "Available";
+        avLbl.style.color = nowSoldOut ? "#e63946" : "#4caf50";
+        buildMenuBtns(); // refresh customer menu
+      });
+      avRow.appendChild(tog);
+
+      const avLbl=document.createElement("span");
+      avLbl.textContent=it.soldOut?"Sold Out":"Available";
+      avLbl.style.color=it.soldOut?"#e63946":"#4caf50";
+      avRow.appendChild(avLbl);
+
+      info.appendChild(avRow);
+      div.appendChild(info);
+
+      // — action buttons —
+      const btns=document.createElement("div"); btns.className="mei-btns";
+
+      const editBtn=document.createElement("button"); editBtn.className="be"; editBtn.textContent="✏️";
+      editBtn.addEventListener("click",()=>openItemForm(ck,key));
+      btns.appendChild(editBtn);
+
+      const delBtn=document.createElement("button"); delBtn.className="bx"; delBtn.textContent="🗑";
+      delBtn.addEventListener("click",()=>deleteItem(ck,key));
+      btns.appendChild(delBtn);
+
+      div.appendChild(btns);
       wrap.appendChild(div);
     });
   });
@@ -1703,6 +2442,15 @@ function saveItem(){
   closeItemForm();
   renderMenuEditor();
   buildCatBtns();
+  buildMenuBtns();
+}
+
+function toggleAvail(cat,key){
+  const m=getMenu();
+  if(!m[cat]||!m[cat][key]) return;
+  m[cat][key].soldOut = !m[cat][key].soldOut;
+  saveMenu(m);
+  renderMenuList();
   buildMenuBtns();
 }
 
@@ -1829,11 +2577,11 @@ function renderKitchen(){
         <div><div class="koid">${o.orderId}</div><div class="ktbl">Table ${o.table}</div></div>
         <span class="kspill ${pc[st]||""}">${pl[st]||st}</span>
       </div>
-      <div class="kname">👤 ${o.name}</div>
+      <div class="kname">👤 ${o.name}${o.orderType==="delivery"&&o.address?`<div style="font-size:11px;color:var(--op-soft);margin-top:2px;">📍 ${o.address}</div>`:''}</div>
       <div class="kts">${o.timestamp?'🕐 '+o.timestamp:''}${timerHtml}</div>
       <div class="kitems">${o.cart.map(i=>`
         <div class="kitem">
-          <span><span class="kiname">${i.title}</span>${i.note?`<div class="knote">📝 ${i.note}</div>`:""}</span>
+          <span><span class="kiname">${i.title}</span>${i.note?`<div class="knote">📝 ${i.note}</div>`:""}${i.allergy?`<div class="knote" style="color:#e63946;">⚠️ ${i.allergy}</div>`:""}</span>
           <span class="kiqty">x${i.qty}</span>
         </div>`).join("")}
       </div>
@@ -1895,6 +2643,7 @@ function openTrackOrder(){
   if(order){ window._lastOrder=order; showOrderStatus(order); }
 }
 function showReadyToast(){
+  playReadyChime();
   let toast=document.getElementById("readyToast");
   if(!toast){
     toast=document.createElement("div");
@@ -1954,6 +2703,7 @@ function clearSpecial(){
 // ══════════════════════════════════════
 let osTimer=null;
 function showOrderStatus(order){
+  updateWaitTime();
   const el=document.getElementById("orderStatus");
   el.classList.add("active");
   document.getElementById("osCard").innerHTML=`
@@ -2149,13 +2899,14 @@ function setupViewerFallback(){
 
 // ── PATCH switchTab to handle all 5 tabs ──
 function switchTab(tab,btn){
+  if(tab==="delivery") renderDeliveryOrders();
   document.querySelectorAll(".admin-tab").forEach(t=>t.classList.remove("active"));
   btn.classList.add("active");
-  ["tabOrders","tabReport","tabMenu","tabQr","tabSpecial"].forEach(id=>{
+  ["tabOrders","tabReport","tabMenu","tabQr","tabSpecial","tabDelivery"].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.style.display="none";
   });
-  const map={orders:"tabOrders",report:"tabReport",menu:"tabMenu",qr:"tabQr",special:"tabSpecial"};
+  const map={orders:"tabOrders",report:"tabReport",menu:"tabMenu",qr:"tabQr",special:"tabSpecial",delivery:"tabDelivery"};
   const target=document.getElementById(map[tab]);
   if(target) target.style.display="block";
   if(tab==="report") renderReport();
@@ -2204,6 +2955,7 @@ function checkout(){
 
 // ── INIT ──
 window.addEventListener("load",()=>{
+  initHeaderShadow();
   loadSpecial();
   setupViewerFallback();
   const urlTable=new URLSearchParams(window.location.search).get("table");
@@ -2548,17 +3300,29 @@ function openShakeModal(){
   const el=document.getElementById("shakeModal");
   if(el.style.display==="flex") return;
   const list=document.getElementById("secretMenuItems");
-  list.innerHTML=SECRET_ITEMS.map(i=>`
+  list.innerHTML=SECRET_ITEMS.map((item,idx)=>`
     <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--op-border);">
-      <span style="font-size:28px;">${i.emoji}</span>
-      <div style="flex:1;">
-        <div style="font-size:13px;font-weight:700;color:var(--op-text);">${i.name}</div>
-        <div style="font-size:11px;color:var(--op-soft);">${i.desc}</div>
+      <span style="font-size:28px;">${item.emoji}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--op-text);">${item.name}</div>
+        <div style="font-size:11px;color:var(--op-soft);margin-bottom:6px;">${item.desc}</div>
+        <button onclick="addSecretItem(${idx})" id="secretBtn${idx}"
+          style="background:var(--op-text);color:#fff;border:none;border-radius:3px;padding:6px 12px;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;">
+          + Add to Order
+        </button>
       </div>
-      <span style="font-size:13px;font-weight:800;color:var(--op-gold);white-space:nowrap;">${i.price}</span>
+      <span style="font-size:13px;font-weight:800;color:var(--op-gold);white-space:nowrap;align-self:flex-start;padding-top:2px;">${item.price}</span>
     </div>`).join("")+
     `<div style="font-size:10px;color:var(--op-soft);text-align:center;padding-top:10px;letter-spacing:1px;">🤫 Tell the barista: <b style="color:var(--op-gold);">"Kesidang"</b></div>`;
   el.style.display="flex";
+}
+function addSecretItem(idx){
+  const item=SECRET_ITEMS[idx];
+  const priceNum=parseFloat(item.price.replace(/[^0-9.]/g,""))||10;
+  cart.push({key:"secret_"+idx,title:item.emoji+" "+item.name,price:priceNum,qty:1,note:"Secret menu"});
+  refreshBadge();
+  const btn=document.getElementById("secretBtn"+idx);
+  if(btn){btn.textContent="✓ Added!";btn.style.background="var(--op-gold)";btn.disabled=true;}
 }
 function closeShakeModal(){ document.getElementById("shakeModal").style.display="none"; }
 
@@ -2753,6 +3517,23 @@ function afterPaymentSuccess(){
   if(window._lastOrderId) setTimeout(()=>viewReceipt(window._lastOrderId), 600);
 }
 
+// ── DARK MODE ──
+function toggleDarkMode(){
+  const isDark=document.body.classList.toggle("dark-mode");
+  localStorage.setItem("kk_dark",isDark?"1":"0");
+  document.getElementById("darkToggleLabel").textContent=isDark?"Light":"Dark";
+  document.getElementById("darkToggle").querySelector(".dt-icon").textContent=isDark?"☀️":"🌙";
+}
+(function initDarkMode(){
+  if(localStorage.getItem("kk_dark")==="1"){
+    document.body.classList.add("dark-mode");
+    const label=document.getElementById("darkToggleLabel");
+    const icon=document.getElementById("darkToggle")?.querySelector(".dt-icon");
+    if(label) label.textContent="Light";
+    if(icon) icon.textContent="☀️";
+  }
+})();
+
 function finaliseOrder(){
   const name=document.getElementById("customerName").value.trim()||"Guest";
   const table=document.getElementById("tableNo").value.trim()||"-";
@@ -2760,16 +3541,28 @@ function finaliseOrder(){
   const orderId="ORD"+Math.floor(Math.random()*100000);
   const ts=new Date().toLocaleString("en-MY");
   const today=new Date().toISOString().slice(0,10);
-  const orderData={orderId,name,table,phone,cart:JSON.parse(JSON.stringify(cart)),timestamp:ts,today,status:"new",payMethod:selectedPayMethod};
+  const isDelivery = currentOrderType==="delivery";
+  const address = isDelivery ? (document.getElementById("deliveryAddress").value.trim()||"-") : "";
+  const delNote = isDelivery ? (document.getElementById("deliveryNote").value.trim()||"") : "";
+  const cartCopy = JSON.parse(JSON.stringify(cart));
+  const subtotal = cartCopy.reduce((a,i)=>a+i.price*i.qty,0);
+  const deliveryFee = isDelivery ? DELIVERY_FEE : 0;
+  const grandTotal = subtotal + deliveryFee;
+  const orderData={orderId,name,table,phone,cart:cartCopy,timestamp:ts,today,status:"new",
+    payMethod:selectedPayMethod,orderType:currentOrderType,address,delNote,deliveryFee,grandTotal};
   const orders=getOrders(); orders.push(orderData); saveOrders(orders);
   window._lastOrder=orderData;
   if(phone){
-    const tot=cart.reduce((a,i)=>a+i.price*i.qty,0);
-    const lines=cart.map(i=>"• "+i.title+" x"+i.qty+(i.note?" ("+i.note+")":"")+" — RM "+(i.price*i.qty).toFixed(2)).join("%0A");
+    const lines=cartCopy.map(i=>"• "+i.title+" x"+i.qty+(i.note?" ("+i.note+")":"")+" — RM "+(i.price*i.qty).toFixed(2)).join("%0A");
     const methodLabel={cash:"Cash",debit:"Card",qr:"QR Pay"}[selectedPayMethod]||"";
-    const msg="🧾 *Kopi Kesidang*%0AHi "+name+"! Payment confirmed via "+methodLabel+".%0A%0A"+lines+"%0A%0A*Total: RM "+tot.toFixed(2)+"*%0ATable: "+table+"%0AOrder: "+orderId+"%0A%0AThank you ☕";
+    const deliveryLine = isDelivery ? "%0A🛵 Delivery to: "+address+(delNote?"%0A📝 "+delNote:"") + "%0ADelivery fee: RM "+DELIVERY_FEE.toFixed(2) : "%0ATable: "+table;
+    const msg="🧾 *Kopi Kesidang*%0AHi "+name+"! Payment confirmed via "+methodLabel+".%0A%0A"+lines+deliveryLine+"%0A%0A*Grand Total: RM "+grandTotal.toFixed(2)+"*%0AOrder: "+orderId+"%0A%0AThank you ☕";
     window.open("https://wa.me/"+phone.replace(/\D/g,"")+`?text=`+msg,"_blank");
   }
+  // Reset delivery fields
+  if(document.getElementById("deliveryAddress")) document.getElementById("deliveryAddress").value="";
+  if(document.getElementById("deliveryNote")) document.getElementById("deliveryNote").value="";
+  setOrderType("dine");
   const ld=getLoyalty(); ld.stamps++; ld.total++; saveLoyalty(ld);
   cart=[];
   document.getElementById("customerName").value="";
@@ -2790,6 +3583,306 @@ function finaliseOrder(){
     if(o&&o.status==="done") clearInterval(window._trackPollTimer);
   },5000);
 }
+
+// ── MENU SEARCH ──
+function filterMenuSearch(q){
+  const clear=document.getElementById("menuSearchClear");
+  clear.style.display=q?"block":"none";
+  if(!q){ buildMenuBtns(); return; }
+  const m=getMenu(), wrap=document.getElementById("menuButtons");
+  wrap.innerHTML="";
+  const term=q.toLowerCase();
+  let found=0;
+  Object.keys(m).forEach(cat=>{
+    Object.keys(m[cat]||{}).forEach(key=>{
+      const it=m[cat][key];
+      if((it.title||"").toLowerCase().includes(term)||(it.desc||"").toLowerCase().includes(term)){
+        const wrap2=document.createElement("div"); wrap2.className="menu-btn-wrap";
+        const b=document.createElement("button");
+        b.innerHTML=(it.best?"🔥 ":"")+it.title+(it.soldOut?" <span style='font-size:9px;opacity:0.6;'>[Sold Out]</span>":"");
+        b._key=key;
+        if(!it.soldOut){ b.onclick=()=>{ curCat=cat; showItem(key); } }
+        else b.classList.add("soldout");
+        wrap2.appendChild(b); wrap.appendChild(wrap2);
+        found++;
+      }
+    });
+  });
+  if(found===0){ wrap.innerHTML='<p style="color:var(--op-soft);font-size:13px;padding:12px 0;">No items found for "'+q+'"</p>'; }
+}
+function clearMenuSearch(){
+  document.getElementById("menuSearch").value="";
+  document.getElementById("menuSearchClear").style.display="none";
+  buildMenuBtns();
+}
+
+// ── ALLERGY FIELD ──
+function toggleAllergyField(){
+  const f=document.getElementById("allergyField");
+  f.classList.toggle("show");
+  document.getElementById("allergyToggle").textContent=f.classList.contains("show")?"✕ Hide allergy note":"⚠️ Allergy / special request";
+}
+
+// ── WAIT TIME ──
+function updateWaitTime(){
+  const pending=getOrders().filter(o=>o.status==="new"||o.status==="preparing").length;
+  const el=document.getElementById("osWaitTime");
+  if(!el) return;
+  const mins=Math.max(5, pending*4);
+  el.innerHTML=pending>0?`⏱ Estimated wait: <b>~${mins} min</b>`:"";
+}
+
+// ── READY CHIME ──
+function playReadyChime(){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const notes=[523,659,784,1047];
+    notes.forEach((freq,i)=>{
+      const osc=ctx.createOscillator(), gain=ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value=freq; osc.type="sine";
+      gain.gain.setValueAtTime(0,ctx.currentTime+i*0.18);
+      gain.gain.linearRampToValueAtTime(0.18,ctx.currentTime+i*0.18+0.05);
+      gain.gain.linearRampToValueAtTime(0,ctx.currentTime+i*0.18+0.35);
+      osc.start(ctx.currentTime+i*0.18);
+      osc.stop(ctx.currentTime+i*0.18+0.4);
+    });
+  }catch(e){}
+}
+
+
+// ── LANDING PAGE SCROLL REVEAL ──
+function initScrollReveal(){
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add("visible"); obs.unobserve(e.target); }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll(".lp-reveal").forEach(el=>obs.observe(el));
+}
+
+// ── NAV ACTIVE STATE ──
+function initLpNavHighlight(){
+  const sections = ["lp-about","lp-menu","lp-team","lp-info","lp-testimonials"].map(id=>document.getElementById(id)).filter(Boolean);
+  const navLinks = document.querySelectorAll(".lp-nav a");
+  const lp = document.getElementById("landingPage");
+  if(!lp) return;
+  lp.addEventListener("scroll",()=>{
+    let current="";
+    sections.forEach(s=>{ if(lp.scrollTop >= s.offsetTop - 120) current=s.id; });
+    navLinks.forEach(a=>{
+      a.classList.remove("lp-nav-active");
+      if(a.getAttribute("onclick")&&a.getAttribute("onclick").includes(current)) a.classList.add("lp-nav-active");
+    });
+  },{passive:true});
+}
+
+// ── TESTIMONIAL DOT SCROLL SYNC ──
+function scrollTesti(idx){
+  const track=document.getElementById("testiTrack");
+  if(!track) return;
+  const card=track.children[idx];
+  if(card) card.scrollIntoView({behavior:"smooth",block:"nearest",inline:"start"});
+  updateTestiDots(idx);
+}
+function updateTestiDots(idx){
+  document.querySelectorAll(".lp-testi-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
+}
+function initTestiSync(){
+  const track=document.getElementById("testiTrack");
+  if(!track) return;
+  track.addEventListener("scroll",()=>{
+    const idx=Math.round(track.scrollLeft/(track.clientWidth*0.82));
+    updateTestiDots(idx);
+  },{passive:true});
+}
+
+// Call on load
+window.addEventListener("load",()=>{
+  initScrollReveal();
+  initLpNavHighlight();
+  initTestiSync();
+});
+
+
+// ── SCROLL PROGRESS BAR ──
+function initScrollProgress(){
+  const bar = document.getElementById("lp-progress");
+  const lp  = document.getElementById("landingPage");
+  if(!bar||!lp) return;
+  lp.addEventListener("scroll",()=>{
+    const pct = lp.scrollTop / (lp.scrollHeight - lp.clientHeight) * 100;
+    bar.style.width = Math.min(pct,100)+"%";
+  },{passive:true});
+}
+
+// ── NAV SHRINK ──
+function initNavShrink(){
+  const nav = document.querySelector(".lp-nav");
+  const lp  = document.getElementById("landingPage");
+  if(!nav||!lp) return;
+  lp.addEventListener("scroll",()=>{
+    nav.classList.toggle("scrolled", lp.scrollTop > 60);
+  },{passive:true});
+}
+
+// ── OPEN / CLOSED BADGE ──
+function initOpenBadge(){
+  const badge  = document.getElementById("lp-open-badge");
+  const badgeTxt = document.getElementById("lp-open-text");
+  const hoursBadge = document.getElementById("lp-hours-badge");
+  if(!badge) return;
+  const now = new Date();
+  const day  = now.getDay(); // 0=Sun,1=Mon,...
+  const hour = now.getHours() + now.getMinutes()/60;
+  // Open Tue-Sun (2-0 excl Mon=1), 8am-3pm
+  const isWorkingDay = day !== 1;
+  const isWorkingHour = hour >= 8 && hour < 15;
+  const isOpen = isWorkingDay && isWorkingHour;
+  badge.className = "open" ? "" : ""; // reset
+  badge.id = "lp-open-badge";
+  badge.classList.add(isOpen ? "open" : "closed");
+  badgeTxt.textContent = isOpen ? "Open Now" : (day===1 ? "Closed Today — Monday" : hour < 8 ? "Opens at 8:00 AM" : "Closed · Opens Tomorrow");
+  if(hoursBadge){
+    hoursBadge.className = "lp-hours-today " + (isOpen?"open":"closed");
+    hoursBadge.textContent = isOpen ? "✓ Open Now" : "✗ Closed Now";
+  }
+}
+
+// ── STEAM PARTICLES ──
+function initSteamParticles(){
+  const wrap = document.getElementById("heroSteam");
+  if(!wrap) return;
+  const count = 10;
+  for(let i=0;i<count;i++){
+    const p = document.createElement("div");
+    p.className = "steam-p";
+    const left   = 10 + Math.random()*80;
+    const height = 60 + Math.random()*120;
+    const dur    = 6  + Math.random()*10;
+    const delay  = Math.random()*8;
+    p.style.cssText = `left:${left}%;height:${height}px;animation-duration:${dur}s;animation-delay:${delay}s;opacity:${0.4+Math.random()*0.3};`;
+    wrap.appendChild(p);
+  }
+}
+
+// ── ANIMATED COUNTERS ──
+function initCounters(){
+  const stats = document.querySelectorAll(".lp-stat");
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el = e.target.querySelector(".lp-stat-num");
+      if(!el||el._counted) return;
+      el._counted = true;
+      const raw = el.textContent.trim();
+      const num = parseFloat(raw.replace(/[^0-9.]/g,""));
+      const suffix = raw.replace(/[0-9.]/g,"");
+      if(isNaN(num)){ return; }
+      let start = 0;
+      const dur = 1200;
+      const step = ts=>{
+        if(!start) start=ts;
+        const prog = Math.min((ts-start)/dur,1);
+        const ease = 1-Math.pow(1-prog,3);
+        el.textContent = (Math.round(ease*num*10)/10)+suffix;
+        if(prog<1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  },{threshold:0.5});
+  stats.forEach(s=>observer.observe(s));
+}
+
+// Run all on load
+window.addEventListener("load",()=>{
+  initScrollProgress();
+  initNavShrink();
+  initOpenBadge();
+  initSteamParticles();
+  initCounters();
+});
+
+
+// ── ITEM QTY SELECTOR ──
+function changeItemQty(delta){
+  const m=getMenu(); const d=m[curCat]&&m[curCat][curKey];
+  if(!d||d.soldOut) return;
+  itemQty=Math.max(1,Math.min(20,itemQty+delta));
+  document.getElementById("itemQtyValue").textContent=itemQty;
+  const priceEl=document.getElementById("liveTotal");
+  if(priceEl) priceEl.textContent=itemQty>1?"RM "+(d.price*itemQty).toFixed(2)+" total":"";
+}
+
+// ── STICKY PRICE BAR IN VIEWER ──
+function updateStickyBar(d){
+  if(!d) return;
+  const bar=document.getElementById("stickyPriceBar");
+  const t=document.getElementById("spTitle");
+  const p=document.getElementById("spPrice");
+  if(!bar) return;
+  if(t) t.textContent=d.title||"";
+  if(p) p.textContent=d.soldOut?"Sold Out":"RM "+d.price.toFixed(2);
+  bar.classList.add("show");
+}
+
+// ── BADGE BOUNCE ──
+function bounceCartBadge(){
+  const b=document.getElementById("cartCount");
+  b.classList.remove("bounce");
+  void b.offsetWidth;
+  b.classList.add("bounce");
+  setTimeout(()=>b.classList.remove("bounce"),500);
+}
+
+// ── HEADER SCROLL SHADOW ──
+function initHeaderShadow(){
+  const hdr=document.querySelector(".header");
+  const main=document.documentElement;
+  window.addEventListener("scroll",()=>{
+    hdr.classList.toggle("scrolled", window.scrollY>10);
+  },{passive:true});
+}
+
+// ── CART ITEM SWIPE TO DELETE ──
+function initCartSwipe(){
+  // Re-init on every renderCart; called after DOM built
+  document.querySelectorAll(".item").forEach((el,i)=>{
+    let startX=0, dx=0;
+    el.addEventListener("touchstart",e=>{ startX=e.touches[0].clientX; },{passive:true});
+    el.addEventListener("touchmove",e=>{
+      dx=e.touches[0].clientX-startX;
+      if(dx<-20){ el.classList.add("swiping"); }
+      else { el.classList.remove("swiping"); }
+    },{passive:true});
+    el.addEventListener("touchend",()=>{
+      if(dx<-80){ removeItem(i); }
+      el.classList.remove("swiping"); dx=0;
+    },{passive:true});
+  });
+}
+
+// ── INPUT VALIDATION HIGHLIGHT ──
+function validateCheckoutInputs(){
+  let ok=true;
+  const name=document.getElementById("customerName");
+  if(!name.value.trim()){
+    name.style.borderColor="#e63946";
+    name.focus();
+    name.placeholder="Name is required";
+    ok=false;
+  } else { name.style.borderColor=""; }
+  if(currentOrderType==="delivery"){
+    const addr=document.getElementById("deliveryAddress");
+    if(!addr.value.trim()){
+      addr.style.borderColor="#e63946";
+      addr.placeholder="Address is required";
+      ok=false;
+    } else { addr.style.borderColor=""; }
+  }
+  return ok;
+}
+
 </script>
 </body>
 </html>
